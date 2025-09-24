@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Đăng nhập Admin - Cà Phê Đậm Đà</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            body {
+                margin: 0;
+                font-family: Inter, system-ui;
+                background: #0f0f12;
+                color: #f5f5f5;
+                min-height: 100vh;
+                display: grid;
+                place-items: center;
+            }
+            .card {
+                width: min(420px, 92vw);
+                background: #17171b;
+                border: 1px solid #26262c;
+                border-radius: 16px;
+                padding: 22px;
+            }
+            h1 {
+                margin: 0 0 12px;
+            }
+            label {
+                display: grid;
+                gap: 6px;
+                margin: 10px 0;
+                color: #bfbfc7;
+            }
+            input {
+                background: #0f0f12;
+                border: 1px solid #2a2a31;
+                color: #fff;
+                border-radius: 10px;
+                padding: 10px;
+            }
+            button {
+                width: 100%;
+                background: #d1a06f;
+                color: #2a1c16;
+                border: none;
+                border-radius: 10px;
+                padding: 10px 14px;
+                font-weight: 700;
+                cursor: pointer;
+                margin-top: 12px;
+            }
+            .err {
+                color: #f87171;
+                height: 18px;
+                margin-top: 6px;
+            }
+            a {
+                color: #d1a06f;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <h1>Đăng nhập Admin</h1>
+            <p>
+                Sử dụng tài khoản quản trị riêng. Mặc định: admin@caphe.vn /
+                123456
+            </p>
+            <form id="f">
+                <label
+                    >Email
+                    <input
+                        type="email"
+                        id="email"
+                        required
+                        value="admin@caphe.vn"
+                /></label>
+                <label
+                    >Mật khẩu
+                    <input type="password" id="pass" required value="123456"
+                /></label>
+                <div class="err" id="err"></div>
+                <button type="submit">Đăng nhập</button>
+            </form>
+            <p>Quay lại <a href="index.html">trang người dùng</a></p>
+        </div>
+
+        <script type="module">
+            import { AdminAuth } from "./scripts/db.js";
+            import { session } from "./scripts/utils.js";
+            const f = document.getElementById("f");
+            const err = document.getElementById("err");
+            f.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const email = document.getElementById("email").value.trim();
+                const pass = document.getElementById("pass").value;
+                const admin = AdminAuth.login(email, pass);
+                if (admin) {
+                    session.setAdmin(true);
+                    location.href = "admin.html";
+                } else {
+                    err.textContent = "Sai thông tin đăng nhập.";
+                }
+            });
+        </script>
+    </body>
+</html>

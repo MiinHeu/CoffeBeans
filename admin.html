@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Admin - Quản trị Cà Phê Đậm Đà</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="styles/admin.css" />
+    </head>
+    <body>
+        <header class="admin-header">
+            <div class="container admin-nav">
+                <strong>Admin • Cà Phê Đậm Đà</strong>
+                <nav class="row">
+                    <a href="index.html">Trang khách</a>
+                    <a id="logout" href="#">Đăng xuất</a>
+                </nav>
+            </div>
+        </header>
+
+        <div class="admin-layout container">
+            <aside class="sidebar">
+                <button data-view="dashboard" class="active">Tổng quan</button>
+                <button data-view="users">Người dùng</button>
+                <button data-view="types">Loại sản phẩm</button>
+                <button data-view="products">Sản phẩm</button>
+                <button data-view="receipts">Nhập hàng</button>
+                <button data-view="pricing">Giá bán</button>
+                <button data-view="orders">Đơn hàng</button>
+                <button data-view="stock">Tồn kho</button>
+            </aside>
+            <main id="app" class="content">
+                <!-- Content will be rendered by scripts/admin.js -->
+            </main>
+        </div>
+
+        <script type="module" src="scripts/admin.js"></script>
+    </body>
+</html>

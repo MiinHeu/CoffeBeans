@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Cà Phê Đậm Đà - Hạt cà phê rang xay</title>
+        <meta
+            name="description"
+            content="Mua hạt cà phê rang xay chất lượng cao. Giao nhanh, giá tốt."
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="styles/user.css" />
+    </head>
+    <body>
+        <!-- Header -->
+        <header class="header">
+            <div class="container nav">
+                <div class="brand">
+                    <div class="brand-logo" aria-hidden="true"></div>
+                    <a href="#" class="brand-name">Cà Phê Đậm Đà</a>
+                </div>
+                <nav class="menu" aria-label="Chính">
+                    <a href="#san-pham">Sản phẩm</a>
+                    <a href="#ve-chung-toi">Giới thiệu</a>
+                    <a href="#loi-ich">Lợi ích</a>
+                    <a href="#cam-nhan">Cảm nhận</a>
+                    <a href="#lien-he">Liên hệ</a>
+                    <a href="#gio-hang" class="badge" aria-label="Giỏ hàng">
+                        Giỏ hàng
+                        <span id="cart-badge" class="badge-count">0</span>
+                    </a>
+                </nav>
+                <button
+                    id="menuBtn"
+                    class="mobile-toggle"
+                    aria-expanded="false"
+                    aria-controls="mobileMenu"
+                >
+                    Menu
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero -->
+        <div class="container" style="padding-top: 20px">
+            <section class="hero">
+                <div class="hero-media"></div>
+                <div class="hero-overlay"></div>
+                <div class="hero-inner">
+                    <div>
+                        <h1 class="hero-title">Cà Phê Đậm Đà</h1>
+                        <p class="hero-sub">
+                            Hương vị đặc trưng từ những hạt cà phê thương hạng
+                        </p>
+                        <a href="#san-pham" class="btn">Khám phá sản phẩm</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Categories -->
+        <section id="san-pham">
+            <div class="container">
+                <h2 class="section-title">Danh mục sản phẩm</h2>
+                <p class="section-sub">Chọn loại hạt phù hợp khẩu vị của bạn</p>
+                <div class="grid grid-3">
+                    <article class="card">
+                        <img
+                            src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=1200&auto=format&fit=crop"
+                            alt="Hạt Arabica"
+                        />
+                        <div class="card-body">
+                            <span class="chip">Arabica</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <img
+                                    src="https://images.unsplash.com/photo-1509043759401-136742328bb3?q=80&w=300&auto=format&fit=crop"
+                                    alt="Arabica Premium"
+                                />
+                                <div>
+                                    <h4>Arabica Premium 250g</h4>
+                                    <div>
+                                        <span class="price">135.000đ</span>
+                                        <span class="strike">159.000đ</span>
+                                    </div>
+                                </div>
+                                <button
+                                    class="add"
+                                    data-name="Arabica Premium 250g"
+                                    data-price="135000"
+                                >
+                                    Thêm
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <img
+                            src="https://images.unsplash.com/photo-1526081347589-6f4f6f61f4d9?q=80&w=1200&auto=format&fit=crop"
+                            alt="Hạt Robusta"
+                        />
+                        <div class="card-body">
+                            <span class="chip">Robusta</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <img
+                                    src="https://images.unsplash.com/photo-1519337265831-281ec6cc8514?q=80&w=300&auto=format&fit=crop"
+                                    alt="Robusta Bold"
+                                />
+                                <div>
+                                    <h4>Robusta Bold 500g</h4>
+                                    <div>
+                                        <span class="price">129.000đ</span>
+                                        <span class="strike">149.000đ</span>
+                                    </div>
+                                </div>
+                                <button
+                                    class="add"
+                                    data-name="Robusta Bold 500g"
+                                    data-price="129000"
+                                >
+                                    Thêm
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <img
+                            src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
+                            alt="Blend"
+                        />
+                        <div class="card-body">
+                            <span class="chip">Signature Blend</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <img
+                                    src="https://images.unsplash.com/photo-1551524164-7d2f9ff12cbb?q=80&w=300&auto=format&fit=crop"
+                                    alt="Signature Blend"
+                                />
+                                <div>
+                                    <h4>Signature Blend 1kg</h4>
+                                    <div>
+                                        <span class="price">265.000đ</span>
+                                        <span class="strike">299.000đ</span>
+                                    </div>
+                                </div>
+                                <button
+                                    class="add"
+                                    data-name="Signature Blend 1kg"
+                                    data-price="265000"
+                                >
+                                    Thêm
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- About -->
+        <section id="ve-chung-toi">
+            <div class="container about">
+                <img
+                    src="https://images.unsplash.com/photo-1485808191679-5f86510681a2?q=80&w=1200&auto=format&fit=crop"
+                    alt="Rang xay thủ công"
+                />
+                <div>
+                    <h2 class="section-title">
+                        Nguồn gốc rõ ràng – Rang xay thủ công
+                    </h2>
+                    <p class="section-sub">
+                        Chúng tôi chọn lọc hạt từ nông trại cao nguyên, rang mẻ
+                        nhỏ để giữ trọn hương vị.
+                    </p>
+                    <ul class="list">
+                        <li>
+                            <span class="chip">100% nguyên chất</span>
+                            <span>Không hương liệu, không phụ gia.</span>
+                        </li>
+                        <li>
+                            <span class="chip">Rang mới mỗi tuần</span>
+                            <span>Đảm bảo độ tươi – thơm hơn khi pha.</span>
+                        </li>
+                        <li>
+                            <span class="chip">Tư vấn hương vị</span>
+                            <span>Chọn loại hạt phù hợp cách pha của bạn.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section id="loi-ich">
+            <div class="container">
+                <h2 class="section-title">Vì sao chọn Cà Phê Đậm Đà?</h2>
+                <p class="section-sub">
+                    Chất lượng tốt, dịch vụ tận tâm, giá luôn hợp lý
+                </p>
+                <div class="grid grid-3">
+                    <div class="quote">
+                        <strong>Giao nhanh</strong><br />Giao trong 24-48h tại
+                        nội thành.
+                    </div>
+                    <div class="quote">
+                        <strong>Đổi trả 7 ngày</strong><br />Không hài lòng,
+                        hoàn tiền ngay.
+                    </div>
+                    <div class="quote">
+                        <strong>Ưu đãi thành viên</strong><br />Tích điểm, giảm
+                        đến 15%.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section id="cam-nhan">
+            <div class="container">
+                <h2 class="section-title">Cảm nhận khách hàng</h2>
+                <div class="testi">
+                    <div class="quote">
+                        Hương rất thơm, pha máy ra crema dày. Sẽ mua lại! – Anh
+                        Minh
+                    </div>
+                    <div class="quote">
+                        Robusta đậm đà, phù hợp pha phin buổi sáng. – Chị Hằng
+                    </div>
+                    <div class="quote">
+                        Giao hàng nhanh, đóng gói đẹp, mùi cà phê lan tỏa. –
+                        Tuấn
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer id="lien-he">
+            <div class="container foot">
+                <div>
+                    <h4>Cà Phê Đậm Đà</h4>
+                    <p>
+                        Hạt cà phê rang xay chất lượng cao. Đồng hành cùng ly cà
+                        phê ngon mỗi ngày.
+                    </p>
+                </div>
+                <div>
+                    <h4>Liên hệ</h4>
+                    <p>Hotline: 0901 234 567<br />Email: hello@caphedamda.vn</p>
+                </div>
+                <div>
+                    <h4>Địa chỉ</h4>
+                    <p>123 Phin Street, Quận Caffeine, TP.HCM</p>
+                </div>
+            </div>
+            <div class="container copyright">
+                © 2025 Cà Phê Đậm Đà. All rights reserved.
+            </div>
+        </footer>
+
+        <!-- Mobile menu (portal) -->
+        <nav
+            id="mobileMenu"
+            hidden
+            style="
+                position: fixed;
+                inset: 64px 16px auto;
+                z-index: 60;
+                background: var(--coffee-900);
+                color: #fff;
+                border-radius: 14px;
+                padding: 14px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            "
+        >
+            <a href="#san-pham">Sản phẩm</a><br />
+            <a href="#ve-chung-toi">Giới thiệu</a><br />
+            <a href="#loi-ich">Lợi ích</a><br />
+            <a href="#cam-nhan">Cảm nhận</a><br />
+            <a href="#lien-he">Liên hệ</a>
+        </nav>
+
+        <script src="scripts/user.js" defer></script>
+    </body>
+</html>
