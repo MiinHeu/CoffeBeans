@@ -18,33 +18,66 @@
     </head>
     <body>
         <!-- Header -->
-        <header class="header">
-            <div class="container nav">
-                <div class="brand">
-                    <div class="brand-logo" aria-hidden="true"></div>
-                    <a href="#" class="brand-name">Cà Phê Đậm Đà</a>
-                </div>
-                <nav class="menu" aria-label="Chính">
-                    <a href="#san-pham">Sản phẩm</a>
-                    <a href="#ve-chung-toi">Giới thiệu</a>
-                    <a href="#loi-ich">Lợi ích</a>
-                    <a href="#cam-nhan">Cảm nhận</a>
-                    <a href="#lien-he">Liên hệ</a>
-                    <a href="#gio-hang" class="badge" aria-label="Giỏ hàng">
-                        Giỏ hàng
-                        <span id="cart-badge" class="badge-count">0</span>
-                    </a>
-                </nav>
-                <button
-                    id="menuBtn"
-                    class="mobile-toggle"
-                    aria-expanded="false"
-                    aria-controls="mobileMenu"
-                >
-                    Menu
-                </button>
-            </div>
-        </header>
+     <header class="header">
+  <div class="container nav">
+    <div class="brand">
+      <a href="#">
+         <img src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9" alt="Logo Cà Phê Đậm Đà" class="brand-logo">
+         <span class="brand-name">Cà Phê Đậm Đà</span>
+      </a>
+    </div>
+
+    <!-- Ô tìm kiếm -->
+    <form class="search-bar" role="search">
+      <button class="search-btn" type="submit">🔍</button>
+      <input type="text" placeholder="Tìm sản phẩm..." aria-label="Tìm kiếm" />
+     <button type="button" id="filterToggle" class="filter-btn">Lọc ⬇</button>
+    </form>
+
+    <nav class="menu" aria-label="Chính">
+      <a href="#san-pham">Sản phẩm</a>
+      <a href="#ve-chung-toi">Giới thiệu</a>
+      <a href="#loi-ich">Lợi ích</a>
+      <a href="#lien-he">Liên hệ</a>
+
+      <!-- Tài khoản -->
+      <div class="account-menu">
+        <div class="account-toggle">
+          <i class="fa fa-user"></i> 
+          Đăng nhập / Đăng ký 
+          <span class="caret">▼</span>
+        </div>
+        <ul class="account-dropdown">
+          <li><a href="#"><i class="fa fa-sign-in-alt"></i> Đăng nhập</a></li>
+          <li><a href="#"><i class="fa fa-user-plus"></i> Đăng ký</a></li>
+        </ul>
+      </div>
+
+      <!-- Giỏ hàng -->
+      <a href="#gio-hang" class="badge" aria-label="Giỏ hàng">
+        Giỏ hàng
+        <span id="cart-badge" class="badge-count">0</span>
+      </a>
+    </nav>
+
+    <button id="menuBtn" class="mobile-toggle" aria-expanded="false" aria-controls="mobileMenu">
+      Menu
+    </button>
+  </div>
+</header>
+
+<!-- Nhúng Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+        <nav class="sub-menu" id="subMenu">
+    <a href="#trang-chu">Trang chủ</a>
+    <a href="#Arabica">Arabica</a>
+    <a href="#Robusta">Robusta</a>
+    <a href="#Culi">Culi</a>
+    <a href="#Moka">Moka</a>
+    <a href="#Liberica">Liberica</a>
+    <a href="#Catimor">Catimor</a>
+</nav>
 
         <!-- Hero -->
         <div class="container" style="padding-top: 20px">
@@ -159,9 +192,131 @@
                             </div>
                         </div>
                     </article>
+                      <article class="card">
+                        <img
+                            src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
+                            alt="Blend"
+                        />
+                        <div class="card-body">
+                            <span class="chip">Signature Blend</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <img
+                                    src="https://images.unsplash.com/photo-1551524164-7d2f9ff12cbb?q=80&w=300&auto=format&fit=crop"
+                                    alt="Signature Blend"
+                                />
+                                <div>
+                                    <h4>Signature Blend 1kg</h4>
+                                    <div>
+                                        <span class="price">265.000đ</span>
+                                        <span class="strike">299.000đ</span>
+                                    </div>
+                                </div>
+                                <button
+                                    class="add"
+                                    data-name="Signature Blend 1kg"
+                                    data-price="265000"
+                                >
+                                    Thêm
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                      <article class="card">
+                        <img
+                            src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
+                            alt="Blend"
+                        />
+                        <div class="card-body">
+                            <span class="chip">Signature Blend</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <img
+                                    src="https://images.unsplash.com/photo-1551524164-7d2f9ff12cbb?q=80&w=300&auto=format&fit=crop"
+                                    alt="Signature Blend"
+                                />
+                                <div>
+                                    <h4>Signature Blend 1kg</h4>
+                                    <div>
+                                        <span class="price">265.000đ</span>
+                                        <span class="strike">299.000đ</span>
+                                    </div>
+                                </div>
+                                <button
+                                    class="add"
+                                    data-name="Signature Blend 1kg"
+                                    data-price="265000"
+                                >
+                                    Thêm
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                     <article class="card">
+                        <img
+                            src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
+                            alt="Blend"
+                        />
+                        <div class="card-body">
+                            <span class="chip">Signature Blend</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <img
+                                    src="https://images.unsplash.com/photo-1551524164-7d2f9ff12cbb?q=80&w=300&auto=format&fit=crop"
+                                    alt="Signature Blend"
+                                />
+                                <div>
+                                    <h4>Signature Blend 1kg</h4>
+                                    <div>
+                                        <span class="price">265.000đ</span>
+                                        <span class="strike">299.000đ</span>
+                                    </div>
+                                </div>
+                                <button
+                                    class="add"
+                                    data-name="Signature Blend 1kg"
+                                    data-price="265000"
+                                >
+                                    Thêm
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                     <article class="card">
+                        <img
+                            src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
+                            alt="Blend"
+                        />
+                        <div class="card-body">
+                            <span class="chip">Signature Blend</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <img
+                                    src="https://images.unsplash.com/photo-1551524164-7d2f9ff12cbb?q=80&w=300&auto=format&fit=crop"
+                                    alt="Signature Blend"
+                                />
+                                <div>
+                                    <h4>Signature Blend 1kg</h4>
+                                    <div>
+                                        <span class="price">265.000đ</span>
+                                        <span class="strike">299.000đ</span>
+                                    </div>
+                                </div>
+                                <button
+                                    class="add"
+                                    data-name="Signature Blend 1kg"
+                                    data-price="265000"
+                                >
+                                    Thêm
+                                </button>
+                            </div>
+                        </div>
+                    </article>
                 </div>
+                <div id="pagination" class="pagination"></div>
             </div>
         </section>
+        
 
         <!-- About -->
         <section id="ve-chung-toi">
@@ -220,26 +375,6 @@
             </div>
         </section>
 
-        <!-- Testimonials -->
-        <section id="cam-nhan">
-            <div class="container">
-                <h2 class="section-title">Cảm nhận khách hàng</h2>
-                <div class="testi">
-                    <div class="quote">
-                        Hương rất thơm, pha máy ra crema dày. Sẽ mua lại! – Anh
-                        Minh
-                    </div>
-                    <div class="quote">
-                        Robusta đậm đà, phù hợp pha phin buổi sáng. – Chị Hằng
-                    </div>
-                    <div class="quote">
-                        Giao hàng nhanh, đóng gói đẹp, mùi cà phê lan tỏa. –
-                        Tuấn
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Footer -->
         <footer id="lien-he">
             <div class="container foot">
@@ -282,7 +417,6 @@
             <a href="#san-pham">Sản phẩm</a><br />
             <a href="#ve-chung-toi">Giới thiệu</a><br />
             <a href="#loi-ich">Lợi ích</a><br />
-            <a href="#cam-nhan">Cảm nhận</a><br />
             <a href="#lien-he">Liên hệ</a>
         </nav>
 
