@@ -47,6 +47,15 @@ const DefaultDB = {
             desc: "Hạt Arabica rang vừa",
             hidden: false,
             profitPercent: null,
+            specs: {
+                weight: "250g",
+                roastLevel: "Vừa",
+                packaging: "Túi có van thoát khí",
+                shelfLife: "12 tháng kể từ ngày sản xuất",
+                origin: "Việt Nam",
+                altitude: "1500m",
+                processingMethod: "Ướt"
+            }
         },
         {
             id: "p2",
@@ -195,6 +204,15 @@ export const Products = {
             desc: input.desc || "",
             hidden: false,
             profitPercent: input.profitPercent ?? null,
+            specs: input.specs || {
+                weight: "",
+                roastLevel: "Vừa",
+                packaging: "Túi có van thoát khí",
+                shelfLife: "12 tháng kể từ ngày sản xuất",
+                origin: "",
+                altitude: "",
+                processingMethod: "Ướt"
+            }
         };
         db.products.push(item);
         saveDB(db);

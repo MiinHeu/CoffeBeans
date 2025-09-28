@@ -23,17 +23,7 @@ document.addEventListener("click", (e) => {
 let lastScrollTop = 0;
 const subMenu = document.getElementById("subMenu");
 
-window.addEventListener("scroll", function () {
-  let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-  if (scrollTop > lastScrollTop) {
-    subMenu.classList.add("hide"); // cuộn xuống thì ẩn
-  } else {
-    subMenu.classList.remove("hide"); // cuộn lên thì hiện lại
-  }
-
-  lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-});
+// Removed scroll handler for sub-menu
 //phân trang
 document.addEventListener("DOMContentLoaded", () => {
   const products = document.querySelectorAll("#san-pham .card");

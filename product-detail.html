@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Chi tiết sản phẩm - Cà Phê Đậm Đà</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="styles/user.css" />
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <style>
+            .product-detail {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 40px;
+                margin: 40px 0;
+            }
+            .product-gallery {
+                position: relative;
+            }
+            .product-gallery img {
+                width: 100%;
+                height: 500px;
+                object-fit: cover;
+                border-radius: 16px;
+            }
+            .product-info {
+                display: grid;
+                gap: 20px;
+            }
+            .product-title {
+                font-family: "Playfair Display", serif;
+                font-size: 32px;
+                margin: 0;
+                color: var(--coffee-900);
+            }
+            .product-meta {
+                display: flex;
+                gap: 12px;
+                align-items: center;
+            }
+            .product-price {
+                font-size: 24px;
+                font-weight: 600;
+                color: var(--coffee);
+            }
+            .product-stock {
+                color: #22c55e;
+                font-weight: 500;
+            }
+            .quantity-selector {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin: 20px 0;
+            }
+            .quantity-selector button {
+                width: 36px;
+                height: 36px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                background: white;
+                font-size: 18px;
+                cursor: pointer;
+            }
+            .quantity-selector input {
+                width: 60px;
+                height: 36px;
+                text-align: center;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }
+            .button-group {
+                display: flex;
+                gap: 12px;
+                margin-top: 20px;
+            }
+
+            .add-to-cart, .buy-now {
+                flex: 1;
+                border: none;
+                padding: 14px 28px;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: opacity 0.2s;
+            }
+
+            .add-to-cart {
+                background: var(--coffee);
+                color: white;
+            }
+
+            .buy-now {
+                background: var(--gold);
+                color: var(--coffee-900);
+            }
+
+            .add-to-cart:hover, .buy-now:hover {
+                opacity: 0.9;
+            }
+            .product-description {
+                margin-top: 20px;
+                line-height: 1.6;
+            }
+            .product-features {
+                margin-top: 20px;
+            }
+            .feature-list {
+                display: grid;
+                gap: 12px;
+                margin: 0;
+                padding: 0;
+            }
+            .feature-list li {
+                list-style: none;
+                display: flex;
+                gap: 8px;
+                align-items: baseline;
+            }
+            .feature-list li::before {
+                content: "•";
+                color: var(--gold);
+            }
+            .related-products {
+                margin-top: 60px;
+            }
+            .related-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+                margin-top: 20px;
+            }
+            @media (max-width: 960px) {
+                .product-detail {
+                    grid-template-columns: 1fr;
+                }
+                .related-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+            @media (max-width: 640px) {
+                .related-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Header -->
+        <header class="header">
+            <div class="container nav">
+                <div class="brand">
+                    <a href="index.html">
+                        <img src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9" alt="Logo Cà Phê Đậm Đà" class="brand-logo">
+                        <span class="brand-name">Cà Phê Đậm Đà</span>
+                    </a>
+                </div>
+
+                <nav class="menu" aria-label="Chính">
+                    <a href="index.html">Trang chủ</a>
+                    <div class="dropdown">
+                        <a href="products.html">Sản phẩm</a>
+                        <div class="dropdown-content">
+                            <a href="products.html?category=t1">Arabica</a>
+                            <a href="products.html?category=t2">Robusta</a>
+                            <a href="products.html?category=t3">Blend</a>
+                        </div>
+                    </div>
+                    <a href="index.html#ve-chung-toi">Giới thiệu</a>
+                    <a href="index.html#lien-he">Liên hệ</a>
+
+                    <!-- Giỏ hàng -->
+                    <a href="#gio-hang" class="badge" aria-label="Giỏ hàng">
+                        Giỏ hàng
+                        <span id="cart-badge" class="badge-count">0</span>
+                    </a>
+                </nav>
+
+                <button id="menuBtn" class="mobile-toggle" aria-expanded="false" aria-controls="mobileMenu">
+                    Menu
+                </button>
+            </div>
+        </header>
+
+        <!-- Mobile menu -->
+        <nav id="mobileMenu" hidden class="mobile-menu">
+            <a href="index.html">Trang chủ</a>
+            <div class="mobile-dropdown">
+                <a href="products.html">Sản phẩm</a>
+                <div class="mobile-dropdown-content">
+                    <a href="products.html?category=t1">Arabica</a>
+                    <a href="products.html?category=t2">Robusta</a>
+                    <a href="products.html?category=t3">Blend</a>
+                </div>
+            </div>
+            <a href="index.html#ve-chung-toi">Giới thiệu</a>
+            <a href="index.html#lien-he">Liên hệ</a>
+        </nav>
+
+        <!-- Main content -->
+        <main class="container">
+            <div id="productDetail">
+                <!-- Product detail will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Related products -->
+            <section class="related-products">
+                <h2 class="section-title">Sản phẩm liên quan</h2>
+                <div class="related-grid" id="relatedProducts">
+                    <!-- Related products will be inserted here by JavaScript -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer id="lien-he">
+            <div class="container foot">
+                <div>
+                    <h4>Cà Phê Đậm Đà</h4>
+                    <p>Hạt cà phê rang xay chất lượng cao. Đồng hành cùng ly cà phê ngon mỗi ngày.</p>
+                </div>
+                <div>
+                    <h4>Liên hệ</h4>
+                    <p>Hotline: 0901 234 567<br/>Email: hello@caphedamda.vn</p>
+                </div>
+                <div>
+                    <h4>Địa chỉ</h4>
+                    <p>123 Phin Street, Quận Caffeine, TP.HCM</p>
+                </div>
+            </div>
+            <div class="container copyright">
+                © 2025 Cà Phê Đậm Đà. All rights reserved.
+            </div>
+        </footer>
+
+        <script type="module">
+            import { Products, Types } from './scripts/db.js';
+            
+            // Get product ID from URL
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('id');
+            
+            if (!productId) {
+                window.location.href = 'products.html';
+            }
+
+            // Load product details
+            function loadProductDetail() {
+                const product = Products.list().find(p => p.id === productId);
+                if (!product) {
+                    window.location.href = 'products.html';
+                    return;
+                }
+
+                const type = Types.list().find(t => t.id === product.typeId);
+                const detail = document.getElementById('productDetail');
+                
+                detail.innerHTML = `
+                    <div class="product-detail">
+                        <div class="product-gallery">
+                            <img src="${product.image || 'https://via.placeholder.com/600x500?text=No+Image'}" 
+                                 alt="${product.name}">
+                        </div>
+                        <div class="product-info">
+                            <div>
+                                <h1 class="product-title">${product.name}</h1>
+                                <div class="product-meta">
+                                    <span class="chip">${type?.name || ''}</span>
+                                    <span class="product-price">${formatCurrency(getSellPrice(product.id).price)}đ</span>
+                                </div>
+                            </div>
+                            
+                            <div class="product-description">
+                                ${product.desc || 'Không có mô tả chi tiết.'}
+                            </div>
+                            
+                            <div class="product-features">
+                                <h3>Đặc điểm sản phẩm</h3>
+                                <ul class="feature-list">
+                                    <li>Loại hạt: ${type?.name || ''}</li>
+                                    <li>Khối lượng: ${getWeight(product.name)}</li>
+                                    <li>Độ rang: Vừa</li>
+                                    <li>Đóng gói: Túi có van thoát khí</li>
+                                    <li>Bảo quản: 12 tháng kể từ ngày sản xuất</li>
+                                </ul>
+                            </div>
+                            
+                            <div>
+                                <div class="quantity-selector">
+                                    <span>Số lượng:</span>
+                                    <button type="button" id="decreaseQuantity">-</button>
+                                    <input type="number" id="quantity" value="1" min="1" max="99">
+                                    <button type="button" id="increaseQuantity">+</button>
+                                </div>
+                                
+                                <div class="button-group">
+                                    <button class="add-to-cart" id="addToCart">
+                                        Thêm vào giỏ hàng
+                                    </button>
+                                    <button class="buy-now" id="buyNow">
+                                        Mua ngay
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                setupQuantityControls();
+                loadRelatedProducts(product.typeId, product.id);
+            }
+
+            // Load related products
+            function loadRelatedProducts(typeId, currentId) {
+                const related = Products.list()
+                    .filter(p => p.typeId === typeId && p.id !== currentId && !p.hidden)
+                    .slice(0, 3);
+
+                const container = document.getElementById('relatedProducts');
+                container.innerHTML = related.map(product => `
+                    <article class="card">
+                        <img src="${product.image || 'https://via.placeholder.com/400x300?text=No+Image'}" 
+                             alt="${product.name}">
+                        <div class="card-body">
+                            <span class="chip">${getTypeName(product.typeId)}</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <div>
+                                    <h4>${product.name}</h4>
+                                    <div>
+                                        <span class="price">${formatCurrency(getSellPrice(product.id).price)}đ</span>
+                                    </div>
+                                </div>
+                                <button class="add" data-id="${product.id}" 
+                                        data-name="${product.name}" 
+                                        data-price="${getSellPrice(product.id).price}">
+                                    Thêm vào giỏ
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                `).join('');
+            }
+
+            // Setup quantity controls
+            function setupQuantityControls() {
+                const quantity = document.getElementById('quantity');
+                
+                document.getElementById('decreaseQuantity').addEventListener('click', () => {
+                    const value = parseInt(quantity.value) || 1;
+                    if (value > 1) {
+                        quantity.value = value - 1;
+                    }
+                });
+                
+                document.getElementById('increaseQuantity').addEventListener('click', () => {
+                    const value = parseInt(quantity.value) || 1;
+                    if (value < 99) {
+                        quantity.value = value + 1;
+                    }
+                });
+                
+                document.getElementById('addToCart').addEventListener('click', () => {
+                    const qty = parseInt(quantity.value) || 1;
+                    addToCart(qty, false);
+                });
+
+                document.getElementById('buyNow').addEventListener('click', () => {
+                    const qty = parseInt(quantity.value) || 1;
+                    addToCart(qty, true);
+                });
+            }
+
+            // Add to cart functionality
+            function addToCart(quantity, redirect = false) {
+                const product = Products.list().find(p => p.id === productId);
+                if (product) {
+                    // Get cart from localStorage
+                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                    
+                    // Add product to cart
+                    cart.push({
+                        id: product.id,
+                        name: product.name,
+                        price: getSellPrice(product.id).price,
+                        quantity: quantity
+                    });
+                    
+                    // Save cart
+                    localStorage.setItem('cart', JSON.stringify(cart));
+
+                    // Update cart badge
+                    const badge = document.getElementById('cart-badge');
+                    badge.textContent = cart.length;
+
+                    if (!redirect) {
+                        // Show confirmation
+                        const button = document.getElementById('addToCart');
+                        const originalText = button.textContent;
+                        button.textContent = 'Đã thêm vào giỏ';
+                        button.disabled = true;
+                        setTimeout(() => {
+                            button.textContent = originalText;
+                            button.disabled = false;
+                        }, 2000);
+                    } else {
+                        // Redirect to cart
+                        window.location.href = 'cart.html';
+                    }
+                }
+            }
+
+            // Utility functions
+            function getTypeName(typeId) {
+                const type = Types.list().find(t => t.id === typeId);
+                return type ? type.name : '';
+            }
+
+            function formatCurrency(value) {
+                return new Intl.NumberFormat('vi-VN').format(value);
+            }
+
+            function getSellPrice(productId) {
+                // Implement price calculation logic here
+                return { price: 150000 }; // Placeholder
+            }
+
+            function getWeight(productName) {
+                const match = productName.match(/\d+g/);
+                return match ? match[0] : 'N/A';
+            }
+
+            // Initialize
+            loadProductDetail();
+        </script>
+    </body>
+</html>
