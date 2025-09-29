@@ -177,7 +177,7 @@
                     <a href="index.html#lien-he">Liên hệ</a>
 
                     <!-- Giỏ hàng -->
-                    <a href="#gio-hang" class="badge" aria-label="Giỏ hàng">
+                    <a href="cart.html" class="badge" aria-label="Giỏ hàng">
                         Giỏ hàng
                         <span id="cart-badge" class="badge-count">0</span>
                     </a>
@@ -204,6 +204,31 @@
             <a href="index.html#lien-he">Liên hệ</a>
         </nav>
 
+        <!-- In-page Cart Drawer -->
+        <div id="cartDrawerOverlay" hidden style="position: fixed; inset: 64px 0 0 0; background: rgba(0,0,0,0.5); z-index: 80;"></div>
+        <aside id="cartDrawer" hidden aria-labelledby="cart-title" style="position: fixed; top: 64px; right: 0; height: calc(100vh - 64px); width: 420px; max-width: 95vw; background: #fff; color: #111; box-shadow: -10px 0 30px rgba(0,0,0,0.3); z-index: 90; display: flex; flex-direction: column; border-radius: 14px 0 0 14px; overflow: hidden;">
+            <header style="display:flex; align-items:center; justify-content: space-between; padding: 16px; border-bottom: 1px solid #eee;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="display:inline-flex; width:24px; height:24px; align-items:center; justify-content:center; color:#c62828;">🛒</span>
+                    <h3 id="cart-title" style="margin:0; font-size: 18px;">Giỏ hàng</h3>
+                </div>
+                <button id="closeCartBtn" aria-label="Đóng giỏ hàng" style="background: transparent; border: none; font-size: 20px; cursor: pointer;">×</button>
+            </header>
+            <div id="cartItems" style="flex:1; overflow: auto; padding: 12px 16px;"></div>
+            <footer style="padding: 16px; border-top: 1px solid #eee; background:#fff;">
+                <div style="display:flex; align-items:center; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="color:#333;">Tổng tiền:</span>
+                    <strong id="cartSubtotal" style="font-size:16px; color: var(--coffee, #4b3429);">0đ</strong>
+                </div>
+                <div style="display:flex; gap:12px;">
+                    <button id="addMoreBtn" style="flex:1; padding: 12px 14px; background: #fff; color:#333; border: 1px solid #ddd; border-radius: 8px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <span>＋</span>
+                        <span>Thêm món</span>
+                    </button>
+                    <button id="checkoutBtn" style="flex:1; padding: 12px 14px; background: var(--gold); color: var(--coffee-900); border:none; border-radius: 8px; cursor:pointer; font-weight: 600;">Thanh toán</button>
+                </div>
+            </footer>
+        </aside>
         <!-- Main content -->
         <main class="container">
             <div id="productDetail">
@@ -242,6 +267,19 @@
 
         <script type="module">
             import { Products, Types } from './scripts/db.js';
+            function getCart(){ try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch { return []; } }
+            function setCart(c){ localStorage.setItem('cart', JSON.stringify(c)); }
+            function formatCurrency(value){ return new Intl.NumberFormat('vi-VN').format(value); }
+            function updateCartBadge(){ const b=document.getElementById('cart-badge'); if(b) b.textContent=getCart().length; }
+            function openCart(){ window.location.href='cart.html'; }
+            function closeCart(){ /* no-op */ }
+            function toggleCart(){ window.location.href='cart.html'; }
+            function renderCart(){ const c=getCart(); const box=document.getElementById('cartItems'); const sub=document.getElementById('cartSubtotal'); if(!box||!sub) return; if(c.length===0){ box.innerHTML='<p>Giỏ hàng trống.</p>'; sub.textContent='0đ'; return;} box.innerHTML=c.map(item=>`<div class="cart-item" data-id="${item.id}" style="padding:12px 0; border-bottom:1px solid #f2f2f2;"><div style="display:flex; align-items:start; justify-content: space-between; gap:10px;"><div style="flex:1; min-width:0;"><div style="font-weight:600;">${item.name}</div><div style="display:flex; align-items:center; gap:6px; color:#888; font-size:12px; margin-top:4px;"><span style=\"color:#999;\">✎</span><input class=\"note-input\" type=\"text\" placeholder=\"Không có ghi chú\" value=\"${item.note||''}\" style=\"flex:1; min-width:0; border:none; border-bottom:1px dashed #e0e0e0; padding:4px 0; outline:none;\" /></div><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><button class=\"qty-dec\" style=\"width:28px; height:28px; border:1px solid #ddd; background:#fff;\">-</button><input class=\"qty-input\" type=\"number\" min=\"1\" value=\"${item.quantity}\" style=\"width:48px; text-align:center; border:1px solid #ddd; height:28px;\" /><button class=\"qty-inc\" style=\"width:28px; height:28px; border:1px solid #ddd; background:#fff;\">+</button><button class=\"remove-item\" style=\"margin-left:8px; background:#fff; border:1px solid #f2d7d7; color:#c62828; cursor:pointer; height:28px; padding:0 10px; border-radius:6px;\">Xóa</button></div></div><div style=\"min-width:100px; text-align:right; font-weight:600; color:#c62828;\">${formatCurrency(item.price*item.quantity)}đ</div></div></div>`).join(''); const total=c.reduce((s,i)=>s+i.price*i.quantity,0); sub.textContent=`${formatCurrency(total)}đ`; box.querySelectorAll('.qty-dec').forEach(b=>b.addEventListener('click',onDec)); box.querySelectorAll('.qty-inc').forEach(b=>b.addEventListener('click',onInc)); box.querySelectorAll('.qty-input').forEach(i=>i.addEventListener('change',onChange)); box.querySelectorAll('.remove-item').forEach(b=>b.addEventListener('click',onRemove)); box.querySelectorAll('.note-input').forEach(inp=>inp.addEventListener('change',onChangeNote)); }
+            function onDec(e){ const id=e.target.closest('.cart-item')?.dataset.id; const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity=Math.max(1,it.quantity-1); setCart(c); updateCartBadge(); renderCart(); }
+            function onInc(e){ const id=e.target.closest('.cart-item')?.dataset.id; const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity+=1; setCart(c); updateCartBadge(); renderCart(); }
+            function onChange(e){ const id=e.target.closest('.cart-item')?.dataset.id; const v=Math.max(1, parseInt(e.target.value||'1',10)); const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity=v; setCart(c); updateCartBadge(); renderCart(); }
+            function onRemove(e){ const id=e.target.closest('.cart-item')?.dataset.id; const c=getCart().filter(i=>i.id!==id); setCart(c); updateCartBadge(); renderCart(); }
+            function onChangeNote(e){ const id=e.target.closest('.cart-item')?.dataset.id; if(!id) return; const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.note = e.target.value.trim(); setCart(c); }
             
             // Get product ID from URL
             const params = new URLSearchParams(window.location.search);
@@ -381,39 +419,22 @@
             // Add to cart functionality
             function addToCart(quantity, redirect = false) {
                 const product = Products.list().find(p => p.id === productId);
-                if (product) {
-                    // Get cart from localStorage
-                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                    
-                    // Add product to cart
-                    cart.push({
-                        id: product.id,
-                        name: product.name,
-                        price: getSellPrice(product.id).price,
-                        quantity: quantity
-                    });
-                    
-                    // Save cart
-                    localStorage.setItem('cart', JSON.stringify(cart));
-
-                    // Update cart badge
-                    const badge = document.getElementById('cart-badge');
-                    badge.textContent = cart.length;
-
-                    if (!redirect) {
-                        // Show confirmation
-                        const button = document.getElementById('addToCart');
-                        const originalText = button.textContent;
-                        button.textContent = 'Đã thêm vào giỏ';
-                        button.disabled = true;
-                        setTimeout(() => {
-                            button.textContent = originalText;
-                            button.disabled = false;
-                        }, 2000);
-                    } else {
-                        // Redirect to cart
-                        window.location.href = 'cart.html';
-                    }
+                if (!product) return;
+                const cart = getCart();
+                const existing = cart.find(i=>i.id===product.id);
+                if(existing){ existing.quantity += quantity; }
+                else { cart.push({ id: product.id, name: product.name, price: getSellPrice(product.id).price, quantity }); }
+                setCart(cart);
+                updateCartBadge();
+                renderCart();
+                if (!redirect) {
+                    const button = document.getElementById('addToCart');
+                    const originalText = button.textContent;
+                    button.textContent = 'Đã thêm vào giỏ';
+                    button.disabled = true;
+                    setTimeout(() => { button.textContent = originalText; button.disabled = false; }, 2000);
+                } else {
+                    openCart();
                 }
             }
 
@@ -428,8 +449,11 @@
             }
 
             function getSellPrice(productId) {
-                // Implement price calculation logic here
-                return { price: 150000 }; // Placeholder
+                const product = Products.list().find(p => p.id === productId);
+                const type = Types.list().find(t => t.id === product?.typeId);
+                const profitPercent = product?.profitPercent ?? type?.profitPercent ?? 20;
+                const basePrice = 150000;
+                return { price: Math.round(basePrice * (1 + profitPercent/100)) };
             }
 
             function getWeight(productName) {
@@ -437,8 +461,12 @@
                 return match ? match[0] : 'N/A';
             }
 
+            // Global events for cart: header link navigates directly
+
             // Initialize
             loadProductDetail();
+            updateCartBadge();
+            closeCart();
         </script>
     </body>
 </html>

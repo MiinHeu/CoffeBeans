@@ -30,7 +30,7 @@
         <a href="index.html#ve-chung-toi">Giới thiệu</a>
         <a href="index.html#loi-ich">Lợi ích</a>
         <a href="index.html#lien-he">Liên hệ</a>
-        <a href="#gio-hang" class="badge" aria-label="Giỏ hàng">
+        <a href="cart.html" class="badge" aria-label="Giỏ hàng">
             Giỏ hàng
             <span id="cart-badge" class="badge-count">0</span>
         </a>
@@ -45,69 +45,97 @@
         <!-- Mobile menu (portal) -->
         <nav id="mobileMenu" hidden style="position: fixed; inset: 64px 16px auto; z-index: 60; background: var(--coffee-900); color: #fff; border-radius: 14px; padding: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);"></nav>
 
-        <!-- Cart Drawer (reuse) -->
-        <div id="cartDrawerOverlay" hidden style="position: fixed; inset: 64px 0 0 0; background: rgba(0,0,0,0.5); z-index: 80;"></div>
-        <aside id="cartDrawer" hidden aria-labelledby="cart-title" style="position: fixed; top: 64px; right: 0; height: calc(100vh - 64px); width: 420px; max-width: 95vw; background: #fff; color: #111; box-shadow: -10px 0 30px rgba(0,0,0,0.3); z-index: 90; display: flex; flex-direction: column; border-radius: 14px 0 0 14px; overflow: hidden;">
-            <header style="display:flex; align-items:center; justify-content: space-between; padding: 16px; border-bottom: 1px solid #eee;">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <span style="display:inline-flex; width:24px; height:24px; align-items:center; justify-content:center; color:#c62828;">🛒</span>
-                    <h3 id="cart-title" style="margin:0; font-size: 18px;">Giỏ hàng</h3>
-                </div>
-                <button id="closeCartBtn" aria-label="Đóng giỏ hàng" style="background: transparent; border: none; font-size: 20px; cursor: pointer;">×</button>
-            </header>
-            <div id="cartItems" style="flex:1; overflow: auto; padding: 12px 16px;"></div>
-            <footer style="padding: 16px; border-top: 1px solid #eee; background:#fff;">
-                <div style="display:flex; align-items:center; justify-content: space-between; margin-bottom: 12px;">
-                    <span style="color:#333;">Tổng tiền:</span>
-                    <strong id="cartSubtotal" style="font-size:16px; color: var(--coffee, #4b3429);">0đ</strong>
-                </div>
-                <div style="display:flex; gap:12px;">
-                    <button id="addMoreBtn" style="flex:1; padding: 12px 14px; background: #fff; color:#333; border: 1px solid #ddd; border-radius: 8px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
-                        <span>＋</span>
-                        <span>Thêm món</span>
-                    </button>
-                    <button id="checkoutBtn" style="flex:1; padding: 12px 14px; background: var(--gold); color: var(--coffee-900); border:none; border-radius: 8px; cursor:pointer; font-weight: 600;">Thanh toán</button>
-                </div>
-            </footer>
-        </aside>
+        
 
         <main class="container" style="padding: 24px 20px;">
             <h1 style="margin: 16px 0;">Thanh toán</h1>
             <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; align-items: start;">
-                <!-- Customer form -->
+                <!-- Left: Order form blocks -->
                 <section style="background:#fff; border-radius: 12px; padding:16px; box-shadow: 0 6px 18px rgba(0,0,0,0.06);">
-                    <h3>Thông tin khách hàng</h3>
-                    <div class="row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                        <div>
-                            <label>Họ và tên</label>
-                            <input id="name" type="text" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;" />
-                        </div>
-                        <div>
-                            <label>Số điện thoại</label>
-                            <input id="phone" type="tel" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;" />
-                        </div>
-                        <div style="grid-column: span 2;">
-                            <label>Địa chỉ</label>
-                            <input id="address" type="text" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;" />
-                        </div>
-                        <div style="grid-column: span 2;">
-                            <label>Ghi chú</label>
-                            <textarea id="note" rows="3" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;"></textarea>
+                    <h3 style="margin-top:0;">Thông tin đơn hàng</h3>
+
+                    <!-- Delivery method -->
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin:12px 0;">
+                        <button id="methodDelivery" data-method="delivery" style="padding:12px; border:1px solid #e3e3e3; border-radius:10px; background:#fff; display:flex; align-items:center; gap:10px; justify-content:center; font-weight:600;">
+                            🚚 Giao tận nơi
+                        </button>
+                        <button id="methodPickup" data-method="pickup" style="padding:12px; border:1px solid #e3e3e3; border-radius:10px; background:#fff; display:flex; align-items:center; gap:10px; justify-content:center; font-weight:600;">
+                            🎁 Tự đến lấy
+                        </button>
+                    </div>
+
+                    <!-- Date selection -->
+                    <div style="margin:12px 0;">
+                        <div style="font-weight:600; margin-bottom:8px;">Ngày giao hàng</div>
+                        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;">
+                            <button class="dateBtn" data-offset="0" style="padding:10px; border:1px solid #e3e3e3; border-radius:8px; background:#fff; font-weight:600;">Hôm nay</button>
+                            <button class="dateBtn" data-offset="1" style="padding:10px; border:1px solid #e3e3e3; border-radius:8px; background:#fff; font-weight:600;">Ngày mai</button>
+                            <button class="dateBtn" data-offset="2" style="padding:10px; border:1px solid #e3e3e3; border-radius:8px; background:#fff; font-weight:600;">Ngày kia</button>
                         </div>
                     </div>
-                    <div style="margin-top:14px; text-align:right;">
-                        <button id="placeOrderBtn" style="padding:12px 16px; background: var(--coffee); color:#fff; border:none; border-radius:10px; cursor:pointer;">Đặt hàng</button>
+
+                    <!-- Time selection -->
+                    <div style="margin:12px 0;">
+                        <div style="font-weight:600; margin-bottom:8px;">Thời gian giao hàng</div>
+                        <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap;">
+                            <label style="display:flex; gap:8px; align-items:center;"><input type="radio" name="timeType" value="asap" checked /> Giao ngay khi xong</label>
+                            <label style="display:flex; gap:8px; align-items:center;"><input type="radio" name="timeType" value="slot" /> Giao vào giờ</label>
+                            <select id="timeSlot" style="border:1px solid #ddd; border-radius:8px; padding:8px 10px;">
+                                <option>08:00 - 09:00</option>
+                                <option>09:00 - 10:00</option>
+                                <option>10:00 - 11:00</option>
+                                <option>13:00 - 14:00</option>
+                                <option>14:00 - 15:00</option>
+                                <option>19:00 - 20:00</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Order note -->
+                    <div style="margin:12px 0;">
+                        <div style="font-weight:600; margin-bottom:8px;">Ghi chú đơn hàng</div>
+                        <textarea id="orderNote" rows="3" placeholder="Nhập ghi chú" style="width:100%; padding:12px; border:1px solid #f1e6d9; background:#fff7ee; border-radius:10px;"></textarea>
+                    </div>
+
+                    <!-- Recipient info -->
+                    <div style="margin-top:16px; border-top:1px solid #eee; padding-top:16px;">
+                        <h3 style="margin-top:0;">Thông tin người nhận</h3>
+                        <div class="row" style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div>
+                                <input id="name" placeholder="Tên người nhận" type="text" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;" />
+                            </div>
+                            <div>
+                                <input id="phone" placeholder="Số điện thoại nhận hàng" type="tel" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;" />
+                            </div>
+                            <div style="grid-column: span 2;">
+                                <input id="address" placeholder="Địa chỉ nhận hàng" type="text" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;" />
+                            </div>
+                        </div>
+                        <div style="margin-top:14px; text-align:right;">
+                            <button id="placeOrderBtn" style="padding:12px 18px; background: var(--coffee); color:#fff; border:none; border-radius:10px; cursor:pointer; font-weight:600;">Đặt hàng</button>
+                        </div>
                     </div>
                 </section>
 
-                <!-- Order summary -->
-                <aside style="background:#fff; border-radius: 12px; padding:16px; box-shadow: 0 6px 18px rgba(0,0,0,0.06);">
+                <!-- Right: Order summary -->
+                <aside style="background:#fff; border-radius: 12px; padding:16px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); position: sticky; top: 84px;">
                     <h3>Đơn hàng</h3>
                     <div id="summaryItems" style="margin-top: 10px;"></div>
-                    <div style="display:flex; justify-content: space-between; margin-top:12px; font-weight:600;">
-                        <span>Tổng cộng</span>
-                        <span id="summaryTotal">0đ</span>
+                    <div style="border-top:1px solid #eee; margin-top:10px; padding-top:10px; display:grid; gap:8px;">
+                        <div style="display:flex; justify-content: space-between;">
+                            <span>Tiền hàng</span>
+                            <span id="summarySubtotal">0đ</span>
+                        </div>
+                        <div style="display:flex; justify-content: space-between;">
+                            <span>Phí vận chuyển</span>
+                            <span id="summaryShipping">0đ</span>
+                        </div>
+                        <div style="display:flex; justify-content: space-between; font-weight:700; border-top:1px dashed #eee; padding-top:8px;">
+                            <span>Tổng tiền</span>
+                            <span id="summaryTotal">0đ</span>
+                        </div>
                     </div>
+                    <button id="summaryPlaceBtn" style="width:100%; margin-top:12px; padding:12px 14px; background: var(--gold); color: var(--coffee-900); border:none; border-radius: 8px; cursor:pointer; font-weight: 600;">Đặt hàng</button>
                 </aside>
             </div>
         </main>
@@ -117,6 +145,7 @@
             // Minimal utilities replicated from index for cart
             function formatCurrency(value) { return new Intl.NumberFormat('vi-VN').format(value); }
             function getCart() { try { return JSON.parse(localStorage.getItem('cart') || '[]'); } catch { return []; } }
+            function getSelectedIds(){ try { return new Set(JSON.parse(localStorage.getItem('cart_selected')||'[]')); } catch { return new Set(); } }
             function setCart(cart) { localStorage.setItem('cart', JSON.stringify(cart)); }
 
             function updateCartBadge() {
@@ -127,95 +156,82 @@
 
             function renderSummary() {
                 const container = document.getElementById('summaryItems');
+                const subtotalEl = document.getElementById('summarySubtotal');
+                const shippingEl = document.getElementById('summaryShipping');
                 const totalEl = document.getElementById('summaryTotal');
                 const cart = getCart();
-                if (cart.length === 0) {
+                const selected = getSelectedIds();
+                const selectedRaw = localStorage.getItem('cart_selected');
+                const items = selectedRaw === null ? cart : cart.filter(i=>selected.has(i.id));
+                if (items.length === 0) {
                     container.innerHTML = '<p>Giỏ hàng trống.</p>';
+                    subtotalEl.textContent = '0đ';
+                    shippingEl.textContent = '0đ';
                     totalEl.textContent = '0đ';
                     return;
                 }
-                container.innerHTML = cart.map(i => `
+                container.innerHTML = items.map(i => `
                     <div style="display:flex; justify-content: space-between; padding:6px 0; border-bottom:1px dashed #eee;">
                         <span>${i.name} × ${i.quantity}</span>
                         <span>${formatCurrency(i.price * i.quantity)}đ</span>
                     </div>
                 `).join('');
-                const total = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-                totalEl.textContent = `${formatCurrency(total)}đ`;
-            }
-
-            // Drawer toggle like index
-            function openCart() {
-                renderCart();
-                const drawer = document.getElementById('cartDrawer');
-                const overlay = document.getElementById('cartDrawerOverlay');
-                if (drawer && overlay) { drawer.hidden = false; overlay.hidden = false; }
-            }
-            function closeCart() {
-                const drawer = document.getElementById('cartDrawer');
-                const overlay = document.getElementById('cartDrawerOverlay');
-                if (drawer && overlay) { drawer.hidden = true; overlay.hidden = true; }
-            }
-            function toggleCart() { const d = document.getElementById('cartDrawer'); if (!d) return; d.hidden ? openCart() : closeCart(); }
-
-            function renderCart() {
-                const container = document.getElementById('cartItems');
-                const subtotalEl = document.getElementById('cartSubtotal');
-                if (!container || !subtotalEl) return;
-                const cart = getCart();
-                if (cart.length === 0) { container.innerHTML = '<p>Giỏ hàng trống.</p>'; subtotalEl.textContent = '0đ'; return; }
-                container.innerHTML = cart.map(item => `
-                    <div class="cart-item" data-id="${item.id}" style="padding: 12px 0; border-bottom: 1px solid #f2f2f2;">
-                        <div style="display:flex; align-items:start; justify-content: space-between; gap: 10px;">
-                            <div style="flex:1; min-width:0;">
-                                <div style="font-weight:600;">${item.name}</div>
-                                <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-                                    <button class="qty-dec" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;">-</button>
-                                    <input class="qty-input" type="number" min="1" value="${item.quantity}" style="width:48px; text-align:center; border:1px solid #ddd; height:28px;" />
-                                    <button class="qty-inc" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;">+</button>
-                                    <button class="remove-item" style="margin-left:8px; background:#fff; border:1px solid #f2d7d7; color:#c62828; cursor:pointer; height:28px; padding:0 10px; border-radius:6px;">Xóa</button>
-                                </div>
-                            </div>
-                            <div style="min-width:100px; text-align:right; font-weight:600; color:var(--coffee);">${formatCurrency(item.price * item.quantity)}đ</div>
-                        </div>
-                    </div>
-                `).join('');
-                const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+                const subtotal = items.reduce((s, i) => s + i.price * i.quantity, 0);
+                const isPickup = currentMethod === 'pickup';
+                const shipping = isPickup ? 0 : (subtotal > 0 ? 30000 : 0);
                 subtotalEl.textContent = `${formatCurrency(subtotal)}đ`;
-                container.querySelectorAll('.qty-dec').forEach(btn => btn.addEventListener('click', onDecQty));
-                container.querySelectorAll('.qty-inc').forEach(btn => btn.addEventListener('click', onIncQty));
-                container.querySelectorAll('.qty-input').forEach(inp => inp.addEventListener('change', onChangeQty));
-                container.querySelectorAll('.remove-item').forEach(btn => btn.addEventListener('click', onRemoveItem));
+                shippingEl.textContent = `${formatCurrency(shipping)}đ`;
+                totalEl.textContent = `${formatCurrency(subtotal + shipping)}đ`;
             }
+
+            // Navigate to cart page instead of drawer
+            function openCart(){ window.location.href='cart.html'; }
+            function closeCart(){}
+            function toggleCart(){ window.location.href='cart.html'; }
 
             function onDecQty(e){ const id = e.target.closest('.cart-item')?.dataset.id; const cart = getCart(); const it = cart.find(i=>i.id===id); if(!it) return; it.quantity=Math.max(1,it.quantity-1); setCart(cart); updateCartBadge(); renderCart(); renderSummary(); }
             function onIncQty(e){ const id = e.target.closest('.cart-item')?.dataset.id; const cart = getCart(); const it = cart.find(i=>i.id===id); if(!it) return; it.quantity+=1; setCart(cart); updateCartBadge(); renderCart(); renderSummary(); }
             function onChangeQty(e){ const id=e.target.closest('.cart-item')?.dataset.id; const v=Math.max(1,parseInt(e.target.value||'1',10)); const cart=getCart(); const it=cart.find(i=>i.id===id); if(!it) return; it.quantity=v; setCart(cart); updateCartBadge(); renderCart(); renderSummary(); }
             function onRemoveItem(e){ const id=e.target.closest('.cart-item')?.dataset.id; const next=getCart().filter(i=>i.id!==id); setCart(next); updateCartBadge(); renderCart(); renderSummary(); }
 
+            // Delivery method state
+            let currentMethod = 'delivery';
+            function updateMethodButtons() {
+                const activeStyle = 'border-color: var(--gold); box-shadow: 0 0 0 2px rgba(209,160,111,0.2) inset;';
+                document.getElementById('methodDelivery').style.cssText += currentMethod==='delivery' ? activeStyle : '';
+                document.getElementById('methodPickup').style.cssText += currentMethod==='pickup' ? activeStyle : '';
+            }
+
             // Events
-            document.querySelector('a[aria-label="Giỏ hàng"]')?.addEventListener('click', (e)=>{ e.preventDefault(); toggleCart(); });
-            document.getElementById('closeCartBtn')?.addEventListener('click', closeCart);
-            document.getElementById('cartDrawerOverlay')?.addEventListener('click', closeCart);
-            document.getElementById('addMoreBtn')?.addEventListener('click', ()=>{ closeCart(); window.location.href='index.html#san-pham'; });
-            document.addEventListener('keydown', (ev)=>{ if(ev.key==='Escape') closeCart(); });
+            // Header cart link navigates directly now
+
+            document.getElementById('methodDelivery').addEventListener('click', ()=>{ currentMethod='delivery'; renderSummary(); });
+            document.getElementById('methodPickup').addEventListener('click', ()=>{ currentMethod='pickup'; renderSummary(); });
+            document.querySelectorAll('.dateBtn').forEach(btn=>btn.addEventListener('click', (e)=>{
+                document.querySelectorAll('.dateBtn').forEach(b=>b.style.background='#fff');
+                e.currentTarget.style.background = '#fff7ee';
+            }));
+            document.querySelectorAll('input[name="timeType"]').forEach(r=>r.addEventListener('change', (e)=>{
+                document.getElementById('timeSlot').disabled = e.target.value !== 'slot';
+            }));
 
             // Place order (demo)
-            document.getElementById('placeOrderBtn')?.addEventListener('click', ()=>{
+            function handlePlaceOrder(){
                 const name = document.getElementById('name').value.trim();
                 const phone = document.getElementById('phone').value.trim();
                 const address = document.getElementById('address').value.trim();
-                if (!name || !phone || !address) { alert('Vui lòng điền đầy đủ Họ tên, SĐT, Địa chỉ.'); return; }
+                if (currentMethod === 'delivery' && (!name || !phone || !address)) { alert('Vui lòng điền đầy đủ Họ tên, SĐT, Địa chỉ.'); return; }
                 alert('Đặt hàng thành công!');
                 localStorage.removeItem('cart');
                 updateCartBadge();
                 renderSummary();
-            });
+            }
+            document.getElementById('placeOrderBtn')?.addEventListener('click', handlePlaceOrder);
+            document.getElementById('summaryPlaceBtn')?.addEventListener('click', handlePlaceOrder);
 
             // Init page
             updateCartBadge();
             renderSummary();
-            closeCart();
         </script>
     </body>
 </html>
