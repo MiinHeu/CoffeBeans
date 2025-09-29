@@ -30,6 +30,11 @@ img {
     display: block;
 }
 
+/* Ensure elements with hidden attribute are actually hidden */
+[hidden] {
+    display: none !important;
+}
+
 /* Header */
 .header {
     position: sticky;

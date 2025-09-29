@@ -415,6 +415,32 @@
             <a href="#lien-he">Liên hệ</a>
         </nav>
 
+        <!-- In-page Cart Drawer -->
+        <div id="cartDrawerOverlay" hidden style="position: fixed; inset: 64px 0 0 0; background: rgba(0,0,0,0.5); z-index: 80;"></div>
+        <aside id="cartDrawer" hidden aria-labelledby="cart-title" style="position: fixed; top: 64px; right: 0; height: calc(100vh - 64px); width: 420px; max-width: 95vw; background: #fff; color: #111; box-shadow: -10px 0 30px rgba(0,0,0,0.3); z-index: 90; display: flex; flex-direction: column; border-radius: 14px 0 0 14px; overflow: hidden;">
+            <header style="display:flex; align-items:center; justify-content: space-between; padding: 16px; border-bottom: 1px solid #eee;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="display:inline-flex; width:24px; height:24px; align-items:center; justify-content:center; color:#c62828;">🛒</span>
+                    <h3 id="cart-title" style="margin:0; font-size: 18px;">Giỏ hàng</h3>
+                </div>
+                <button id="closeCartBtn" aria-label="Đóng giỏ hàng" style="background: transparent; border: none; font-size: 20px; cursor: pointer;">×</button>
+            </header>
+            <div id="cartItems" style="flex:1; overflow: auto; padding: 12px 16px;"></div>
+            <footer style="padding: 16px; border-top: 1px solid #eee; background:#fff;">
+                <div style="display:flex; align-items:center; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="color:#333;">Tổng tiền:</span>
+                    <strong id="cartSubtotal" style="font-size:16px; color: var(--coffee, #4b3429);">0đ</strong>
+                </div>
+                <div style="display:flex; gap:12px;">
+                    <button id="addMoreBtn" style="flex:1; padding: 12px 14px; background: #fff; color:#333; border: 1px solid #ddd; border-radius: 8px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <span>＋</span>
+                        <span>Thêm món</span>
+                    </button>
+                    <button id="checkoutBtn" style="flex:1; padding: 12px 14px; background: var(--gold); color: var(--coffee-900); border:none; border-radius: 8px; cursor:pointer; font-weight: 600;">Thanh toán</button>
+                </div>
+            </footer>
+        </aside>
+
         <script src="scripts/user.js" defer></script>
         <script type="module">
             import { Products, Types } from './scripts/db.js';
@@ -487,24 +513,36 @@
                 };
             }
 
-            function addToCart(button) {
-                const productId = button.dataset.id;
+            function getCart() {
+                try { return JSON.parse(localStorage.getItem('cart') || '[]'); } catch { return []; }
+            }
+
+            function setCart(cart) {
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+
+            function addToCart(buttonOrData) {
+                const productId = buttonOrData.dataset ? buttonOrData.dataset.id : buttonOrData.id;
                 const product = Products.list().find(p => p.id === productId);
                 if (!product) return;
 
-                // Add to cart
-                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                cart.push({
-                    id: productId,
-                    name: product.name,
-                    price: getSellPrice(productId).price,
-                    quantity: 1
-                });
-                localStorage.setItem('cart', JSON.stringify(cart));
+                const cart = getCart();
+                const existing = cart.find(i => i.id === productId);
+                if (existing) {
+                    existing.quantity += 1;
+                } else {
+                    cart.push({
+                        id: productId,
+                        name: product.name,
+                        price: getSellPrice(productId).price,
+                        quantity: 1
+                    });
+                }
+                setCart(cart);
 
-                // Update UI
                 updateCartBadge();
-                showAddedToCart(button);
+                renderCart();
+                if (buttonOrData.dataset) showAddedToCart(buttonOrData);
             }
             window.addToCart = addToCart;
 
@@ -513,22 +551,13 @@
                 const product = Products.list().find(p => p.id === productId);
                 if (!product) return;
 
-                // Add to cart and redirect
-                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                cart.push({
-                    id: productId,
-                    name: product.name,
-                    price: getSellPrice(productId).price,
-                    quantity: 1
-                });
-                localStorage.setItem('cart', JSON.stringify(cart));
-                
-                window.location.href = 'cart.html';
+                addToCart({ id: productId });
+                openCart();
             }
             window.buyNow = buyNow;
 
             function updateCartBadge() {
-                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                const cart = getCart();
                 const badge = document.getElementById('cart-badge');
                 if (badge) {
                     badge.textContent = cart.length;
@@ -553,10 +582,34 @@
                     menu.hidden = !expanded;
                     menuBtn.setAttribute('aria-expanded', expanded);
                 });
+
+                // Toggle cart from header
+                document.querySelector('a[aria-label="Giỏ hàng"]')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    toggleCart();
+                });
+
+                // Close cart buttons/overlay
+                document.getElementById('closeCartBtn')?.addEventListener('click', closeCart);
+                document.getElementById('cartDrawerOverlay')?.addEventListener('click', closeCart);
+                document.getElementById('checkoutBtn')?.addEventListener('click', () => {
+                    window.location.href = 'checkout.html';
+                });
+                document.getElementById('addMoreBtn')?.addEventListener('click', () => {
+                    closeCart();
+                    document.getElementById('san-pham')?.scrollIntoView({ behavior: 'smooth' });
+                });
+
+                // ESC to close
+                document.addEventListener('keydown', (ev) => {
+                    if (ev.key === 'Escape') closeCart();
+                });
             }
 
             // Initialize when DOM is ready
             init();
+            // Ensure drawer hidden on initial load
+            closeCart();
 
             // Handle search form submission
             function handleSearch(event) {
@@ -568,6 +621,137 @@
                 }
             }
             window.handleSearch = handleSearch;
+
+            // Cart UI logic
+            function openCart() {
+                renderCart();
+                const drawer = document.getElementById('cartDrawer');
+                const overlay = document.getElementById('cartDrawerOverlay');
+                if (drawer && overlay) {
+                    drawer.hidden = false;
+                    overlay.hidden = false;
+                }
+            }
+
+            function closeCart() {
+                const drawer = document.getElementById('cartDrawer');
+                const overlay = document.getElementById('cartDrawerOverlay');
+                if (drawer && overlay) {
+                    drawer.hidden = true;
+                    overlay.hidden = true;
+                }
+            }
+            function toggleCart() {
+                const drawer = document.getElementById('cartDrawer');
+                if (!drawer) return;
+                if (drawer.hidden) {
+                    openCart();
+                } else {
+                    closeCart();
+                }
+            }
+            window.openCart = openCart;
+            window.closeCart = closeCart;
+            window.toggleCart = toggleCart;
+
+            function renderCart() {
+                const container = document.getElementById('cartItems');
+                const subtotalEl = document.getElementById('cartSubtotal');
+                if (!container || !subtotalEl) return;
+                const cart = getCart();
+                if (cart.length === 0) {
+                    container.innerHTML = '<p>Giỏ hàng trống.</p>';
+                    subtotalEl.textContent = '0đ';
+                    return;
+                }
+                const html = cart.map(item => `
+                    <div class="cart-item" data-id="${item.id}" style="padding: 12px 0; border-bottom: 1px solid #f2f2f2;">
+                        <div style="display:flex; align-items:start; justify-content: space-between; gap: 10px;">
+                            <div style="flex:1; min-width:0;">
+                                <div style="font-weight:600;">${item.name}</div>
+                                <div style="display:flex; align-items:center; gap:6px; color:#888; font-size: 12px; margin-top:4px;">
+                                    <span style="color:#999;">✎</span>
+                                    <input class="note-input" type="text" placeholder="Không có ghi chú" value="${item.note || ''}" style="flex:1; min-width:0; border:none; border-bottom:1px dashed #e0e0e0; padding:4px 0; outline:none;" />
+                                </div>
+                                <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                                    <button class="qty-dec" aria-label="Giảm" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;">-</button>
+                                    <input class="qty-input" type="number" min="1" value="${item.quantity}" style="width:48px; text-align:center; border:1px solid #ddd; height:28px;" />
+                                    <button class="qty-inc" aria-label="Tăng" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;">+</button>
+                                    <button class="remove-item" aria-label="Xóa" style="margin-left:8px; background: #fff; border: 1px solid #f2d7d7; color:#c62828; cursor:pointer; height:28px; padding:0 10px; border-radius:6px;">Xóa</button>
+                                </div>
+                            </div>
+                            <div style="min-width:100px; text-align:right; font-weight:600; color:#c62828;">${formatCurrency(item.price * item.quantity)}đ</div>
+                        </div>
+                    </div>
+                `).join('');
+                container.innerHTML = html;
+
+                const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+                subtotalEl.textContent = `${formatCurrency(subtotal)}đ`;
+
+                // Bind item controls
+                container.querySelectorAll('.qty-dec').forEach(btn => btn.addEventListener('click', onDecQty));
+                container.querySelectorAll('.qty-inc').forEach(btn => btn.addEventListener('click', onIncQty));
+                container.querySelectorAll('.qty-input').forEach(inp => inp.addEventListener('change', onChangeQty));
+                container.querySelectorAll('.remove-item').forEach(btn => btn.addEventListener('click', onRemoveItem));
+                container.querySelectorAll('.note-input').forEach(inp => inp.addEventListener('change', onChangeNote));
+            }
+
+            function onDecQty(e) {
+                const id = e.target.closest('.cart-item')?.dataset.id;
+                if (!id) return;
+                const cart = getCart();
+                const it = cart.find(i => i.id === id);
+                if (!it) return;
+                it.quantity = Math.max(1, it.quantity - 1);
+                setCart(cart);
+                updateCartBadge();
+                renderCart();
+            }
+
+            function onIncQty(e) {
+                const id = e.target.closest('.cart-item')?.dataset.id;
+                if (!id) return;
+                const cart = getCart();
+                const it = cart.find(i => i.id === id);
+                if (!it) return;
+                it.quantity += 1;
+                setCart(cart);
+                updateCartBadge();
+                renderCart();
+            }
+
+            function onChangeQty(e) {
+                const id = e.target.closest('.cart-item')?.dataset.id;
+                if (!id) return;
+                const value = Math.max(1, parseInt(e.target.value || '1', 10));
+                const cart = getCart();
+                const it = cart.find(i => i.id === id);
+                if (!it) return;
+                it.quantity = value;
+                setCart(cart);
+                updateCartBadge();
+                renderCart();
+            }
+
+            function onRemoveItem(e) {
+                const id = e.target.closest('.cart-item')?.dataset.id;
+                if (!id) return;
+                const next = getCart().filter(i => i.id !== id);
+                setCart(next);
+                updateCartBadge();
+                renderCart();
+            }
+
+            function onChangeNote(e) {
+                const id = e.target.closest('.cart-item')?.dataset.id;
+                if (!id) return;
+                const cart = getCart();
+                const it = cart.find(i => i.id === id);
+                if (!it) return;
+                it.note = e.target.value.trim();
+                setCart(cart);
+            }
         </script>
     </body>
 </html>
