@@ -518,22 +518,83 @@ function renderOrders() {
         if (!b) return;
         const id = b.getAttribute("data-id");
         const o = Orders.list().find((x) => x.id === id);
-        const html = `<h3>Đơn ${o.id}</h3><p>Ngày: ${o.date}</p><p>Khách: ${
-            o.userId || "-"
-        }</p><ul>${o.items
-            .map(
-                (it) =>
-                    `<li>${it.productId} x ${it.qty} @ ${fmt.currency(
-                        it.price
-                    )}</li>`
-            )
-            .join("")}</ul>
-      <label>Trạng thái <select id="ust"><option value="new">Mới đặt</option><option value="processing">Đã xử lý</option><option value="shipped">Đã giao</option><option value="canceled">Hủy</option></select></label>`;
+        const user = Users.list().find((u) => u.id === o.userId);
+        const products = Products.list();
+        const pmap = new Map(products.map((p) => [p.id, p]));
+
+        const total = o.items.reduce((sum, it) => sum + it.qty * it.price, 0);
+
+        const html = `
+          <div class="row" style="justify-content: space-between; align-items: center;">
+            <h3>Chi tiết đơn hàng #${o.id}</h3>
+            <button class="btn" onclick="this.closest('section').remove()">✕ Đóng</button>
+          </div>
+          <div class="grid-2">
+            <div>
+              <h4>Thông tin đơn hàng</h4>
+              <p><strong>Ngày đặt:</strong> ${o.date}</p>
+              <p><strong>Trạng thái:</strong> 
+                <select id="ust" style="margin-left: 8px;">
+                  <option value="new">Mới đặt</option>
+                  <option value="processing">Đã xử lý</option>
+                  <option value="shipped">Đã giao</option>
+                  <option value="canceled">Hủy</option>
+                </select>
+              </p>
+              <p><strong>Tổng tiền:</strong> ${fmt.currency(total)}</p>
+              ${o.note ? `<p><strong>Ghi chú:</strong> ${o.note}</p>` : ""}
+            </div>
+            <div>
+              <h4>Thông tin khách hàng</h4>
+              ${
+                  user
+                      ? `
+                <p><strong>Tên:</strong> ${user.name}</p>
+                <p><strong>Email:</strong> ${user.email}</p>
+                <p><strong>Điện thoại:</strong> ${
+                    user.phone || "Chưa cập nhật"
+                }</p>
+                <p><strong>Địa chỉ:</strong> ${
+                    user.address || "Chưa cập nhật"
+                }</p>
+              `
+                      : "<p>Khách vãng lai</p>"
+              }
+            </div>
+          </div>
+          <div>
+            <h4>Chi tiết sản phẩm</h4>
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr><th>Sản phẩm</th><th>Mã</th><th>Số lượng</th><th>Đơn giá</th><th>Thành tiền</th></tr>
+                </thead>
+                <tbody>
+                  ${o.items
+                      .map((it) => {
+                          const p = pmap.get(it.productId);
+                          return `<tr>
+                      <td>${p ? p.name : it.productId}</td>
+                      <td>${p ? p.code : it.productId}</td>
+                      <td>${it.qty}</td>
+                      <td>${fmt.currency(it.price)}</td>
+                      <td>${fmt.currency(it.qty * it.price)}</td>
+                    </tr>`;
+                      })
+                      .join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row">
+            <button class="btn-primary" id="save">Cập nhật trạng thái</button>
+            <button class="btn" onclick="this.closest('section').remove()">Đóng</button>
+          </div>`;
+
         const wrap = document.createElement("section");
         wrap.className = "panel";
-        wrap.innerHTML =
-            html +
-            '<div class="row"><button class="btn-primary" id="save">Cập nhật</button></div>';
+        wrap.style.marginBottom = "20px";
+        wrap.innerHTML = html;
         app.prepend(wrap);
         qs("#ust").value = o.status;
         qs("#save").addEventListener("click", () => {
@@ -546,21 +607,212 @@ function renderOrders() {
 // Stock module
 function renderStock() {
     const products = Products.list();
+    const types = Types.list();
     const stock = computeStock();
     const low = [];
+
     app.innerHTML = `
-    <section class="panel"><h1>Tồn kho</h1>
-      <div class="table-wrap"><table class="table"><thead><tr><th>Mã</th><th>Tên</th><th>Tồn</th><th>Cảnh báo</th></tr></thead><tbody id="tb"></tbody></table></div>
+    <section class="panel">
+      <h1>Tồn kho</h1>
+      <div class="row">
+        <label>Lọc theo loại <select id="typeFilter"><option value="">Tất cả loại</option>${types
+            .map((t) => `<option value="${t.id}">${t.name}</option>`)
+            .join("")}</select></label>
+        <label>Từ ngày <input type="date" id="dateFrom"></label>
+        <label>Đến ngày <input type="date" id="dateTo"></label>
+        <button class="btn" id="searchStock">Tra cứu</button>
+      </div>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr><th>Mã</th><th>Tên</th><th>Loại</th><th>Tồn hiện tại</th><th>Cảnh báo</th><th>Giá vốn</th><th>Giá bán</th></tr>
+          </thead>
+          <tbody id="tb"></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="panel">
+      <h2>Báo cáo nhập - xuất - tồn</h2>
+      <div class="table-wrap">
+        <table class="table">
+          <thead>
+            <tr><th>Mã</th><th>Tên</th><th>Nhập</th><th>Xuất</th><th>Tồn</th><th>Giá vốn TB</th></tr>
+          </thead>
+          <tbody id="reportTb"></tbody>
+        </table>
+      </div>
     </section>`;
+
     const tb = qs("#tb");
-    tb.innerHTML = products
-        .map((p) => {
-            const qty = stock.get(p.id) || 0;
-            const warn = qty < 5 ? "Sắp hết" : "";
-            if (warn) low.push(p.name);
-            return `<tr><td>${p.code}</td><td>${p.name}</td><td>${qty}</td><td>${warn}</td></tr>`;
-        })
-        .join("");
+    const reportTb = qs("#reportTb");
+
+    function paintStock(list = products) {
+        const tmap = new Map(types.map((t) => [t.id, t.name]));
+        tb.innerHTML = list
+            .map((p) => {
+                const qty = stock.get(p.id) || 0;
+                const warn =
+                    qty < 5 ? "⚠️ Sắp hết" : qty === 0 ? "❌ Hết hàng" : "";
+                if (warn) low.push(p.name);
+                const priceInfo = getSellPrice(p.id);
+                return `<tr>
+                  <td>${p.code}</td>
+                  <td>${p.name}</td>
+                  <td>${tmap.get(p.typeId) || ""}</td>
+                  <td>${qty}</td>
+                  <td>${warn}</td>
+                  <td>${fmt.currency(priceInfo.cost)}</td>
+                  <td>${fmt.currency(priceInfo.price)}</td>
+                </tr>`;
+            })
+            .join("");
+    }
+
+    function paintReport() {
+        const { receipts, orders } = dbGet();
+        const report = new Map();
+
+        // Tính nhập
+        receipts.forEach((r) => {
+            r.items.forEach((it) => {
+                if (!report.has(it.productId)) {
+                    report.set(it.productId, {
+                        in: 0,
+                        out: 0,
+                        totalCost: 0,
+                        totalQty: 0,
+                    });
+                }
+                const data = report.get(it.productId);
+                data.in += Number(it.qty);
+                data.totalCost += Number(it.qty) * Number(it.costPrice);
+                data.totalQty += Number(it.qty);
+            });
+        });
+
+        // Tính xuất
+        orders.forEach((o) => {
+            o.items.forEach((it) => {
+                if (!report.has(it.productId)) {
+                    report.set(it.productId, {
+                        in: 0,
+                        out: 0,
+                        totalCost: 0,
+                        totalQty: 0,
+                    });
+                }
+                report.get(it.productId).out += Number(it.qty);
+            });
+        });
+
+        reportTb.innerHTML = products
+            .map((p) => {
+                const data = report.get(p.id) || {
+                    in: 0,
+                    out: 0,
+                    totalCost: 0,
+                    totalQty: 0,
+                };
+                const avgCost =
+                    data.totalQty > 0 ? data.totalCost / data.totalQty : 0;
+                const current = data.in - data.out;
+                return `<tr>
+                  <td>${p.code}</td>
+                  <td>${p.name}</td>
+                  <td>${data.in}</td>
+                  <td>${data.out}</td>
+                  <td>${current}</td>
+                  <td>${fmt.currency(avgCost)}</td>
+                </tr>`;
+            })
+            .join("");
+    }
+
+    paintStock();
+    paintReport();
+
+    // Lọc theo loại
+    qs("#typeFilter").addEventListener("change", (e) => {
+        const typeId = e.target.value;
+        const filtered = typeId
+            ? products.filter((p) => p.typeId === typeId)
+            : products;
+        paintStock(filtered);
+    });
+
+    // Tra cứu theo thời gian
+    qs("#searchStock").addEventListener("click", () => {
+        const from = qs("#dateFrom").value;
+        const to = qs("#dateTo").value;
+
+        if (!from && !to) {
+            paintStock();
+            return;
+        }
+
+        // Tính tồn tại thời điểm cụ thể
+        const { receipts, orders } = dbGet();
+        const stockAtTime = new Map(products.map((p) => [p.id, 0]));
+
+        receipts.forEach((r) => {
+            if (!from || r.date >= from) {
+                if (!to || r.date <= to) {
+                    r.items.forEach((it) => {
+                        stockAtTime.set(
+                            it.productId,
+                            (stockAtTime.get(it.productId) || 0) +
+                                Number(it.qty)
+                        );
+                    });
+                }
+            }
+        });
+
+        orders.forEach((o) => {
+            if (!from || o.date >= from) {
+                if (!to || o.date <= to) {
+                    o.items.forEach((it) => {
+                        stockAtTime.set(
+                            it.productId,
+                            (stockAtTime.get(it.productId) || 0) -
+                                Number(it.qty)
+                        );
+                    });
+                }
+            }
+        });
+
+        const tmap = new Map(types.map((t) => [t.id, t.name]));
+        tb.innerHTML = products
+            .map((p) => {
+                const qty = stockAtTime.get(p.id) || 0;
+                const warn =
+                    qty < 5 ? "⚠️ Sắp hết" : qty === 0 ? "❌ Hết hàng" : "";
+                const priceInfo = getSellPrice(p.id);
+                return `<tr>
+                  <td>${p.code}</td>
+                  <td>${p.name}</td>
+                  <td>${tmap.get(p.typeId) || ""}</td>
+                  <td>${qty}</td>
+                  <td>${warn}</td>
+                  <td>${fmt.currency(priceInfo.cost)}</td>
+                  <td>${fmt.currency(priceInfo.price)}</td>
+                </tr>`;
+            })
+            .join("");
+    });
+
+    // Hiển thị cảnh báo nếu có
+    if (low.length > 0) {
+        const alert = document.createElement("div");
+        alert.className = "panel";
+        alert.style.background = "#2d1b1b";
+        alert.style.borderColor = "#ef4444";
+        alert.innerHTML = `<h3>⚠️ Cảnh báo sản phẩm sắp hết hàng:</h3><p>${low.join(
+            ", "
+        )}</p>`;
+        app.insertBefore(alert, app.firstChild);
+    }
 }
 
 route("dashboard");

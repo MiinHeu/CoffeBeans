@@ -16,6 +16,33 @@ export const session = {
             ? sessionStorage.setItem("is_admin", "1")
             : sessionStorage.removeItem("is_admin");
     },
+    isLoggedIn() {
+        return sessionStorage.getItem("user_id") !== null;
+    },
+    getUser() {
+        const userId = sessionStorage.getItem("user_id");
+        if (!userId) return null;
+
+        try {
+            const userData = sessionStorage.getItem("user_data");
+            return userData ? JSON.parse(userData) : null;
+        } catch (e) {
+            return null;
+        }
+    },
+    setUser(user) {
+        if (user) {
+            sessionStorage.setItem("user_id", user.id);
+            sessionStorage.setItem("user_data", JSON.stringify(user));
+        } else {
+            sessionStorage.removeItem("user_id");
+            sessionStorage.removeItem("user_data");
+        }
+    },
+    logout() {
+        sessionStorage.removeItem("user_id");
+        sessionStorage.removeItem("user_data");
+    },
 };
 
 export function paginate(items, page = 1, pageSize = 8) {
