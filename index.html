@@ -49,15 +49,17 @@
                     <a href="#ve-chung-toi">Giới thiệu</a>
                     <a href="#loi-ich">Lợi ích</a>
                     <a href="#lien-he">Liên hệ</a>      <!-- Tài khoản -->
-      <div class="account-menu">
+      <div class="account-menu" id="accountMenu">
         <div class="account-toggle">
           <i class="fa fa-user"></i> 
-          Đăng nhập / Đăng ký 
+          <span id="accountText">Đăng nhập / Đăng ký</span>
           <span class="caret">▼</span>
         </div>
         <ul class="account-dropdown">
-          <li><a href="#"><i class="fa fa-sign-in-alt"></i> Đăng nhập</a></li>
-          <li><a href="#"><i class="fa fa-user-plus"></i> Đăng ký</a></li>
+          <li id="loginItem"><a href="login.html"><i class="fa fa-sign-in-alt"></i> Đăng nhập</a></li>
+          <li id="registerItem"><a href="register.html"><i class="fa fa-user-plus"></i> Đăng ký</a></li>
+          <li id="profileItem" style="display: none;"><a href="profile.html"><i class="fa fa-user-circle"></i> Thông tin cá nhân</a></li>
+          <li id="logoutItem" style="display: none;"><a href="#" id="logoutLink"><i class="fa fa-sign-out-alt"></i> Đăng xuất</a></li>
         </ul>
       </div>
 
@@ -571,6 +573,62 @@
 
             // Initialize when DOM is ready
             init();
+
+            // Import session utilities
+            import { session } from './scripts/utils.js';
+
+            // Update auth UI
+            function updateAuthUI() {
+                const accountText = document.getElementById('accountText');
+                const loginItem = document.getElementById('loginItem');
+                const registerItem = document.getElementById('registerItem');
+                const profileItem = document.getElementById('profileItem');
+                const logoutItem = document.getElementById('logoutItem');
+
+                if (session.isLoggedIn()) {
+                    const user = session.getUser();
+                    accountText.textContent = `Xin chào, ${user.name}`;
+                    loginItem.style.display = 'none';
+                    registerItem.style.display = 'none';
+                    profileItem.style.display = 'block';
+                    logoutItem.style.display = 'block';
+                } else {
+                    accountText.textContent = 'Đăng nhập / Đăng ký';
+                    loginItem.style.display = 'block';
+                    registerItem.style.display = 'block';
+                    profileItem.style.display = 'none';
+                    logoutItem.style.display = 'none';
+                }
+            }
+
+            // Initialize auth UI
+            updateAuthUI();
+
+            // Logout handler
+            document.getElementById('logoutLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                    session.logout();
+                    updateAuthUI();
+                    // Show success message
+                    const successMsg = document.createElement('div');
+                    successMsg.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #10b981;
+                        color: white;
+                        padding: 12px 20px;
+                        border-radius: 8px;
+                        z-index: 1000;
+                        font-size: 14px;
+                    `;
+                    successMsg.textContent = 'Đã đăng xuất thành công!';
+                    document.body.appendChild(successMsg);
+                    setTimeout(() => successMsg.remove(), 3000);
+                }
+            });
+
             // No in-page cart drawer
 
             // Handle search form submission
