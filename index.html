@@ -31,65 +31,42 @@
                     </a>
                 </div>
 
-                <!-- Ô tìm kiếm -->
-                <form class="search-bar" role="search">
-                    <button class="search-btn" type="submit">🔍</button>
-                    <input
-                        type="text"
-                        placeholder="Tìm sản phẩm..."
-                        aria-label="Tìm kiếm"
-                    />
-                    <button type="button" id="filterToggle" class="filter-btn">
-                        Lọc ⬇
-                    </button>
-                </form>
+    <!-- Ô tìm kiếm -->
+    <form class="search-bar" role="search" id="searchForm" onsubmit="handleSearch(event)">
+      <button class="search-btn" type="submit">🔍</button>
+      <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." aria-label="Tìm kiếm" />
+    </form>
 
                 <nav class="menu" aria-label="Chính">
-                    <a href="#san-pham">Sản phẩm</a>
+                    <div class="dropdown">
+                        <a href="products.html">Sản phẩm</a>
+                        <div class="dropdown-content">
+                            <a href="arabica.html">Arabica</a>
+                            <a href="robusta.html">Robusta</a>
+                            <a href="blend.html">Blend</a>
+                        </div>
+                    </div>
                     <a href="#ve-chung-toi">Giới thiệu</a>
                     <a href="#loi-ich">Lợi ích</a>
-                    <a href="#lien-he">Liên hệ</a>
+                    <a href="#lien-he">Liên hệ</a>      <!-- Tài khoản -->
+      <div class="account-menu">
+        <div class="account-toggle">
+          <i class="fa fa-user"></i> 
+          Đăng nhập / Đăng ký 
+          <span class="caret">▼</span>
+        </div>
+        <ul class="account-dropdown">
+          <li><a href="#"><i class="fa fa-sign-in-alt"></i> Đăng nhập</a></li>
+          <li><a href="#"><i class="fa fa-user-plus"></i> Đăng ký</a></li>
+        </ul>
+      </div>
 
-                    <!-- Tài khoản -->
-                    <div class="account-menu" id="accountMenu">
-                        <div class="account-toggle">
-                            <i class="fa fa-user"></i>
-                            <span id="accountText">Tài Khoản</span>
-                            <span class="caret">▼</span>
-                        </div>
-                        <ul class="account-dropdown" id="accountDropdown">
-                            <li id="loginItem">
-                                <a href="login.html"
-                                    ><i class="fa fa-sign-in-alt"></i> Đăng
-                                    nhập</a
-                                >
-                            </li>
-                            <li id="registerItem">
-                                <a href="register.html"
-                                    ><i class="fa fa-user-plus"></i> Đăng ký</a
-                                >
-                            </li>
-                            <li id="profileItem" style="display: none">
-                                <a href="profile.html"
-                                    ><i class="fa fa-user-cog"></i> Thông tin cá
-                                    nhân</a
-                                >
-                            </li>
-                            <li id="logoutItem" style="display: none">
-                                <a href="#" id="logoutLink"
-                                    ><i class="fa fa-sign-out-alt"></i> Đăng
-                                    xuất</a
-                                >
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Giỏ hàng -->
-                    <a href="#gio-hang" class="badge" aria-label="Giỏ hàng">
-                        Giỏ hàng
-                        <span id="cart-badge" class="badge-count">0</span>
-                    </a>
-                </nav>
+      <!-- Giỏ hàng -->
+      <a href="cart.html" class="badge" aria-label="Giỏ hàng">
+        Giỏ hàng
+        <span id="cart-badge" class="badge-count">0</span>
+      </a>
+    </nav>
 
                 <button
                     id="menuBtn"
@@ -108,15 +85,6 @@
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
 
-        <nav class="sub-menu" id="subMenu">
-            <a href="#trang-chu">Trang chủ</a>
-            <a href="#Arabica">Arabica</a>
-            <a href="#Robusta">Robusta</a>
-            <a href="#Culi">Culi</a>
-            <a href="#Moka">Moka</a>
-            <a href="#Liberica">Liberica</a>
-            <a href="#Catimor">Catimor</a>
-        </nav>
 
         <!-- Hero -->
         <div class="container" style="padding-top: 20px">
@@ -129,7 +97,7 @@
                         <p class="hero-sub">
                             Hương vị đặc trưng từ những hạt cà phê thương hạng
                         </p>
-                        <a href="#san-pham" class="btn">Khám phá sản phẩm</a>
+                        <a href="products.html" class="btn">Khám phá sản phẩm</a>
                     </div>
                 </div>
             </section>
@@ -155,7 +123,7 @@
                                     alt="Arabica Premium"
                                 />
                                 <div>
-                                    <h4>Arabica Premium 250g</h4>
+                                    <h4><a href="product-detail.html?id=p1">Arabica Premium 250g</a></h4>
                                     <div>
                                         <span class="price">135.000đ</span>
                                         <span class="strike">159.000đ</span>
@@ -185,7 +153,7 @@
                                     alt="Robusta Bold"
                                 />
                                 <div>
-                                    <h4>Robusta Bold 500g</h4>
+                                    <h4><a href="product-detail.html?id=p2">Robusta Bold 500g</a></h4>
                                     <div>
                                         <span class="price">129.000đ</span>
                                         <span class="strike">149.000đ</span>
@@ -458,6 +426,183 @@
             <a href="#lien-he">Liên hệ</a>
         </nav>
 
-        <script type="module" src="scripts/user.js"></script>
+        
+
+        <script src="scripts/user.js" defer></script>
+        <script type="module">
+            import { Products, Types } from './scripts/db.js';
+
+            // Initialize
+            function init() {
+                loadFeaturedProducts();
+                setupEventListeners();
+                updateCartBadge();
+            }
+
+            // Load featured products
+            function loadFeaturedProducts() {
+                const products = Products.list()
+                    .filter(p => !p.hidden)
+                    .slice(0, 6); // Lấy 6 sản phẩm đầu tiên
+
+                const grid = document.querySelector('#san-pham .grid');
+                grid.innerHTML = products.map(product => `
+                    <article class="card" onclick="window.location.href='product-detail.html?id=${product.id}'" style="cursor: pointer;">
+                        <img src="${product.image || 'https://via.placeholder.com/400x300?text=No+Image'}" 
+                             alt="${product.name}" />
+                        <div class="card-body">
+                            <span class="chip">${getTypeName(product.typeId)}</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <div>
+                                    <h4>${product.name}</h4>
+                                    <div>
+                                        <span class="price">${formatCurrency(getSellPrice(product.id).price)}đ</span>
+                                    </div>
+                                </div>
+                                <div class="button-group">
+                                    <button class="add" 
+                                            data-id="${product.id}" 
+                                            data-name="${product.name}" 
+                                            data-price="${getSellPrice(product.id).price}"
+                                            onclick="event.stopPropagation(); addToCart(this);">
+                                        Thêm vào giỏ
+                                    </button>
+                                    <button class="buy-now" 
+                                            data-id="${product.id}"
+                                            onclick="buyNow(event, '${product.id}')">
+                                        Mua ngay
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                `).join('');
+            }
+
+            // Utility functions
+            function getTypeName(typeId) {
+                const type = Types.list().find(t => t.id === typeId);
+                return type ? type.name : '';
+            }
+
+            function formatCurrency(value) {
+                return new Intl.NumberFormat('vi-VN').format(value);
+            }
+
+            function getSellPrice(productId) {
+                const product = Products.list().find(p => p.id === productId);
+                const type = Types.list().find(t => t.id === product?.typeId);
+                const profitPercent = product?.profitPercent ?? type?.profitPercent ?? 20;
+                const basePrice = 150000;
+                return {
+                    price: Math.round(basePrice * (1 + profitPercent / 100))
+                };
+            }
+
+            function getCart() {
+                try { return JSON.parse(localStorage.getItem('cart') || '[]'); } catch { return []; }
+            }
+
+            function setCart(cart) {
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+
+            function addToCart(buttonOrData) {
+                const productId = buttonOrData.dataset ? buttonOrData.dataset.id : buttonOrData.id;
+                const product = Products.list().find(p => p.id === productId);
+                if (!product) return;
+
+                const cart = getCart();
+                const existing = cart.find(i => i.id === productId);
+                if (existing) {
+                    existing.quantity += 1;
+                } else {
+                    cart.push({
+                        id: productId,
+                        name: product.name,
+                        price: getSellPrice(productId).price,
+                        quantity: 1
+                    });
+                }
+                setCart(cart);
+
+                updateCartBadge();
+                renderCart();
+                if (buttonOrData.dataset) showAddedToCart(buttonOrData);
+            }
+            window.addToCart = addToCart;
+
+            function buyNow(event, productId) {
+                event.stopPropagation();
+                const product = Products.list().find(p => p.id === productId);
+                if (!product) return;
+
+                addToCart({ id: productId });
+                openCart();
+            }
+            window.buyNow = buyNow;
+
+            function updateCartBadge() {
+                const cart = getCart();
+                const badge = document.getElementById('cart-badge');
+                if (badge) {
+                    badge.textContent = cart.length;
+                }
+            }
+
+            function showAddedToCart(button) {
+                const originalText = button.textContent;
+                button.textContent = 'Đã thêm';
+                button.disabled = true;
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 2000);
+            }
+
+            // Setup event listeners
+            function setupEventListeners() {
+                document.getElementById('menuBtn')?.addEventListener('click', () => {
+                    const menu = document.getElementById('mobileMenu');
+                    const expanded = menu.hidden;
+                    menu.hidden = !expanded;
+                    menuBtn.setAttribute('aria-expanded', expanded);
+                });
+
+                // Toggle cart from header
+                // Header cart link now navigates to cart.html by default
+
+                // ESC to close
+                document.addEventListener('keydown', (ev) => {
+                    if (ev.key === 'Escape') closeCart();
+                });
+            }
+
+            // Initialize when DOM is ready
+            init();
+            // No in-page cart drawer
+
+            // Handle search form submission
+            function handleSearch(event) {
+                event.preventDefault();
+                const searchQuery = document.getElementById('searchInput').value.trim();
+                if (searchQuery) {
+                    // Redirect to products page with search query
+                    window.location.href = `products.html?search=${encodeURIComponent(searchQuery)}`;
+                }
+            }
+            window.handleSearch = handleSearch;
+
+            // Cart UI logic moved to cart.html; helpers redirect
+            function openCart() { window.location.href = 'cart.html'; }
+            function closeCart() {}
+            function toggleCart() { window.location.href = 'cart.html'; }
+            window.openCart = openCart; window.closeCart = closeCart; window.toggleCart = toggleCart;
+
+            // renderCart removed (handled in cart.html)
+
+            // item handlers removed (cart.html owns them)
+        </script>
     </body>
 </html>

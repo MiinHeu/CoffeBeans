@@ -30,6 +30,11 @@ img {
     display: block;
 }
 
+/* Ensure elements with hidden attribute are actually hidden */
+[hidden] {
+    display: none !important;
+}
+
 /* Header */
 .header {
     position: sticky;
@@ -234,6 +239,47 @@ img {
   transition: background 0.2s;
 }
 
+/* Dropdown Menu */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: var(--coffee-900);
+    min-width: 200px;
+    border-radius: 8px;
+    padding: 8px 0;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+    z-index: 100;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 10px 20px;
+    color: #fff;
+    transition: all 0.2s;
+}
+
+.dropdown-content a:hover {
+    background: var(--gold);
+    color: var(--coffee-900);
+}
+
+.dropdown > a::after {
+    content: '▼';
+    font-size: 0.8em;
+    margin-left: 5px;
+}
+
 /*phân trang*/
 .pagination {
   margin-top: 20px;
@@ -427,16 +473,40 @@ section {
     font-weight: 500;
 }
 
-.add {
+.button-group {
     margin-left: auto;
+    display: flex;
+    gap: 8px;
     align-self: center;
-    background: var(--coffee);
-    color: var(--white);
+}
+
+.add, .buy-now {
     border: none;
     border-radius: 10px;
-    padding: 8px 10px;
+    padding: 8px 12px;
     cursor: pointer;
     transition: opacity 0.2s ease-in-out;
+    min-width: 100px;
+}
+
+.add {
+    background: var(--coffee);
+    color: var(--white);
+}
+
+.buy-now {
+    background: var(--gold);
+    color: var(--coffee-900);
+    font-weight: 500;
+}
+
+.buy-now:hover {
+    opacity: 0.9;
+}
+
+.add:hover {
+    opacity: 0.9;
+}
 }
 .add:hover {
     opacity: 0.9;
@@ -548,4 +618,52 @@ footer {
     .hero-media {
         height: 64vh;
     }
+}
+
+/* Product buttons */
+.button-group {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+    align-self: center;
+}
+
+.button-group button {
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: opacity 0.2s ease-in-out;
+    min-width: 100px;
+    font-size: 0.9em;
+}
+
+.button-group .add {
+    background: var(--coffee);
+    color: var(--white);
+}
+
+.button-group .buy-now {
+    background: var(--gold);
+    color: var(--coffee-900);
+    font-weight: 500;
+}
+
+.button-group button:hover {
+    opacity: 0.9;
+}
+
+.button-group button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Product card hover effect */
+.card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
