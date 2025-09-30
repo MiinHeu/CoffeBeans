@@ -18,18 +18,18 @@
     </head>
     <body>
         <!-- Header -->
-        <header class="header">
-            <div class="container nav">
-                <div class="brand">
-                    <a href="#">
+     <header class="header">
+  <div class="container nav">
+    <div class="brand">
+      <a href="#">
                         <img
                             src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9"
                             alt="Logo Cà Phê Đậm Đà"
                             class="brand-logo"
                         />
-                        <span class="brand-name">Cà Phê Đậm Đà</span>
-                    </a>
-                </div>
+         <span class="brand-name">Cà Phê Đậm Đà</span>
+      </a>
+    </div>
 
     <!-- Ô tìm kiếm -->
     <form class="search-bar" role="search" id="searchForm" onsubmit="handleSearch(event)">
@@ -74,12 +74,12 @@
                     aria-expanded="false"
                     aria-controls="mobileMenu"
                 >
-                    Menu
-                </button>
-            </div>
-        </header>
+      Menu
+    </button>
+  </div>
+</header>
 
-        <!-- Nhúng Font Awesome -->
+<!-- Nhúng Font Awesome -->
         <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -199,7 +199,7 @@
                             </div>
                         </div>
                     </article>
-                    <article class="card">
+                      <article class="card">
                         <img
                             src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
                             alt="Blend"
@@ -229,7 +229,7 @@
                             </div>
                         </div>
                     </article>
-                    <article class="card">
+                      <article class="card">
                         <img
                             src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
                             alt="Blend"
@@ -259,7 +259,7 @@
                             </div>
                         </div>
                     </article>
-                    <article class="card">
+                     <article class="card">
                         <img
                             src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
                             alt="Blend"
@@ -289,7 +289,7 @@
                             </div>
                         </div>
                     </article>
-                    <article class="card">
+                     <article class="card">
                         <img
                             src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
                             alt="Blend"
@@ -430,7 +430,7 @@
 
         <script src="scripts/user.js" defer></script>
         <script type="module">
-            import { Products, Types } from './scripts/db.js';
+            import { Products, Types, getSellPrice } from './scripts/db.js';
 
             // Initialize
             function init() {
@@ -443,7 +443,7 @@
             function loadFeaturedProducts() {
                 const products = Products.list()
                     .filter(p => !p.hidden)
-                    .slice(0, 6); // Lấy 6 sản phẩm đầu tiên
+                    .slice(0, 6); // Lấy 6 sản phẩm đầu tiên từ LocalStorage
 
                 const grid = document.querySelector('#san-pham .grid');
                 grid.innerHTML = products.map(product => `
@@ -488,16 +488,6 @@
 
             function formatCurrency(value) {
                 return new Intl.NumberFormat('vi-VN').format(value);
-            }
-
-            function getSellPrice(productId) {
-                const product = Products.list().find(p => p.id === productId);
-                const type = Types.list().find(t => t.id === product?.typeId);
-                const profitPercent = product?.profitPercent ?? type?.profitPercent ?? 20;
-                const basePrice = 150000;
-                return {
-                    price: Math.round(basePrice * (1 + profitPercent / 100))
-                };
             }
 
             function getCart() {

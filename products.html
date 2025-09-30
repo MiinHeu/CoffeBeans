@@ -109,9 +109,9 @@
                     <div class="dropdown">
                         <a href="#" class="active">Sản phẩm</a>
                         <div class="dropdown-content">
-                            <a href="?category=t1">Arabica</a>
-                            <a href="?category=t2">Robusta</a>
-                            <a href="?category=t3">Blend</a>
+                            <a href="arabica.html">Arabica</a>
+                            <a href="robusta.html">Robusta</a>
+                            <a href="blend.html">Blend</a>
                         </div>
                     </div>
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
@@ -136,9 +136,9 @@
             <div class="mobile-dropdown">
                 <a href="#" class="active">Sản phẩm</a>
                 <div class="mobile-dropdown-content">
-                    <a href="?category=t1">Arabica</a>
-                    <a href="?category=t2">Robusta</a>
-                    <a href="?category=t3">Blend</a>
+                    <a href="arabica.html">Arabica</a>
+                    <a href="robusta.html">Robusta</a>
+                    <a href="blend.html">Blend</a>
                 </div>
             </div>
             <a href="index.html#ve-chung-toi">Giới thiệu</a>
@@ -248,7 +248,7 @@
         </footer>
 
         <script type="module">
-            import { Products, Types } from './scripts/db.js';
+            import { Products, Types, getSellPrice } from './scripts/db.js';
             
             function getCart(){ try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch { return []; } }
             function setCart(c){ localStorage.setItem('cart', JSON.stringify(c)); }
@@ -363,7 +363,9 @@
                     return;
                 }
 
-                grid.innerHTML = pageProducts.map(product => `
+                grid.innerHTML = pageProducts.map(product => {
+                    const priceInfo = getSellPrice(product.id);
+                    return `
                     <article class="card" onclick="window.location.href='product-detail.html?id=${product.id}'" style="cursor: pointer;">
                         <img src="${product.image || 'https://via.placeholder.com/400x300?text=No+Image'}" 
                              alt="${product.name}">
@@ -373,14 +375,15 @@
                             <div class="prod">
                                 <div>
                                     <h4>${product.name}</h4>
+                                    <p class="description">${product.desc || ''}</p>
                                     <div>
-                                        <span class="price">${formatCurrency(getSellPrice(product.id).price)}đ</span>
+                                        <span class="price">${formatCurrency(priceInfo.price)}đ</span>
                                     </div>
                                 </div>
                                 <div class="button-group">
                                     <button class="add" data-id="${product.id}" 
                                             data-name="${product.name}" 
-                                            data-price="${getSellPrice(product.id).price}"
+                                            data-price="${priceInfo.price}"
                                             onclick="event.stopPropagation(); addToCart(this);">
                                         Thêm vào giỏ
                                     </button>
@@ -393,7 +396,8 @@
                             </div>
                         </div>
                     </article>
-                `).join('');
+                `;
+                }).join('');
             }
 
             // Render pagination
@@ -467,18 +471,6 @@
             function getTypeName(typeId) {
                 const type = Types.list().find(t => t.id === typeId);
                 return type ? type.name : '';
-            }
-
-            function formatCurrency(value) {
-                return new Intl.NumberFormat('vi-VN').format(value);
-            }
-
-            function getSellPrice(productId) {
-                const product = Products.list().find(p => p.id === productId);
-                const type = Types.list().find(t => t.id === product?.typeId);
-                const profitPercent = product?.profitPercent ?? type?.profitPercent ?? 20;
-                const basePrice = 150000;
-                return { price: Math.round(basePrice * (1 + profitPercent/100)) };
             }
 
             // Add to cart and buy now (consistent with index)

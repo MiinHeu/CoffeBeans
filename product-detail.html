@@ -266,7 +266,7 @@
         </footer>
 
         <script type="module">
-            import { Products, Types } from './scripts/db.js';
+            import { Products, Types, getSellPrice } from './scripts/db.js';
             function getCart(){ try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch { return []; } }
             function setCart(c){ localStorage.setItem('cart', JSON.stringify(c)); }
             function formatCurrency(value){ return new Intl.NumberFormat('vi-VN').format(value); }
@@ -311,7 +311,7 @@
                                 <h1 class="product-title">${product.name}</h1>
                                 <div class="product-meta">
                                     <span class="chip">${type?.name || ''}</span>
-                                    <span class="product-price">${formatCurrency(getSellPrice(product.id).price)}đ</span>
+                                    <span class="product-price">${formatCurrency(getSellPrice(productId).price)}đ</span>
                                 </div>
                             </div>
                             
@@ -442,18 +442,6 @@
             function getTypeName(typeId) {
                 const type = Types.list().find(t => t.id === typeId);
                 return type ? type.name : '';
-            }
-
-            function formatCurrency(value) {
-                return new Intl.NumberFormat('vi-VN').format(value);
-            }
-
-            function getSellPrice(productId) {
-                const product = Products.list().find(p => p.id === productId);
-                const type = Types.list().find(t => t.id === product?.typeId);
-                const profitPercent = product?.profitPercent ?? type?.profitPercent ?? 20;
-                const basePrice = 150000;
-                return { price: Math.round(basePrice * (1 + profitPercent/100)) };
             }
 
             function getWeight(productName) {
