@@ -83,16 +83,52 @@ menuBtn?.addEventListener("click", () => {
     mobileMenu.hidden = expanded;
 });
 
-let cartCount = 0;
-document.addEventListener("click", (e) => {
-    const target = e.target;
-    if (target && target.classList && target.classList.contains("add")) {
-        cartCount += 1;
-        cartBadge.textContent = String(cartCount);
-        target.textContent = "Đã thêm";
-        setTimeout(() => (target.textContent = "Thêm"), 1200);
+// Cart functionality
+function updateCartBadge() {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    if (cartBadge) {
+        cartBadge.textContent = totalItems > 0 ? String(totalItems) : '';
+        cartBadge.style.display = totalItems > 0 ? 'flex' : 'none';
     }
-});
+    return totalItems;
+}
+
+// Initialize cart badge
+updateCartBadge();
+
+// Add to cart function
+window.addToCart = function(button) {
+    const productId = button.dataset.id;
+    const productName = button.dataset.name;
+    const price = parseFloat(button.dataset.price) || 0;
+    const quantity = 1;
+    
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({
+            id: productId,
+            name: productName,
+            price: price,
+            quantity: quantity
+        });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartBadge();
+    
+    // Show added to cart message
+    button.textContent = 'Đã thêm';
+    button.disabled = true;
+    setTimeout(() => {
+        button.textContent = 'Thêm vào giỏ';
+        button.disabled = false;
+    }, 1500);
+};
 
 // Initialize auth UI
 updateAuthUI();

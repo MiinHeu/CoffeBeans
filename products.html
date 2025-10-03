@@ -248,7 +248,7 @@
         </footer>
 
         <script type="module">
-            import { Products, Types, getSellPrice } from './scripts/db.js';
+            import { Products, Types, getSellPrice, computeStock } from './scripts/db.js';
             
             function getCart(){ try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch { return []; } }
             function setCart(c){ localStorage.setItem('cart', JSON.stringify(c)); }
@@ -257,7 +257,99 @@
             function openCart(){ window.location.href='cart.html'; }
             function closeCart(){ /* no-op */ }
             function toggleCart(){ window.location.href='cart.html'; }
-            function renderCart(){ const c=getCart(); const box=document.getElementById('cartItems'); const sub=document.getElementById('cartSubtotal'); if(!box||!sub) return; if(c.length===0){ box.innerHTML='<p>Giỏ hàng trống.</p>'; sub.textContent='0đ'; return;} box.innerHTML=c.map(item=>`<div class="cart-item" data-id="${item.id}" style="padding:12px 0; border-bottom:1px solid #f2f2f2;"><div style="display:flex; align-items:start; justify-content: space-between; gap:10px;"><div style="flex:1; min-width:0;"><div style="font-weight:600;">${item.name}</div><div style="display:flex; align-items:center; gap:6px; color:#888; font-size:12px; margin-top:4px;"><span style="color:#999;">✎</span><input class="note-input" type="text" placeholder="Không có ghi chú" value="${item.note||''}" style="flex:1; min-width:0; border:none; border-bottom:1px dashed #e0e0e0; padding:4px 0; outline:none;" /></div><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><button class="qty-dec" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;">-</button><input class="qty-input" type="number" min="1" value="${item.quantity}" style="width:48px; text-align:center; border:1px solid #ddd; height:28px;" /><button class="qty-inc" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;">+</button><button class="remove-item" style="margin-left:8px; background:#fff; border:1px solid #f2d7d7; color:#c62828; cursor:pointer; height:28px; padding:0 10px; border-radius:6px;">Xóa</button></div></div><div style="min-width:100px; text-align:right; font-weight:600; color:#c62828;">${formatCurrency(item.price*item.quantity)}đ</div></div></div>`).join(''); const total=c.reduce((s,i)=>s+i.price*i.quantity,0); sub.textContent=`${formatCurrency(total)}đ`; box.querySelectorAll('.qty-dec').forEach(b=>b.addEventListener('click',onDec)); box.querySelectorAll('.qty-inc').forEach(b=>b.addEventListener('click',onInc)); box.querySelectorAll('.qty-input').forEach(i=>i.addEventListener('change',onChange)); box.querySelectorAll('.remove-item').forEach(b=>b.addEventListener('click',onRemove)); box.querySelectorAll('.note-input').forEach(inp=>inp.addEventListener('change',onChangeNote)); }
+            // Track current stock levels
+            let productStocks = new Map();
+            
+            // Initialize stock levels
+            function updateStockLevels() {
+                const stockMap = computeStock();
+                productStocks = stockMap;
+                return stockMap;
+            }
+            
+            // Get available stock for a product
+            function getAvailableStock(productId) {
+                return productStocks.get(productId) || 0;
+            }
+            
+            // Check if a product is in stock
+            function isInStock(productId, quantity = 1) {
+                return getAvailableStock(productId) >= quantity;
+            }
+            
+            // Initialize stock levels when the page loads
+            updateStockLevels();
+            
+            function renderCart(){ 
+                const c = getCart(); 
+                const box = document.getElementById('cartItems'); 
+                const sub = document.getElementById('cartSubtotal'); 
+                if(!box || !sub) return; 
+                
+                if(c.length === 0) { 
+                    box.innerHTML = '<p>Giỏ hàng trống.</p>'; 
+                    sub.textContent = '0đ'; 
+                    return;
+                } 
+                
+                // Check stock for all items in cart
+                let hasOutOfStockItems = false;
+                const cartWithStock = c.map(item => {
+                    const available = getAvailableStock(item.id);
+                    const isAvailable = available >= item.quantity;
+                    if (!isAvailable) hasOutOfStockItems = true;
+                    return { ...item, available, isAvailable };
+                });
+                
+                box.innerHTML = cartWithStock.map(item => `
+                    <div class="cart-item" data-id="${item.id}" style="padding:12px 0; border-bottom:1px solid #f2f2f2;">
+                        <div style="display:flex; align-items:start; justify-content: space-between; gap:10px;">
+                            <div style="flex:1; min-width:0;">
+                                <div style="font-weight:600;${!item.isAvailable ? ' color:#f44336;' : ''}">
+                                    ${item.name}
+                                    ${!item.isAvailable ? '<span style="color:#f44336; font-size:12px; margin-left:8px;">(Hết hàng)</span>' : ''}
+                                </div>
+                                <div style="font-size:12px; color:#666; margin:4px 0;">
+                                    Còn lại: ${item.available} sản phẩm
+                                </div>
+                                <div style="display:flex; align-items:center; gap:6px; color:#888; font-size:12px; margin-top:4px;">
+                                    <span style="color:#999;">✎</span>
+                                    <input class="note-input" type="text" placeholder="Không có ghi chú" value="${item.note||''}" style="flex:1; min-width:0; border:none; border-bottom:1px dashed #e0e0e0; padding:4px 0; outline:none;" />
+                                </div>
+                                <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+                                    <button class="qty-dec" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;${!item.isAvailable ? ' opacity:0.5;' : ''}" ${!item.isAvailable ? 'disabled' : ''}>-</button>
+                                    <input class="qty-input" type="number" min="1" max="${item.available}" value="${item.quantity}" style="width:48px; text-align:center; border:1px solid #ddd; height:28px;" ${!item.isAvailable ? 'disabled' : ''} />
+                                    <button class="qty-inc" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;${!item.isAvailable ? ' opacity:0.5;' : ''}" ${!item.isAvailable ? 'disabled' : ''}>+</button>
+                                    <button class="remove-item" style="margin-left:8px; background:#fff; border:1px solid #f2d7d7; color:#c62828; cursor:pointer; height:28px; padding:0 10px; border-radius:6px;">Xóa</button>
+                                </div>
+                            </div>
+                            <div style="min-width:100px; text-align:right; font-weight:600; color:${item.isAvailable ? '#c62828' : '#999'};">
+                                ${formatCurrency(item.price * item.quantity)}đ
+                            </div>
+                        </div>
+                    </div>`).join(''); 
+                
+                const total = c.reduce((s, i) => s + i.price * i.quantity, 0); 
+                sub.textContent = `${formatCurrency(total)}đ`; 
+                
+                // Disable checkout button if any items are out of stock
+                const checkoutBtn = document.getElementById('checkoutBtn');
+                if (checkoutBtn) {
+                    checkoutBtn.disabled = hasOutOfStockItems;
+                    if (hasOutOfStockItems) {
+                        checkoutBtn.title = 'Vui lòng xóa sản phẩm hết hàng trước khi thanh toán';
+                    } else {
+                        checkoutBtn.title = '';
+                    }
+                }
+                
+                // Add event listeners
+                box.querySelectorAll('.qty-dec').forEach(b => b.addEventListener('click', onDec));
+                box.querySelectorAll('.qty-inc').forEach(b => b.addEventListener('click', onInc));
+                box.querySelectorAll('.qty-input').forEach(i => i.addEventListener('change', onChange));
+                box.querySelectorAll('.remove-item').forEach(b => b.addEventListener('click', onRemove));
+                box.querySelectorAll('.note-input').forEach(inp => inp.addEventListener('change', onChangeNote)); 
+            }
             function onDec(e){ const id=e.target.closest('.cart-item')?.dataset.id; const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity=Math.max(1,it.quantity-1); setCart(c); updateCartBadge(); renderCart(); }
             function onInc(e){ const id=e.target.closest('.cart-item')?.dataset.id; const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity+=1; setCart(c); updateCartBadge(); renderCart(); }
             function onChange(e){ const id=e.target.closest('.cart-item')?.dataset.id; const v=Math.max(1, parseInt(e.target.value||'1',10)); const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity=v; setCart(c); updateCartBadge(); renderCart(); }
@@ -365,10 +457,18 @@
 
                 grid.innerHTML = pageProducts.map(product => {
                     const priceInfo = getSellPrice(product.id);
+                    const availableStock = getAvailableStock(product.id);
+                    const isAvailable = availableStock > 0;
+                    const stockStatus = isAvailable ? 
+                        `<span style="color:#4caf50; font-size:0.9em;">Còn ${availableStock} sản phẩm</span>` : 
+                        '<span style="color:#f44336; font-size:0.9em;">Tạm hết hàng</span>';
+                    
                     return `
-                    <article class="card" onclick="window.location.href='product-detail.html?id=${product.id}'" style="cursor: pointer;">
+                    <article class="card" onclick="window.location.href='product-detail.html?id=${product.id}'" style="cursor: pointer; position: relative;">
+                        ${!isAvailable ? '<div style="position: absolute; top: 10px; left: 10px; background: rgba(244, 67, 54, 0.9); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">HẾT HÀNG</div>' : ''}
                         <img src="${product.image || 'https://via.placeholder.com/400x300?text=No+Image'}" 
-                             alt="${product.name}">
+                             alt="${product.name}"
+                             style="${!isAvailable ? 'opacity: 0.7;' : ''}">
                         <div class="card-body">
                             <span class="chip">${getTypeName(product.typeId)}</span>
                             <div class="spacer"></div>
@@ -376,20 +476,26 @@
                                 <div>
                                     <h4>${product.name}</h4>
                                     <p class="description">${product.desc || ''}</p>
+                                    <div style="margin: 8px 0;">
+                                        ${stockStatus}
+                                    </div>
                                     <div>
                                         <span class="price">${formatCurrency(priceInfo.price)}đ</span>
                                     </div>
                                 </div>
                                 <div class="button-group">
-                                    <button class="add" data-id="${product.id}" 
+                                    <button class="add" 
+                                            data-id="${product.id}" 
                                             data-name="${product.name}" 
                                             data-price="${priceInfo.price}"
-                                            onclick="event.stopPropagation(); addToCart(this);">
-                                        Thêm vào giỏ
+                                            onclick="event.stopPropagation(); addToCart(this);"
+                                            ${!isAvailable ? 'disabled style="opacity: 0.6; cursor: not-allowed;"' : ''}>
+                                        ${isAvailable ? 'Thêm vào giỏ' : 'Hết hàng'}
                                     </button>
                                     <button class="buy-now" 
                                             data-id="${product.id}"
-                                            onclick="buyNow(event, '${product.id}')">
+                                            onclick="event.stopPropagation(); buyNow(event, '${product.id}');"
+                                            ${!isAvailable ? 'disabled style="opacity: 0.6; cursor: not-allowed;"' : ''}>
                                         Mua ngay
                                     </button>
                                 </div>
@@ -473,32 +579,149 @@
                 return type ? type.name : '';
             }
 
-            // Add to cart and buy now (consistent with index)
+            // Check if user is logged in
+            function checkAuth() {
+                return localStorage.getItem('user_id') !== null;
+            }
+
+            // Show login required message and redirect to login page
+            function showLoginRequired(returnUrl = window.location.href) {
+                if (confirm('Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng. Bạn có muốn đăng nhập ngay bây giờ?')) {
+                    window.location.href = `login.html?redirect=${encodeURIComponent(returnUrl)}`;
+                }
+            }
+
+            // Add to cart function with login check
             function addToCart(buttonOrData){
+                // Check if user is logged in
+                if (!checkAuth()) {
+                    showLoginRequired();
+                    return false;
+                }
+                
                 const productId = buttonOrData.dataset ? buttonOrData.dataset.id : buttonOrData.id;
                 const product = Products.list().find(p => p.id === productId);
-                if(!product) return;
-                const cart = getCart();
-                const existing = cart.find(i=>i.id===productId);
-                if(existing){ existing.quantity += 1; }
-                else {
-                    cart.push({ id: productId, name: product.name, price: getSellPrice(productId).price, quantity: 1 });
+                if (!product) return false;
+                
+                // Check if product is in stock
+                const availableStock = getAvailableStock(productId);
+                const currentQuantity = getCart().find(i => i.id === productId)?.quantity || 0;
+                const newQuantity = currentQuantity + 1;
+                
+                if (newQuantity > availableStock) {
+                    showToast(`Chỉ còn ${availableStock} sản phẩm trong kho`, 'error');
+                    return false;
                 }
+                
+                const cart = getCart();
+                const existing = cart.find(i => i.id === productId);
+                
+                if (existing) { 
+                    existing.quantity = newQuantity; 
+                } else {
+                    cart.push({ 
+                        id: productId, 
+                        name: product.name, 
+                        price: getSellPrice(productId).price, 
+                        quantity: 1,
+                        image: product.image || ''
+                    });
+                }
+                
                 setCart(cart);
                 updateCartBadge();
                 renderCart();
-                if (buttonOrData.dataset) { showAddedToCart(buttonOrData); }
+                
+                if (buttonOrData.dataset) { 
+                    showAddedToCart(buttonOrData);
+                }
+                
+                showToast('Đã thêm vào giỏ hàng', 'success');
+                return true;
             }
             window.addToCart = addToCart;
-            function buyNow(event, productId){ event.stopPropagation(); addToCart({ id: productId }); openCart(); }
+            
+            // Buy now with inventory validation
+            // Buy now function with login check
+            function buyNow(event, productId) { 
+                event.stopPropagation(); 
+                
+                // Check if user is logged in
+                if (!checkAuth()) {
+                    showLoginRequired('checkout.html');
+                    return;
+                }
+                
+                // Add to cart and proceed to checkout
+                addToCart({ id: productId });
+                window.location.href = 'checkout.html';
+            }
             window.buyNow = buyNow;
-            function showAddedToCart(button){ const original=button.textContent; button.textContent='Đã thêm'; button.disabled=true; setTimeout(()=>{ button.textContent=original; button.disabled=false; }, 2000); }
+            
+            // Show added to cart feedback
+            function showAddedToCart(button) { 
+                const original = button.textContent; 
+                button.textContent = 'Đã thêm'; 
+                button.disabled = true; 
+                setTimeout(() => { 
+                    button.textContent = original; 
+                    button.disabled = false; 
+                }, 2000); 
+            }
+            
+            // Show toast message
+            function showToast(message, type = 'info') {
+                // Check if toast container exists, if not create it
+                let container = document.getElementById('toast-container');
+                if (!container) {
+                    container = document.createElement('div');
+                    container.id = 'toast-container';
+                    container.style.position = 'fixed';
+                    container.style.bottom = '20px';
+                    container.style.right = '20px';
+                    container.style.zIndex = '1000';
+                    document.body.appendChild(container);
+                }
+                
+                // Create toast element
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.style.padding = '12px 24px';
+                toast.style.marginBottom = '10px';
+                toast.style.borderRadius = '4px';
+                toast.style.background = type === 'success' ? '#4caf50' : 
+                                       type === 'error' ? '#f44336' : '#2196f3';
+                toast.style.color = 'white';
+                toast.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(20px)';
+                toast.style.transition = 'opacity 0.3s, transform 0.3s';
+                toast.textContent = message;
+                
+                // Add to container
+                container.appendChild(toast);
+                
+                // Trigger reflow
+                setTimeout(() => {
+                    toast.style.opacity = '1';
+                    toast.style.transform = 'translateY(0)';
+                }, 10);
+                
+                // Remove after delay
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(-20px)';
+                    setTimeout(() => {
+                        container.removeChild(toast);
+                    }, 300);
+                }, 3000);
+            }
 
             // Global events for cart (header link navigates directly)
 
             // Initialize the page
             init();
-            updateCartBadge();
+
             closeCart();
         </script>
     </body>

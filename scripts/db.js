@@ -202,6 +202,7 @@ export const Products = {
             name: input.name,
             image: input.image || "",
             desc: input.desc || "",
+            price: input.price || 0,
             hidden: false,
             profitPercent: input.profitPercent ?? null,
             specs: input.specs || {
@@ -222,6 +223,10 @@ export const Products = {
         const db = loadDB();
         const it = db.products.find((x) => x.id === id);
         if (it) {
+            // Ensure price is always a number
+            if (patch.price !== undefined) {
+                patch.price = Number(patch.price) || 0;
+            }
             Object.assign(it, patch);
             saveDB(db);
         }
@@ -277,12 +282,27 @@ export const Orders = {
     create(order) {
         const db = loadDB();
         const item = {
-            id: uid("o"),
-            status: "new",
-            date: order.date,
+            id: order.id || uid("o"),
+            status: order.status || "new",
+            date: order.date || new Date().toISOString(),
             userId: order.userId,
-            items: order.items,
+            customerName: order.customerName || '',
+            customerPhone: order.customerPhone || '',
+            customerEmail: order.customerEmail || '',
+            shippingAddress: order.shippingAddress || '',
+            deliveryMethod: order.deliveryMethod || 'delivery',
+            paymentMethod: order.paymentMethod || 'cod',
             note: order.note || "",
+            subtotal: order.subtotal || 0,
+            shipping: order.shipping || 0,
+            total: order.total || 0,
+            items: order.items.map(item => ({
+                productId: item.productId,
+                name: item.name,
+                price: item.price,
+                quantity: item.quantity,
+                image: item.image || ''
+            }))
         };
         db.orders.push(item);
         saveDB(db);
@@ -291,10 +311,33 @@ export const Orders = {
     update(id, patch) {
         const db = loadDB();
         const it = db.orders.find((x) => x.id === id);
-        if (it) {
-            Object.assign(it, patch);
-            saveDB(db);
+        if (!it) return null;
+        
+        // Nếu đơn hàng đã bị hủy, không cho phép cập nhật trạng thái
+        if (it.status === 'canceled') {
+            throw new Error('Không thể thay đổi trạng thái đơn hàng đã hủy');
         }
+
+        // Nếu đang cập nhật trạng thái thành 'hủy', thêm hàng trở lại kho
+        if (patch.status === 'canceled') {
+            // Tạo phiếu nhập kho để cộng lại hàng
+            const receipt = {
+                id: uid('rec'),
+                date: new Date().toISOString(),
+                status: 'done',
+                note: `Hủy đơn hàng #${id}`,
+                items: it.items.map(item => ({
+                    productId: item.productId,
+                    qty: item.quantity,
+                    costPrice: 0 // Không theo dõi giá gốc khi hủy đơn
+                }))
+            };
+            db.receipts.push(receipt);
+        }
+        
+        // Cập nhật thông tin đơn hàng
+        Object.assign(it, patch);
+        saveDB(db);
         return it;
     },
 };
@@ -324,7 +367,18 @@ export function computeStock() {
 
 export function getSellPrice(productId) {
     const db = loadDB();
-    // Cost = weighted avg from receipts
+    const product = db.products.find((p) => p.id === productId);
+    
+    // If product has a direct price set, use that
+    if (product && typeof product.price === 'number' && product.price > 0) {
+        return { 
+            cost: 0, 
+            percent: 0, 
+            price: product.price 
+        };
+    }
+    
+    // Otherwise calculate price based on cost and profit percentage
     let totalQty = 0;
     let totalCost = 0;
     db.receipts.forEach((r) => {
@@ -335,10 +389,15 @@ export function getSellPrice(productId) {
             }
         });
     });
+    
     const cost = totalQty > 0 ? totalCost / totalQty : 0;
-    const product = db.products.find((p) => p.id === productId);
-    const type = db.productTypes.find((t) => t.id === product.typeId);
-    const percent = product.profitPercent ?? type?.profitPercent ?? 0;
-    const price = Math.round(cost * (1 + percent / 100));
-    return { cost, percent, price };
+    const type = product ? db.productTypes.find((t) => t.id === product.typeId) : null;
+    const percent = (product?.profitPercent ?? type?.profitPercent) || 0;
+    const price = Math.round(cost * (1 + (percent / 100)));
+    
+    return { 
+        cost, 
+        percent, 
+        price: price > 0 ? price : 0 
+    };
 }

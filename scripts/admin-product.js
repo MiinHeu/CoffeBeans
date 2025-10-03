@@ -15,6 +15,7 @@ export function renderProductForm() {
         <label>Mã <input id="pcode" required placeholder="ARB-250"></label>
         <label>Tên <input id="pname" required placeholder="Arabica Premium 250g"></label>
         <label>Hình (URL) <input id="pimg" placeholder="https://..."></label>
+        <label>Giá bán (VND) <input id="pprice" type="number" min="0" required></label>
         <label class="grid-2" style="grid-column:1/-1">Mô tả<textarea id="pdesc"></textarea></label>
         
         <h3 style="grid-column:1/-1;margin:10px 0">Thông số kỹ thuật</h3>
@@ -50,6 +51,7 @@ export function getProductFormData() {
         code: qs("#pcode").value.trim(),
         name: qs("#pname").value.trim(),
         image: qs("#pimg").value.trim(),
+        price: parseInt(qs("#pprice").value) || 0,
         desc: qs("#pdesc").value.trim(),
         specs: {
             weight: qs("#pweight").value.trim(),
@@ -70,19 +72,20 @@ export function setProductFormData(product) {
     }
     
     qs("#ptype").value = product.typeId;
-    qs("#pcode").value = product.code;
-    qs("#pname").value = product.name;
-    qs("#pimg").value = product.image;
-    qs("#pdesc").value = product.desc;
+    qs("#pcode").value = product.code || '';
+    qs("#pname").value = product.name || '';
+    qs("#pimg").value = product.image || '';
+    qs("#pprice").value = product.price || '';
+    qs("#pdesc").value = product.desc || '';
     
     // Set specs
     if (product.specs) {
-        qs("#pweight").value = product.specs.weight;
-        qs("#proast").value = product.specs.roastLevel;
-        qs("#ppack").value = product.specs.packaging;
-        qs("#pshelf").value = product.specs.shelfLife;
-        qs("#porigin").value = product.specs.origin;
-        qs("#paltitude").value = product.specs.altitude;
-        qs("#pprocess").value = product.specs.processingMethod;
+        qs("#pweight").value = product.specs.weight || '';
+        qs("#proast").value = product.specs.roastLevel || 'Vừa';
+        qs("#ppack").value = product.specs.packaging || '';
+        qs("#pshelf").value = product.specs.shelfLife || '';
+        qs("#porigin").value = product.specs.origin || '';
+        qs("#paltitude").value = product.specs.altitude || '';
+        qs("#pprocess").value = product.specs.processingMethod || 'Ướt';
     }
 }

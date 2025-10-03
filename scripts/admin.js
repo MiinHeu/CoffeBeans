@@ -16,22 +16,44 @@ if (!session.isAdmin()) {
     location.href = "admin-login.html";
 }
 
+// Xử lý đăng xuất
 document.getElementById("logout")?.addEventListener("click", (e) => {
     e.preventDefault();
     session.setAdmin(false);
     location.href = "admin-login.html";
 });
 
+// Khởi tạo ứng dụng
 const app = document.getElementById("app");
-const side = document.querySelectorAll(".sidebar button");
-side.forEach((b) =>
-    b.addEventListener("click", () => {
-        side.forEach((x) => x.classList.remove("active"));
-        b.classList.add("active");
-        route(b.dataset.view);
-    })
-);
+if (!app) {
+    document.body.innerHTML = '<div style="padding: 20px; color: red;">Lỗi: Không tìm thấy phần tử #app</div>';
+    throw new Error('Không tìm thấy phần tử #app');
+}
 
+// Khởi tạo sidebar
+const side = document.querySelectorAll(".sidebar button");
+if (side.length === 0) {
+    console.warn('Không tìm thấy nút điều hướng trong sidebar');
+} else {
+    side.forEach((b) => {
+        b.addEventListener("click", () => {
+            side.forEach((x) => x.classList.remove("active"));
+            b.classList.add("active");
+            try {
+                route(b.dataset.view);
+            } catch (error) {
+                console.error('Lỗi khi chuyển trang:', error);
+                app.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h3>Đã xảy ra lỗi</h3>
+                        <p>${error.message || 'Không thể tải trang'}</p>
+                    </div>`;
+            }
+        });
+    });
+}
+
+// Hàm định tuyến
 function route(view) {
     switch (view) {
         case "users":
@@ -483,335 +505,404 @@ function renderPricing() {
 function renderOrders() {
     const orders = Orders.list();
     app.innerHTML = `
-    <section class="panel"><h1>Đơn hàng</h1>
-      <div class="row"><label>Từ <input type="date" id="d1"></label><label>Đến <input type="date" id="d2"></label>
-      <label>Trạng thái <select id="st"><option value="">Tất cả</option><option value="new">Mới đặt</option><option value="processing">Đã xử lý</option><option value="shipped">Đã giao</option><option value="canceled">Hủy</option></select></label>
-      </div>
-      <div class="table-wrap"><table class="table"><thead><tr><th>#</th><th>Ngày</th><th>Khách</th><th>SL mặt hàng</th><th>Trạng thái</th><th></th></tr></thead><tbody id="tb"></tbody></table></div>
+    <section class="panel">
+        <h1>Đơn hàng</h1>
+        <div class="row">
+            <label>Từ <input type="date" id="d1"></label>
+            <label>Đến <input type="date" id="d2"></label>
+            <label>Trạng thái 
+                <select id="st">
+                    <option value="">Tất cả</option>
+                    <option value="new">Mới đặt</option>
+                    <option value="processing">Đã xử lý</option>
+                    <option value="shipped">Đã giao</option>
+                    <option value="canceled">Hủy</option>
+                </select>
+            </label>
+        </div>
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Ngày</th>
+                        <th>Khách</th>
+                        <th>SL mặt hàng</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tb"></tbody>
+            </table>
+        </div>
     </section>`;
+    
     const tb = qs("#tb");
+    
     function paint() {
         const d1 = qs("#d1").value;
         const d2 = qs("#d2").value;
         const st = qs("#st").value;
-        let list = Orders.list();
+        let list = [...orders]; // Tạo bản sao của danh sách đơn hàng
+        
+        // Lọc đơn hàng
         if (d1) list = list.filter((o) => o.date >= d1);
         if (d2) list = list.filter((o) => o.date <= d2);
         if (st) list = list.filter((o) => o.status === st);
+        
+        // Hiển thị danh sách đơn hàng
         tb.innerHTML = list
-            .map(
-                (o, i) => `<tr><td>${i + 1}</td><td>${o.date}</td><td>${
-                    o.userId || "-"
-                }</td><td>${o.items.length}</td><td>${o.status}</td>
-      <td style="text-align:right"><button class="btn" data-id="${
-          o.id
-      }" data-act="view">Xem</button></td></tr>`
-            )
-            .join("");
+            .map((o, i) => `
+                <tr>
+                    <td>${i + 1}</td>
+                    <td>${o.date}</td>
+                    <td>${o.userId || "-"}</td>
+                    <td>${o.items.length}</td>
+                    <td>${getStatusDisplay(o.status)}</td>
+                    <td style="text-align:right">
+                        <button class="btn" data-id="${o.id}" data-act="view">Xem</button>
+                    </td>
+                </tr>`
+            ).join("");
     }
-    ["d1", "d2", "st"].forEach((id) =>
-        qs("#" + id).addEventListener("change", paint)
-    );
+    
+    // Hàm chuyển đổi mã trạng thái thành tên hiển thị
+    function getStatusDisplay(status) {
+        const statusMap = {
+            'new': 'Mới đặt',
+            'processing': 'Đã xử lý',
+            'shipped': 'Đã giao',
+            'canceled': 'Đã hủy'
+        };
+        return statusMap[status] || status;
+    }
+    
+    // Thêm sự kiện lọc
+    ["d1", "d2", "st"].forEach((id) => {
+        const element = qs("#" + id);
+        if (element) {
+            element.addEventListener("change", paint);
+        }
+    });
+    
+    // Vẽ danh sách ban đầu
     paint();
+    
+    // Xử lý sự kiện xem chi tiết đơn hàng
     tb.addEventListener("click", (e) => {
         const b = e.target.closest('button[data-act="view"]');
         if (!b) return;
+        
         const id = b.getAttribute("data-id");
-        const o = Orders.list().find((x) => x.id === id);
-        const user = Users.list().find((u) => u.id === o.userId);
-        const products = Products.list();
-        const pmap = new Map(products.map((p) => [p.id, p]));
+        const order = Orders.list().find((x) => x.id === id);
+        if (!order) return;
+        
+        showOrderDetail(order);
+    });
+}
 
-        const total = o.items.reduce((sum, it) => sum + it.qty * it.price, 0);
-
-        const html = `
-          <div class="row" style="justify-content: space-between; align-items: center;">
-            <h3>Chi tiết đơn hàng #${o.id}</h3>
-            <button class="btn" onclick="this.closest('section').remove()">✕ Đóng</button>
-          </div>
-          <div class="grid-2">
+// Hàm hiển thị chi tiết đơn hàng
+function showOrderDetail(order) {
+    const user = Users.list().find((u) => u.id === order.userId);
+    const products = Products.list();
+    const pmap = new Map(products.map((p) => [p.id, p]));
+    const total = order.items.reduce((sum, it) => sum + (it.quantity * it.price), 0);
+    
+    const statusMessages = {
+        'new': 'Mới đặt',
+        'processing': 'Đã xử lý',
+        'shipped': 'Đã giao',
+        'canceled': 'Đã hủy'
+    };
+    
+    const isCanceled = order.status === 'canceled';
+    
+    const html = `
+    <div class="order-detail">
+        <div class="row" style="justify-content: space-between; align-items: center;">
+            <h3>Chi tiết đơn hàng #${order.id}</h3>
+            <button class="btn" id="closeDetail">✕ Đóng</button>
+        </div>
+        
+        <div class="grid-2">
             <div>
-              <h4>Thông tin đơn hàng</h4>
-              <p><strong>Ngày đặt:</strong> ${o.date}</p>
-              <p><strong>Trạng thái:</strong> 
-                <select id="ust" style="margin-left: 8px;">
-                  <option value="new">Mới đặt</option>
-                  <option value="processing">Đã xử lý</option>
-                  <option value="shipped">Đã giao</option>
-                  <option value="canceled">Hủy</option>
-                </select>
-              </p>
-              <p><strong>Tổng tiền:</strong> ${fmt.currency(total)}</p>
-              ${o.note ? `<p><strong>Ghi chú:</strong> ${o.note}</p>` : ""}
+                <h4>Thông tin đơn hàng</h4>
+                <p><strong>Ngày đặt:</strong> ${order.date}</p>
+                <p><strong>Trạng thái:</strong> 
+                    <select id="ust" style="margin-left: 8px;" ${isCanceled ? 'disabled' : ''}>
+                        <option value="new" ${order.status === 'new' ? 'selected' : ''}>Mới đặt</option>
+                        <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Đã xử lý</option>
+                        <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Đã giao</option>
+                        <option value="canceled" ${order.status === 'canceled' ? 'selected' : ''}>Hủy</option>
+                    </select>
+                    ${isCanceled ? '<p style="color: red; margin-top: 5px;">Không thể thay đổi trạng thái đơn hàng đã hủy</p>' : ''}
+                </p>
+                <p><strong>Tổng tiền:</strong> ${fmt.currency(total)}</p>
+                ${order.note ? `<p><strong>Ghi chú:</strong> ${order.note}</p>` : ""}
             </div>
+            
             <div>
-              <h4>Thông tin khách hàng</h4>
-              ${
-                  user
-                      ? `
-                <p><strong>Tên:</strong> ${user.name}</p>
-                <p><strong>Email:</strong> ${user.email}</p>
-                <p><strong>Điện thoại:</strong> ${
-                    user.phone || "Chưa cập nhật"
-                }</p>
-                <p><strong>Địa chỉ:</strong> ${
-                    user.address || "Chưa cập nhật"
-                }</p>
-              `
-                      : "<p>Khách vãng lai</p>"
-              }
+                <h4>Thông tin khách hàng</h4>
+                ${user ? `
+                    <p><strong>Tên:</strong> ${user.name || 'N/A'}</p>
+                    <p><strong>Email:</strong> ${user.email || 'N/A'}</p>
+                    <p><strong>Điện thoại:</strong> ${user.phone || 'Chưa cập nhật'}</p>
+                    <p><strong>Địa chỉ:</strong> ${user.address || 'Chưa cập nhật'}</p>
+                ` : '<p>Khách vãng lai</p>'}
             </div>
-          </div>
-          <div>
+        </div>
+        
+        <div>
             <h4>Chi tiết sản phẩm</h4>
             <div class="table-wrap">
-              <table class="table">
-                <thead>
-                  <tr><th>Sản phẩm</th><th>Mã</th><th>Số lượng</th><th>Đơn giá</th><th>Thành tiền</th></tr>
-                </thead>
-                <tbody>
-                  ${o.items
-                      .map((it) => {
-                          const p = pmap.get(it.productId);
-                          return `<tr>
-                      <td>${p ? p.name : it.productId}</td>
-                      <td>${p ? p.code : it.productId}</td>
-                      <td>${it.qty}</td>
-                      <td>${fmt.currency(it.price)}</td>
-                      <td>${fmt.currency(it.qty * it.price)}</td>
-                    </tr>`;
-                      })
-                      .join("")}
-                </tbody>
-              </table>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Mã</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${order.items.map(item => {
+                            const product = pmap.get(item.productId);
+                            return `
+                                <tr>
+                                    <td>${product ? product.name : item.productId}</td>
+                                    <td>${product ? (product.code || 'N/A') : item.productId}</td>
+                                    <td>${item.quantity}</td>
+                                    <td>${fmt.currency(item.price)}</td>
+                                    <td>${fmt.currency(item.quantity * item.price)}</td>
+                                </tr>`;
+                        }).join('')}
+                    </tbody>
+                </table>
             </div>
-          </div>
-          <div class="row">
-            <button class="btn-primary" id="save">Cập nhật trạng thái</button>
-            <button class="btn" onclick="this.closest('section').remove()">Đóng</button>
-          </div>`;
-
-        const wrap = document.createElement("section");
-        wrap.className = "panel";
-        wrap.style.marginBottom = "20px";
-        wrap.innerHTML = html;
-        app.prepend(wrap);
-        qs("#ust").value = o.status;
-        qs("#save").addEventListener("click", () => {
-            Orders.update(id, { status: qs("#ust").value });
-            renderOrders();
-        });
+        </div>
+        
+        <div class="row" style="margin-top: 20px;">
+            <button class="btn-primary" id="save" ${isCanceled ? 'disabled' : ''}>
+                Cập nhật trạng thái
+            </button>
+            <button class="btn" id="closeBtn">
+                Đóng
+            </button>
+        </div>
+    </div>`;
+    
+    // Tạo và hiển thị modal
+    const wrap = document.createElement("section");
+    wrap.className = "panel";
+    wrap.style.marginBottom = "20px";
+    wrap.innerHTML = html;
+    
+    // Xóa các modal cũ nếu có
+    document.querySelectorAll('.order-detail-modal').forEach(el => el.remove());
+    
+    // Thêm modal mới
+    const modal = document.createElement('div');
+    modal.className = 'order-detail-modal';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.right = '0';
+    modal.style.bottom = '0';
+    modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+    modal.style.display = 'flex';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'flex-start';
+    modal.style.padding = '40px 20px';
+    modal.style.overflowY = 'auto';
+    modal.style.zIndex = '1000';
+    
+    modal.appendChild(wrap);
+    document.body.appendChild(modal);
+    
+    // Xử lý sự kiện đóng modal
+    const closeModal = () => {
+        modal.remove();
+    };
+    
+    // Đóng khi click ra ngoài modal
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
+        }
     });
+    
+    // Đóng khi click nút đóng
+    const closeBtn = wrap.querySelector('#closeBtn');
+    const closeDetailBtn = wrap.querySelector('#closeDetail');
+    
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (closeDetailBtn) closeDetailBtn.addEventListener('click', closeModal);
+    
+    // Xử lý sự kiện lưu
+    const saveBtn = wrap.querySelector('#save');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', function() {
+            const newStatus = wrap.querySelector('#ust').value;
+            const oldStatus = order.status;
+            const stock = computeStock(); // Lấy thông tin tồn kho mới nhất
+            
+            try {
+                // Kiểm tra nếu đơn hàng đã bị hủy
+                if (oldStatus === 'canceled') {
+                    throw new Error('Không thể thay đổi trạng thái đơn hàng đã hủy');
+                }
+                
+                // Cập nhật trạng thái đơn hàng
+                Orders.update(order.id, { status: newStatus });
+                
+                // Nếu hủy đơn hàng, cần cập nhật lại số lượng tồn kho
+                if (newStatus === 'canceled' && oldStatus !== 'canceled') {
+                    // Lấy danh sách sản phẩm trong đơn hàng
+                    order.items.forEach(item => {
+                        // Cập nhật số lượng tồn kho
+                        const currentStock = stock.get(item.productId) || 0;
+                        
+                        // Cập nhật vào cơ sở dữ liệu
+                        const db = dbGet();
+                        const product = db.products.find(p => p.id === item.productId);
+                        if (product) {
+                            product.stock = (product.stock || 0) + item.quantity;
+                            dbSet(db);
+                            
+                            // Cập nhật lại stock trong bộ nhớ
+                            stock.set(item.productId, product.stock);
+                        }
+                    });
+                }
+                
+                // Hiển thị thông báo thành công
+                if (newStatus === 'canceled') {
+                    alert('Đã hủy đơn hàng và cập nhật lại số lượng tồn kho.');
+                } else {
+                    const statusText = statusMessages[newStatus] || newStatus;
+                    alert(`Cập nhật trạng thái đơn hàng thành: ${statusText}`);
+                }
+                
+                // Đóng modal và làm mới danh sách
+                closeModal();
+                renderOrders();
+                
+            } catch (error) {
+                // Hiển thị thông báo lỗi nếu có
+                console.error('Lỗi khi cập nhật đơn hàng:', error);
+                alert(error.message || 'Có lỗi xảy ra khi cập nhật trạng thái đơn hàng');
+            }
+        });
+    }
 }
 
 // Stock module
 function renderStock() {
-    const products = Products.list();
-    const types = Types.list();
-    const stock = computeStock();
-    const low = [];
-
-    app.innerHTML = `
-    <section class="panel">
-      <h1>Tồn kho</h1>
-      <div class="row">
-        <label>Lọc theo loại <select id="typeFilter"><option value="">Tất cả loại</option>${types
-            .map((t) => `<option value="${t.id}">${t.name}</option>`)
-            .join("")}</select></label>
-        <label>Từ ngày <input type="date" id="dateFrom"></label>
-        <label>Đến ngày <input type="date" id="dateTo"></label>
-        <button class="btn" id="searchStock">Tra cứu</button>
-      </div>
-      <div class="table-wrap">
-        <table class="table">
-          <thead>
-            <tr><th>Mã</th><th>Tên</th><th>Loại</th><th>Tồn hiện tại</th><th>Cảnh báo</th><th>Giá vốn</th><th>Giá bán</th></tr>
-          </thead>
-          <tbody id="tb"></tbody>
-        </table>
-      </div>
-    </section>
-    <section class="panel">
-      <h2>Báo cáo nhập - xuất - tồn</h2>
-      <div class="table-wrap">
-        <table class="table">
-          <thead>
-            <tr><th>Mã</th><th>Tên</th><th>Nhập</th><th>Xuất</th><th>Tồn</th><th>Giá vốn TB</th></tr>
-          </thead>
-          <tbody id="reportTb"></tbody>
-        </table>
-      </div>
-    </section>`;
-
-    const tb = qs("#tb");
-    const reportTb = qs("#reportTb");
-
-    function paintStock(list = products) {
-        const tmap = new Map(types.map((t) => [t.id, t.name]));
-        tb.innerHTML = list
-            .map((p) => {
-                const qty = stock.get(p.id) || 0;
-                const warn =
-                    qty < 5 ? "⚠️ Sắp hết" : qty === 0 ? "❌ Hết hàng" : "";
-                if (warn) low.push(p.name);
-                const priceInfo = getSellPrice(p.id);
-                return `<tr>
-                  <td>${p.code}</td>
-                  <td>${p.name}</td>
-                  <td>${tmap.get(p.typeId) || ""}</td>
-                  <td>${qty}</td>
-                  <td>${warn}</td>
-                  <td>${fmt.currency(priceInfo.cost)}</td>
-                  <td>${fmt.currency(priceInfo.price)}</td>
-                </tr>`;
-            })
-            .join("");
-    }
-
-    function paintReport() {
-        const { receipts, orders } = dbGet();
-        const report = new Map();
-
-        // Tính nhập
-        receipts.forEach((r) => {
-            r.items.forEach((it) => {
-                if (!report.has(it.productId)) {
-                    report.set(it.productId, {
-                        in: 0,
-                        out: 0,
-                        totalCost: 0,
-                        totalQty: 0,
-                    });
-                }
-                const data = report.get(it.productId);
-                data.in += Number(it.qty);
-                data.totalCost += Number(it.qty) * Number(it.costPrice);
-                data.totalQty += Number(it.qty);
-            });
-        });
-
-        // Tính xuất
-        orders.forEach((o) => {
-            o.items.forEach((it) => {
-                if (!report.has(it.productId)) {
-                    report.set(it.productId, {
-                        in: 0,
-                        out: 0,
-                        totalCost: 0,
-                        totalQty: 0,
-                    });
-                }
-                report.get(it.productId).out += Number(it.qty);
-            });
-        });
-
-        reportTb.innerHTML = products
-            .map((p) => {
-                const data = report.get(p.id) || {
-                    in: 0,
-                    out: 0,
-                    totalCost: 0,
-                    totalQty: 0,
-                };
-                const avgCost =
-                    data.totalQty > 0 ? data.totalCost / data.totalQty : 0;
-                const current = data.in - data.out;
-                return `<tr>
-                  <td>${p.code}</td>
-                  <td>${p.name}</td>
-                  <td>${data.in}</td>
-                  <td>${data.out}</td>
-                  <td>${current}</td>
-                  <td>${fmt.currency(avgCost)}</td>
-                </tr>`;
-            })
-            .join("");
-    }
-
-    paintStock();
-    paintReport();
-
-    // Lọc theo loại
-    qs("#typeFilter").addEventListener("change", (e) => {
-        const typeId = e.target.value;
-        const filtered = typeId
-            ? products.filter((p) => p.typeId === typeId)
-            : products;
-        paintStock(filtered);
-    });
-
-    // Tra cứu theo thời gian
-    qs("#searchStock").addEventListener("click", () => {
-        const from = qs("#dateFrom").value;
-        const to = qs("#dateTo").value;
-
-        if (!from && !to) {
-            paintStock();
+    try {
+        // Lấy dữ liệu sản phẩm và tồn kho
+        const products = Products.list();
+        const stock = computeStock();
+        const lowStockProducts = [];
+        
+        // Kiểm tra phần tử app
+        if (!app) {
+            console.error('Không tìm thấy phần tử app');
             return;
         }
-
-        // Tính tồn tại thời điểm cụ thể
-        const { receipts, orders } = dbGet();
-        const stockAtTime = new Map(products.map((p) => [p.id, 0]));
-
-        receipts.forEach((r) => {
-            if (!from || r.date >= from) {
-                if (!to || r.date <= to) {
-                    r.items.forEach((it) => {
-                        stockAtTime.set(
-                            it.productId,
-                            (stockAtTime.get(it.productId) || 0) +
-                                Number(it.qty)
-                        );
-                    });
+        
+        // Tạo giao diện bảng tồn kho
+        app.innerHTML = `
+        <section class="panel">
+            <div class="panel-header">
+                <h1>Quản lý tồn kho</h1>
+                <div class="actions">
+                    <button id="refreshStock" class="btn">
+                        <i class="fas fa-sync-alt"></i> Làm mới
+                    </button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Mã sản phẩm</th>
+                            <th>Tên sản phẩm</th>
+                            <th class="text-right">Số lượng tồn</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockTableBody">
+                        ${products.length === 0 ? 
+                            '<tr><td colspan="4" class="text-center">Không có sản phẩm nào</td></tr>' : ''
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>`;
+        
+        // Lấy tham chiếu đến tbody
+        const tbody = qs("#stockTableBody");
+        if (!tbody) {
+            console.error('Không tìm thấy bảng tồn kho');
+            return;
+        }
+        
+        // Nếu không có sản phẩm, không cần render tiếp
+        if (products.length === 0) return;
+        
+        // Render danh sách sản phẩm
+        tbody.innerHTML = products
+            .map((product) => {
+                const quantity = stock.get(product.id) || 0;
+                const isLowStock = quantity < 5;
+                let status = '';
+                
+                if (isLowStock) {
+                    lowStockProducts.push(product.name);
+                    status = '<span class="badge badge-warning">Sắp hết</span>';
+                } else if (quantity === 0) {
+                    status = '<span class="badge badge-danger">Hết hàng</span>';
+                } else {
+                    status = '<span class="badge badge-success">Còn hàng</span>';
                 }
-            }
-        });
-
-        orders.forEach((o) => {
-            if (!from || o.date >= from) {
-                if (!to || o.date <= to) {
-                    o.items.forEach((it) => {
-                        stockAtTime.set(
-                            it.productId,
-                            (stockAtTime.get(it.productId) || 0) -
-                                Number(it.qty)
-                        );
-                    });
-                }
-            }
-        });
-
-        const tmap = new Map(types.map((t) => [t.id, t.name]));
-        tb.innerHTML = products
-            .map((p) => {
-                const qty = stockAtTime.get(p.id) || 0;
-                const warn =
-                    qty < 5 ? "⚠️ Sắp hết" : qty === 0 ? "❌ Hết hàng" : "";
-                const priceInfo = getSellPrice(p.id);
-                return `<tr>
-                  <td>${p.code}</td>
-                  <td>${p.name}</td>
-                  <td>${tmap.get(p.typeId) || ""}</td>
-                  <td>${qty}</td>
-                  <td>${warn}</td>
-                  <td>${fmt.currency(priceInfo.cost)}</td>
-                  <td>${fmt.currency(priceInfo.price)}</td>
-                </tr>`;
+                
+                return `
+                    <tr>
+                        <td>${product.code || 'N/A'}</td>
+                        <td>${product.name || 'N/A'}</td>
+                        <td class="text-right">${quantity.toLocaleString()}</td>
+                        <td>${status}</td>
+                    </tr>`;
             })
             .join("");
-    });
-
-    // Hiển thị cảnh báo nếu có
-    if (low.length > 0) {
-        const alert = document.createElement("div");
-        alert.className = "panel";
-        alert.style.background = "#2d1b1b";
-        alert.style.borderColor = "#ef4444";
-        alert.innerHTML = `<h3>⚠️ Cảnh báo sản phẩm sắp hết hàng:</h3><p>${low.join(
-            ", "
-        )}</p>`;
-        app.insertBefore(alert, app.firstChild);
+        
+        // Thêm sự kiện làm mới
+        const refreshBtn = qs("#refreshStock");
+        if (refreshBtn) {
+            refreshBtn.addEventListener("click", () => {
+                renderStock();
+            });
+        }
+        
+        // Hiển thị cảnh báo nếu có sản phẩm sắp hết hàng
+        if (lowStockProducts.length > 0) {
+            const warningMsg = `Cảnh báo: Có ${lowStockProducts.length} sản phẩm sắp hết hàng`;
+            console.warn(warningMsg, lowStockProducts);
+        }
+            
+    } catch (error) {
+        console.error('Lỗi khi tải kho hàng:', error);
+        if (app) {
+            app.innerHTML = `
+            <div class="alert alert-danger">
+                <h3>Đã xảy ra lỗi khi tải kho hàng</h3>
+                <p>${error.message || 'Vui lòng thử lại sau'}</p>
+                <button onclick="location.reload()" class="btn btn-primary mt-2">
+                    <i class="fas fa-sync-alt"></i> Tải lại trang
+                </button>
+            </div>`;
+        }
     }
 }
 

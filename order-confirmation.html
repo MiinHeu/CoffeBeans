@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt hàng thành công - Cà Phê Đậm Đà</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles/user.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .confirmation-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .success-icon {
+            font-size: 64px;
+            color: #4caf50;
+            margin-bottom: 20px;
+        }
+        .order-details {
+            margin: 30px 0;
+            text-align: left;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        .order-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #f0f0f0;
+        }
+        .order-detail:last-child {
+            border-bottom: none;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: var(--coffee);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        .btn-outline {
+            background: white;
+            border: 1px solid var(--coffee);
+            color: var(--coffee);
+        }
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container nav">
+            <div class="brand">
+                <a href="index.html">
+                    <img src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png" alt="Logo Cà Phê Đậm Đà" class="brand-logo">
+                    <span class="brand-name">Cà Phê Đậm Đà</span>
+                </a>
+            </div>
+            <nav class="menu" aria-label="Chính">
+                <a href="products.html">Sản phẩm</a>
+                <a href="index.html#ve-chung-toi">Giới thiệu</a>
+                <a href="index.html#loi-ich">Lợi ích</a>
+                <a href="index.html#lien-he">Liên hệ</a>
+                <a href="order-history.html" style="margin-right: 10px;">
+                    <i class="fas fa-history"></i> Đơn hàng
+                </a>
+                <a href="cart.html" class="badge" aria-label="Giỏ hàng">
+                    Giỏ hàng
+                    <span id="cart-badge" class="badge-count">0</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="padding: 24px 20px;">
+        <div class="confirmation-container">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1>Đặt hàng thành công!</h1>
+            <p>Cảm ơn bạn đã đặt hàng tại Cà Phê Đậm Đà. Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.</p>
+            
+            <div class="order-details">
+                <h3>Thông tin đơn hàng</h3>
+                <div class="order-detail">
+                    <span>Mã đơn hàng:</span>
+                    <strong id="orderId">#123456</strong>
+                </div>
+                <div class="order-detail">
+                    <span>Ngày đặt hàng:</span>
+                    <span id="orderDate">10/10/2023</span>
+                </div>
+                <div class="order-detail">
+                    <span>Phương thức thanh toán:</span>
+                    <span>Thanh toán khi nhận hàng</span>
+                </div>
+                <div class="order-detail">
+                    <span>Tổng tiền:</span>
+                    <strong id="orderTotal">0đ</strong>
+                </div>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <p>Bạn có thể theo dõi đơn hàng trong mục <a href="order-history.html" style="color: var(--coffee); font-weight: 600;">Lịch sử đơn hàng</a></p>
+            </div>
+
+            <div>
+                <a href="products.html" class="btn">Tiếp tục mua sắm</a>
+                <a href="order-history.html" class="btn btn-outline">Xem đơn hàng</a>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { Orders, Products } from './scripts/db.js';
+        import { fmt } from './scripts/utils.js';
+
+        // Get order ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+
+        // If no order ID, redirect to home
+        if (!orderId) {
+            window.location.href = 'index.html';
+        }
+
+        // Load order details
+        function loadOrderDetails() {
+            const order = Orders.list().find(o => o.id === orderId);
+            
+            if (!order) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Update UI with order details
+            document.getElementById('orderId').textContent = '#' + order.id;
+            document.getElementById('orderDate').textContent = new Date(order.date).toLocaleDateString('vi-VN');
+            
+            // Calculate total
+            const total = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('orderTotal').textContent = fmt.currency(total) + 'đ';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadOrderDetails();
+        });
+    </script>
+</body>
+</html>

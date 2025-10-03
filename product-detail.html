@@ -266,7 +266,27 @@
         </footer>
 
         <script type="module">
-            import { Products, Types, getSellPrice } from './scripts/db.js';
+            import { Products, Types, getSellPrice, computeStock } from './scripts/db.js';
+            // Track current stock levels
+            let productStocks = new Map();
+            
+            // Initialize stock levels
+            function updateStockLevels() {
+                const stockMap = computeStock();
+                productStocks = stockMap;
+                return stockMap;
+            }
+            
+            // Get available stock for a product
+            function getAvailableStock(productId) {
+                return productStocks.get(productId) || 0;
+            }
+            
+            // Check if a product is in stock
+            function isInStock(productId, quantity = 1) {
+                return getAvailableStock(productId) >= quantity;
+            }
+            
             function getCart(){ try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch { return []; } }
             function setCart(c){ localStorage.setItem('cart', JSON.stringify(c)); }
             function formatCurrency(value){ return new Intl.NumberFormat('vi-VN').format(value); }

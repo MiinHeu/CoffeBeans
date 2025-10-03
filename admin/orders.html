@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý đơn hàng - Admin</title>
+    <link rel="stylesheet" href="../styles/admin.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .order-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .order-header {
+            padding: 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .order-body {
+            padding: 15px;
+        }
+        .order-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #eee;
+        }
+        .order-item {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .order-item:last-child {
+            border-bottom: none;
+        }
+        .order-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+        .order-item-details {
+            flex: 1;
+        }
+        .order-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-new { background: #e3f2fd; color: #1976d2; }
+        .status-processing { background: #fff3e0; color: #ef6c00; }
+        .status-shipped { background: #e8f5e9; color: #2e7d32; }
+        .status-canceled { background: #ffebee; color: #c62828; }
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+        }
+        .filter-group label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        .filter-group select, .filter-group input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Cà Phê Đậm Đà</h2>
+                <p>Quản trị viên</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Tổng quan</a>
+                <a href="products.html"><i class="fas fa-coffee"></i> Sản phẩm</a>
+                <a href="categories.html"><i class="fas fa-tags"></i> Danh mục</a>
+                <a href="orders.html" class="active"><i class="fas fa-shopping-cart"></i> Đơn hàng</a>
+                <a href="users.html"><i class="fas fa-users"></i> Khách hàng</a>
+                <a href="settings.html"><i class="fas fa-cog"></i> Cài đặt</a>
+                <a href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <h1>Quản lý đơn hàng</h1>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="exportOrders()">
+                        <i class="fas fa-file-export"></i> Xuất Excel
+                    </button>
+                </div>
+            </header>
+
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Trạng thái</label>
+                    <select id="statusFilter" onchange="filterOrders()">
+                        <option value="">Tất cả</option>
+                        <option value="new">Mới</option>
+                        <option value="processing">Đang xử lý</option>
+                        <option value="shipped">Đã giao hàng</option>
+                        <option value="canceled">Đã hủy</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Từ ngày</label>
+                    <input type="date" id="dateFrom" onchange="filterOrders()">
+                </div>
+                <div class="filter-group">
+                    <label>Đến ngày</label>
+                    <input type="date" id="dateTo" onchange="filterOrders()">
+                </div>
+                <div class="filter-group">
+                    <label>Tìm kiếm</label>
+                    <input type="text" id="searchInput" placeholder="Mã đơn, tên KH..." onkeyup="filterOrders()">
+                </div>
+            </div>
+
+            <!-- Orders List -->
+            <div id="ordersList">
+                <!-- Orders will be loaded here -->
+                <div class="empty-state">
+                    <i class="fas fa-shopping-cart"></i>
+                    <h3>Chưa có đơn hàng nào</h3>
+                    <p>Hiện chưa có đơn hàng nào được tạo.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { Orders, Products, Users } from '../scripts/db.js';
+        import { fmt, session } from '../scripts/utils.js';
+
+        // Check admin authentication
+        if (!session.isAdmin()) {
+            window.location.href = '../admin/login.html';
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const options = { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            };
+            return new Date(dateString).toLocaleString('vi-VN', options);
+        }
+
+        // Get status info
+        function getStatusInfo(status) {
+            const statusMap = {
+                'new': { class: 'status-new', text: 'Mới' },
+                'processing': { class: 'status-processing', text: 'Đang xử lý' },
+                'shipped': { class: 'status-shipped', text: 'Đã giao hàng' },
+                'canceled': { class: 'status-canceled', text: 'Đã hủy' }
+            };
+            return statusMap[status] || { class: '', text: status };
+        }
+
+        // Update order status
+        async function updateOrderStatus(orderId, newStatus) {
+            const db = await import('../scripts/db.js');
+            db.Orders.update(orderId, { status: newStatus });
+            renderOrders();
+        }
+
+        // Render orders with filters
+        function renderOrders() {
+            const container = document.getElementById('ordersList');
+            const allOrders = Orders.list();
+            
+            // Apply filters
+            const statusFilter = document.getElementById('statusFilter').value;
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            let filteredOrders = [...allOrders];
+
+            if (statusFilter) {
+                filteredOrders = filteredOrders.filter(order => order.status === statusFilter);
+            }
+            
+            if (dateFrom) {
+                const fromDate = new Date(dateFrom);
+                filteredOrders = filteredOrders.filter(order => new Date(order.date) >= fromDate);
+            }
+            
+            if (dateTo) {
+                const toDate = new Date(dateTo);
+                toDate.setHours(23, 59, 59, 999); // End of the day
+                filteredOrders = filteredOrders.filter(order => new Date(order.date) <= toDate);
+            }
+            
+            if (searchTerm) {
+                filteredOrders = filteredOrders.filter(order => 
+                    order.id.toLowerCase().includes(searchTerm) ||
+                    (order.userId && order.userId.toLowerCase().includes(searchTerm)) ||
+                    (order.shippingAddress && order.shippingAddress.toLowerCase().includes(searchTerm))
+                );
+            }
+
+            // Sort by date (newest first)
+            filteredOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (filteredOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Không tìm thấy đơn hàng</h3>
+                        <p>Không có đơn hàng nào phù hợp với bộ lọc hiện tại.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = filteredOrders.map(order => {
+                const status = getStatusInfo(order.status);
+                const total = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                const user = Users.list().find(u => u.id === order.userId) || {};
+                
+                return `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <strong>Mã đơn hàng:</strong> ${order.id}
+                            <span class="order-status ${status.class}" style="margin-left: 10px;">${status.text}</span>
+                        </div>
+                        <div><strong>Ngày đặt:</strong> ${formatDate(order.date)}</div>
+                    </div>
+                    <div class="order-body">
+                        <div style="margin-bottom: 15px;">
+                            <div><strong>Khách hàng:</strong> ${user.name || 'Khách vãng lai'}</div>
+                            <div><strong>Địa chỉ:</strong> ${order.shippingAddress || 'Chưa có thông tin'}</div>
+                            <div><strong>SĐT:</strong> ${order.phone || (user.phone || 'Chưa có')}</div>
+                        </div>
+                        
+                        ${order.items.map(item => {
+                            const product = Products.list().find(p => p.id === item.productId) || {};
+                            return `
+                            <div class="order-item">
+                                <img src="${product.image || 'https://via.placeholder.com/60'}" alt="${product.name}">
+                                <div class="order-item-details">
+                                    <div style="font-weight: 500;">${product.name || 'Sản phẩm'}</div>
+                                    <div style="color: #666; font-size: 14px;">Số lượng: ${item.quantity}</div>
+                                    <div style="color: #d4a76a; font-weight: 600;">${fmt.currency(item.price)}đ</div>
+                                </div>
+                                <div style="font-weight: 600;">${fmt.currency(item.price * item.quantity)}đ</div>
+                            </div>`;
+                        }).join('')}
+                        
+                        <div style="text-align: right; margin-top: 15px; font-size: 18px; font-weight: 600;">
+                            Tổng cộng: ${fmt.currency(total)}đ
+                        </div>
+                        
+                        ${order.note ? `
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
+                            <strong>Ghi chú:</strong> ${order.note}
+                        </div>` : ''}
+                        
+                        <div class="order-actions">
+                            ${order.status === 'new' ? `
+                                <button class="btn btn-success" onclick="updateOrderStatus('${order.id}', 'processing')">
+                                    <i class="fas fa-check"></i> Xác nhận
+                                </button>
+                                <button class="btn btn-danger" onclick="updateOrderStatus('${order.id}', 'canceled')">
+                                    <i class="fas fa-times"></i> Hủy đơn
+                                </button>
+                            ` : ''}
+                            
+                            ${order.status === 'processing' ? `
+                                <button class="btn btn-success" onclick="updateOrderStatus('${order.id}', 'shipped')">
+                                    <i class="fas fa-truck"></i> Đã giao hàng
+                                </button>
+                            ` : ''}
+                            
+                            <a href="order-detail.html?id=${order.id}" class="btn">
+                                <i class="fas fa-eye"></i> Xem chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // Export orders to Excel
+        function exportOrders() {
+            // This is a simplified example - in a real app, you would generate an Excel file
+            alert('Chức năng xuất Excel sẽ được thực hiện ở đây');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set default date range to last 30 days
+            const today = new Date();
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(today.getDate() - 30);
+            
+            document.getElementById('dateFrom').valueAsDate = thirtyDaysAgo;
+            document.getElementById('dateTo').valueAsDate = today;
+            
+            // Add logout handler
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                session.logout();
+                window.location.href = '../admin/login.html';
+            });
+            
+            // Initial render
+            renderOrders();
+        });
+
+        // Make functions available globally for inline handlers
+        window.updateOrderStatus = updateOrderStatus;
+        window.filterOrders = renderOrders;
+        window.exportOrders = exportOrders;
+    </script>
+</body>
+</html>
