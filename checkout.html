@@ -249,7 +249,7 @@
 
             .btn-checkout {
                 width: 100%;
-                background-color: var(--coffee-600);
+                background-color: grey;
                 color: white;
                 border: none;
                 padding: 1rem;
@@ -775,29 +775,37 @@
                 }
             }
             
-            // Auto-fill user info if logged in
+            // Auto-fill user info from session profile
             function autoFillUserInfo() {
-                if (session.isLoggedIn()) {
-                    const user = JSON.parse(sessionStorage.getItem('user') || '{}');
-                    if (user) {
-                        const fullNameInput = document.getElementById('fullName');
-                        const emailInput = document.getElementById('email');
-                        const phoneInput = document.getElementById('phone');
-                        const addressInput = document.getElementById('address');
-                        
-                        if (fullNameInput && user.name) fullNameInput.value = user.name;
-                        if (emailInput && user.email) emailInput.value = user.email;
-                        if (phoneInput && user.phone) phoneInput.value = user.phone;
-                        if (addressInput && user.address) addressInput.value = user.address;
+                const fullNameInput = document.getElementById('fullName');
+                const emailInput = document.getElementById('email');
+                const phoneInput = document.getElementById('phone');
+                const addressInput = document.getElementById('address');
+
+                if (!session.isLoggedIn()) {
+                    // Offer to login for autofill and guard checkout
+                    const wantLogin = confirm('Vui lòng đăng nhập để tự động điền thông tin. Chuyển đến trang đăng nhập?');
+                    if (wantLogin) {
+                        window.location.href = `login.html?redirect=${encodeURIComponent('checkout.html')}`;
                     }
+                    return;
                 }
+
+                const user = session.getUser();
+                if (!user) return;
+
+                if (fullNameInput && !fullNameInput.value && user.name) fullNameInput.value = user.name;
+                if (emailInput && !emailInput.value && user.email) emailInput.value = user.email;
+                if (phoneInput && !phoneInput.value && user.phone) phoneInput.value = user.phone;
+                if (addressInput && !addressInput.value && user.address) addressInput.value = user.address;
             }
             
-            // Update cart badge
+            // Update cart badge (distinct items count)
             function updateCartBadge() {
                 const badge = document.getElementById('cart-badge');
                 if (badge) {
-                    badge.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+                    const distinctCount = Array.isArray(cart) ? cart.length : 0;
+                    badge.textContent = distinctCount > 0 ? String(distinctCount) : '0';
                 }
             }
             

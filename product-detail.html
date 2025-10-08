@@ -267,6 +267,7 @@
 
         <script type="module">
             import { Products, Types, getSellPrice, computeStock } from './scripts/db.js';
+            import { session } from './scripts/utils.js';
             // Track current stock levels
             let productStocks = new Map();
             
@@ -283,9 +284,7 @@
             }
             
             // Check if a product is in stock
-            function isInStock(productId, quantity = 1) {
-                return getAvailableStock(productId) >= quantity;
-            }
+            function isInStock(productId, quantity = 1) { return getAvailableStock(productId) >= quantity; }
             
             function getCart(){ try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch { return []; } }
             function setCart(c){ localStorage.setItem('cart', JSON.stringify(c)); }
@@ -320,11 +319,13 @@
                 const type = Types.list().find(t => t.id === product.typeId);
                 const detail = document.getElementById('productDetail');
                 
+                const available = getAvailableStock(product.id);
+                const isAvailable = available > 0;
                 detail.innerHTML = `
                     <div class="product-detail">
                         <div class="product-gallery">
                             <img src="${product.image || 'https://via.placeholder.com/600x500?text=No+Image'}" 
-                                 alt="${product.name}">
+                                 alt="${product.name}" ${!isAvailable ? 'style="opacity:.8;"' : ''}>
                         </div>
                         <div class="product-info">
                             <div>
@@ -332,6 +333,7 @@
                                 <div class="product-meta">
                                     <span class="chip">${type?.name || ''}</span>
                                     <span class="product-price">${formatCurrency(getSellPrice(productId).price)}đ</span>
+                                    <span class="product-stock" style="${isAvailable ? 'color:#22c55e;' : 'color:#f44336;'}">${isAvailable ? `Còn ${available} sản phẩm` : 'Tạm hết hàng'}</span>
                                 </div>
                             </div>
                             
@@ -354,16 +356,16 @@
                                 <div class="quantity-selector">
                                     <span>Số lượng:</span>
                                     <button type="button" id="decreaseQuantity">-</button>
-                                    <input type="number" id="quantity" value="1" min="1" max="99">
+                                    <input type="number" id="quantity" value="1" min="1" max="${available}">
                                     <button type="button" id="increaseQuantity">+</button>
                                 </div>
                                 
                                 <div class="button-group">
-                                    <button class="add-to-cart" id="addToCart">
-                                        Thêm vào giỏ hàng
+                                    <button class="add-to-cart" id="addToCart" ${!isAvailable ? 'disabled style="opacity:.6;cursor:not-allowed;"' : ''}>
+                                        ${isAvailable ? 'Thêm vào giỏ hàng' : 'Hết hàng'}
                                     </button>
-                                    <button class="buy-now" id="buyNow">
-                                        Mua ngay
+                                    <button class="buy-now" id="buyNow" ${!isAvailable ? 'disabled style="opacity:.6;cursor:not-allowed;"' : ''}>
+                                        ${isAvailable ? 'Mua ngay' : 'Hết hàng'}
                                     </button>
                                 </div>
                             </div>
@@ -371,7 +373,7 @@
                     </div>
                 `;
 
-                setupQuantityControls();
+                setupQuantityControls(available, isAvailable);
                 loadRelatedProducts(product.typeId, product.id);
             }
 
@@ -382,57 +384,85 @@
                     .slice(0, 3);
 
                 const container = document.getElementById('relatedProducts');
-                container.innerHTML = related.map(product => `
-                    <article class="card">
+                container.innerHTML = related.map(product => {
+                    const price = getSellPrice(product.id).price;
+                    const available = getAvailableStock(product.id);
+                    const isAvailable = available > 0;
+                    const stockStatus = isAvailable 
+                        ? `<span style="color:#4caf50; font-size:.9em;">Còn ${available} sản phẩm</span>`
+                        : '<span style="color:#f44336; font-size:.9em;">Tạm hết hàng</span>';
+                    return `
+                    <article class="card" style="position:relative; cursor:pointer;" onclick="window.location.href='product-detail.html?id=${product.id}'">
+                        ${!isAvailable ? '<div style="position:absolute;top:10px;left:10px;background:rgba(244,67,54,.9);color:#fff;padding:4px 8px;border-radius:4px;font-size:.8em;font-weight:700;">HẾT HÀNG</div>' : ''}
                         <img src="${product.image || 'https://via.placeholder.com/400x300?text=No+Image'}" 
-                             alt="${product.name}">
+                             alt="${product.name}" ${!isAvailable ? 'style="opacity:.7;"' : ''}>
                         <div class="card-body">
                             <span class="chip">${getTypeName(product.typeId)}</span>
                             <div class="spacer"></div>
                             <div class="prod">
                                 <div>
                                     <h4>${product.name}</h4>
+                                    <div style="margin:6px 0;">${stockStatus}</div>
                                     <div>
-                                        <span class="price">${formatCurrency(getSellPrice(product.id).price)}đ</span>
+                                        <span class="price">${formatCurrency(price)}đ</span>
                                     </div>
                                 </div>
-                                <button class="add" data-id="${product.id}" 
-                                        data-name="${product.name}" 
-                                        data-price="${getSellPrice(product.id).price}">
-                                    Thêm vào giỏ
-                                </button>
+                                <div class="button-group">
+                                    <button class="add" data-id="${product.id}" 
+                                            data-name="${product.name}" 
+                                            data-price="${price}"
+                                            onclick="addRelated(event, '${product.id}')" ${!isAvailable ? 'disabled style=\"opacity:.6;cursor:not-allowed;\"' : ''}>
+                                        ${isAvailable ? 'Thêm vào giỏ' : 'Hết hàng'}
+                                    </button>
+                                    <button class="buy-now" data-id="${product.id}"
+                                            onclick="buyRelated(event, '${product.id}')" ${!isAvailable ? 'disabled style=\"opacity:.6;cursor:not-allowed;\"' : ''}>
+                                        ${isAvailable ? 'Mua ngay' : 'Hết hàng'}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </article>
-                `).join('');
+                    `;
+                }).join('');
             }
 
-            // Setup quantity controls
-            function setupQuantityControls() {
-                const quantity = document.getElementById('quantity');
-                
-                document.getElementById('decreaseQuantity').addEventListener('click', () => {
-                    const value = parseInt(quantity.value) || 1;
-                    if (value > 1) {
-                        quantity.value = value - 1;
-                    }
-                });
-                
-                document.getElementById('increaseQuantity').addEventListener('click', () => {
-                    const value = parseInt(quantity.value) || 1;
-                    if (value < 99) {
-                        quantity.value = value + 1;
-                    }
-                });
-                
-                document.getElementById('addToCart').addEventListener('click', () => {
-                    const qty = parseInt(quantity.value) || 1;
-                    addToCart(qty, false);
-                });
+            // Setup quantity controls with stock awareness
+            function setupQuantityControls(available, isAvailable) {
+                const qtyInput = document.getElementById('quantity');
+                const decBtn = document.getElementById('decreaseQuantity');
+                const incBtn = document.getElementById('increaseQuantity');
+                const addBtn = document.getElementById('addToCart');
+                const buyBtn = document.getElementById('buyNow');
 
-                document.getElementById('buyNow').addEventListener('click', () => {
-                    const qty = parseInt(quantity.value) || 1;
-                    addToCart(qty, true);
+                function clampAndUpdate() {
+                    let v = parseInt(qtyInput.value) || 1;
+                    if (available <= 0) v = 0; // force 0 conceptually when hết hàng
+                    v = Math.max(1, Math.min(available || 1, v));
+                    qtyInput.value = v;
+                    // Disable +/- according to stock
+                    decBtn.disabled = v <= 1 || available <= 0;
+                    incBtn.disabled = v >= (available || 1) || available <= 0;
+                    // Disable action buttons if out of stock
+                    if (available <= 0) {
+                        addBtn.disabled = true; buyBtn.disabled = true;
+                    }
+                }
+
+                // Initialize max bound and UI
+                qtyInput.max = String(available);
+                clampAndUpdate();
+
+                decBtn.addEventListener('click', () => { qtyInput.value = Math.max(1, (parseInt(qtyInput.value)||1) - 1); clampAndUpdate(); });
+                incBtn.addEventListener('click', () => { qtyInput.value = Math.min(available, (parseInt(qtyInput.value)||1) + 1); clampAndUpdate(); });
+                qtyInput.addEventListener('change', clampAndUpdate);
+
+                addBtn.addEventListener('click', () => {
+                    const qty = parseInt(qtyInput.value) || 1;
+                    if (isInStock(productId, qty)) addToCart(qty, false);
+                });
+                buyBtn.addEventListener('click', () => {
+                    const qty = parseInt(qtyInput.value) || 1;
+                    if (isInStock(productId, qty)) addToCart(qty, true);
                 });
             }
 
@@ -440,10 +470,15 @@
             function addToCart(quantity, redirect = false) {
                 const product = Products.list().find(p => p.id === productId);
                 if (!product) return;
+                if (!session.isLoggedIn()) {
+                    window.location.href = `login.html?redirect=${encodeURIComponent(redirect ? 'checkout.html' : window.location.href)}`;
+                    return;
+                }
                 const cart = getCart();
                 const existing = cart.find(i=>i.id===product.id);
-                if(existing){ existing.quantity += quantity; }
-                else { cart.push({ id: product.id, name: product.name, price: getSellPrice(product.id).price, quantity }); }
+                const available = getAvailableStock(product.id);
+                if(existing){ existing.quantity = Math.min(available, existing.quantity + quantity); }
+                else { if (available > 0) cart.push({ id: product.id, name: product.name, price: getSellPrice(product.id).price, quantity: Math.min(available, quantity) }); }
                 setCart(cart);
                 updateCartBadge();
                 renderCart();
@@ -472,6 +507,7 @@
             // Global events for cart: header link navigates directly
 
             // Initialize
+            updateStockLevels();
             loadProductDetail();
             updateCartBadge();
             closeCart();

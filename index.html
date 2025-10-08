@@ -432,10 +432,19 @@
 
         <script src="scripts/user.js" defer></script>
         <script type="module">
-            import { Products, Types, getSellPrice } from './scripts/db.js';
+            import { Products, Types, getSellPrice, computeStock } from './scripts/db.js';
+            import { initHeader, getCartSafe as getCart, setCartSafe as setCart, updateCartBadge, openCart, closeCart, toggleCart } from './scripts/header.js';
+            import { session } from './scripts/utils.js';
+
+            // Inventory helpers
+            let productStocks = new Map();
+            function updateStockLevels(){ productStocks = computeStock(); }
+            function getAvailableStock(productId){ return productStocks.get(productId)||0; }
+            function isInStock(productId, qty=1){ return getAvailableStock(productId) >= qty; }
 
             // Initialize
             function init() {
+                updateStockLevels();
                 loadFeaturedProducts();
                 setupEventListeners();
                 updateCartBadge();
@@ -448,10 +457,15 @@
                     .slice(0, 6); // Lấy 6 sản phẩm đầu tiên từ LocalStorage
 
                 const grid = document.querySelector('#san-pham .grid');
-                grid.innerHTML = products.map(product => `
-                    <article class="card" onclick="window.location.href='product-detail.html?id=${product.id}'" style="cursor: pointer;">
+                grid.innerHTML = products.map(product => {
+                    const available = getAvailableStock(product.id);
+                    const isAvailable = available > 0;
+                    const priceStr = formatCurrency(getSellPrice(product.id).price);
+                    return `
+                    <article class="card" onclick="window.location.href='product-detail.html?id=${product.id}'" style="cursor: pointer; position: relative;">
+                        ${!isAvailable ? '<div style="position:absolute;top:10px;left:10px;background:rgba(244,67,54,.9);color:#fff;padding:4px 8px;border-radius:4px;font-size:.8em;font-weight:700;">HẾT HÀNG</div>' : ''}
                         <img src="${product.image || 'https://via.placeholder.com/400x300?text=No+Image'}" 
-                             alt="${product.name}" />
+                             alt="${product.name}" ${!isAvailable ? 'style="opacity:.7;"' : ''} />
                         <div class="card-body">
                             <span class="chip">${getTypeName(product.typeId)}</span>
                             <div class="spacer"></div>
@@ -459,27 +473,28 @@
                                 <div>
                                     <h4>${product.name}</h4>
                                     <div>
-                                        <span class="price">${formatCurrency(getSellPrice(product.id).price)}đ</span>
+                                        <span class="price">${priceStr}đ</span>
                                     </div>
+                                    <div style="margin-top:6px; font-size:.9em; ${isAvailable ? 'color:#4caf50;' : 'color:#f44336;'}">${isAvailable ? `Còn ${available} sản phẩm` : 'Tạm hết hàng'}</div>
                                 </div>
                                 <div class="button-group">
                                     <button class="add" 
                                             data-id="${product.id}" 
                                             data-name="${product.name}" 
                                             data-price="${getSellPrice(product.id).price}"
-                                            onclick="event.stopPropagation(); addToCart(this);">
-                                        Thêm vào giỏ
+                                            onclick="event.stopPropagation(); addToCart(this);" ${!isAvailable ? 'disabled style="opacity:.6;cursor:not-allowed;"' : ''}>
+                                        ${isAvailable ? 'Thêm vào giỏ' : 'Hết hàng'}
                                     </button>
                                     <button class="buy-now" 
                                             data-id="${product.id}"
-                                            onclick="buyNow(event, '${product.id}')">
-                                        Mua ngay
+                                            onclick="buyNow(event, '${product.id}')" ${!isAvailable ? 'disabled style="opacity:.6;cursor:not-allowed;"' : ''}>
+                                        ${isAvailable ? 'Mua ngay' : 'Hết hàng'}
                                     </button>
                                 </div>
                             </div>
                         </div>
-                    </article>
-                `).join('');
+                    </article>`;
+                }).join('');
             }
 
             // Utility functions
@@ -492,23 +507,20 @@
                 return new Intl.NumberFormat('vi-VN').format(value);
             }
 
-            function getCart() {
-                try { return JSON.parse(localStorage.getItem('cart') || '[]'); } catch { return []; }
-            }
-
-            function setCart(cart) {
-                localStorage.setItem('cart', JSON.stringify(cart));
-            }
-
             function addToCart(buttonOrData) {
+                if (!requireLogin()) return;
                 const productId = buttonOrData.dataset ? buttonOrData.dataset.id : buttonOrData.id;
                 const product = Products.list().find(p => p.id === productId);
                 if (!product) return;
 
+                const available = getAvailableStock(productId);
+                const currentQty = getCart().find(i=>i.id===productId)?.quantity || 0;
+                if (available <= currentQty) return;
+
                 const cart = getCart();
                 const existing = cart.find(i => i.id === productId);
                 if (existing) {
-                    existing.quantity += 1;
+                    existing.quantity = Math.min(available, existing.quantity + 1);
                 } else {
                     cart.push({
                         id: productId,
@@ -520,7 +532,6 @@
                 setCart(cart);
 
                 updateCartBadge();
-                renderCart();
                 if (buttonOrData.dataset) showAddedToCart(buttonOrData);
             }
             window.addToCart = addToCart;
@@ -529,19 +540,14 @@
                 event.stopPropagation();
                 const product = Products.list().find(p => p.id === productId);
                 if (!product) return;
-
+                if (!requireLogin('cart.html')) return;
+                const available = getAvailableStock(productId);
+                const currentQty = getCart().find(i=>i.id===productId)?.quantity || 0;
+                if (available <= currentQty) return;
                 addToCart({ id: productId });
-                openCart();
+                window.location.href = 'cart.html';
             }
             window.buyNow = buyNow;
-
-            function updateCartBadge() {
-                const cart = getCart();
-                const badge = document.getElementById('cart-badge');
-                if (badge) {
-                    badge.textContent = cart.length;
-                }
-            }
 
             function showAddedToCart(button) {
                 const originalText = button.textContent;
@@ -571,11 +577,13 @@
                 });
             }
 
+            // Header/cart mode similar to robusta: always navigate to cart.html
+            window.CART_MODE = 'navigate';
+            initHeader();
+            closeCart();
+
             // Initialize when DOM is ready
             init();
-
-            // Import session utilities
-            import { session } from './scripts/utils.js';
 
             // Update auth UI
             function updateAuthUI() {
@@ -631,6 +639,17 @@
 
             // No in-page cart drawer
 
+            // Auth guard (like robusta)
+            function requireLogin(redirectUrl = window.location.href) {
+                if (!session.isLoggedIn()) {
+                    if (confirm('Vui lòng đăng nhập để tiếp tục. Chuyển sang trang đăng nhập?')) {
+                        window.location.href = `login.html?redirect=${encodeURIComponent(redirectUrl)}`;
+                    }
+                    return false;
+                }
+                return true;
+            }
+
             // Handle search form submission
             function handleSearch(event) {
                 event.preventDefault();
@@ -641,12 +660,6 @@
                 }
             }
             window.handleSearch = handleSearch;
-
-            // Cart UI logic moved to cart.html; helpers redirect
-            function openCart() { window.location.href = 'cart.html'; }
-            function closeCart() {}
-            function toggleCart() { window.location.href = 'cart.html'; }
-            window.openCart = openCart; window.closeCart = closeCart; window.toggleCart = toggleCart;
 
             // renderCart removed (handled in cart.html)
 

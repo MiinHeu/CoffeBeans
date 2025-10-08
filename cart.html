@@ -141,13 +141,14 @@
             // Update cart badge in the header
             function updateCartBadge() {
                 const cart = getCart();
-                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                // Show number of distinct items on the cart page
+                const distinctCount = cart.length;
                 const badge = document.getElementById('cart-badge');
                 if (badge) {
-                    badge.textContent = totalItems > 0 ? String(totalItems) : '';
-                    badge.style.display = totalItems > 0 ? 'flex' : 'none';
+                    badge.textContent = distinctCount > 0 ? String(distinctCount) : '';
+                    badge.style.display = distinctCount > 0 ? 'flex' : 'none';
                 }
-                return totalItems;
+                return distinctCount;
             }
 
             // Get selected item IDs from localStorage
@@ -242,6 +243,7 @@
                     item.quantity = newQuantity;
                     setCart(cart);
                     render();
+                    updateCartSummary();
                     return true;
                 }
                 return false;
@@ -446,6 +448,9 @@
                         render();
                     };
                 }
+
+                // After rendering, update the summary (selected count and subtotal)
+                updateCartSummary();
             }
 
             // Search submit

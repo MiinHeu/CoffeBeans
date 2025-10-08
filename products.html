@@ -11,6 +11,7 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="styles/user.css" />
+        <link rel="stylesheet" href="styles/header.css" />
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
@@ -116,6 +117,21 @@
                     </div>
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
                     <a href="index.html#lien-he">Liên hệ</a>
+
+                    <!-- Tài khoản -->
+                    <div class="account-menu" id="accountMenu">
+                        <div class="account-toggle">
+                            <i class="fa fa-user"></i>
+                            <span id="accountText">Đăng nhập / Đăng ký</span>
+                            <span class="caret">▼</span>
+                        </div>
+                        <ul class="account-dropdown">
+                            <li id="loginItem"><a href="login.html"><i class="fa fa-sign-in-alt"></i> Đăng nhập</a></li>
+                            <li id="registerItem"><a href="register.html"><i class="fa fa-user-plus"></i> Đăng ký</a></li>
+                            <li id="profileItem" style="display: none;"><a href="profile.html"><i class="fa fa-user-circle"></i> Thông tin cá nhân</a></li>
+                            <li id="logoutItem" style="display: none;"><a href="#" id="logoutLink"><i class="fa fa-sign-out-alt"></i> Đăng xuất</a></li>
+                        </ul>
+                    </div>
 
                     <!-- Giỏ hàng -->
                     <a href="cart.html" class="badge" aria-label="Giỏ hàng">
@@ -249,14 +265,10 @@
 
         <script type="module">
             import { Products, Types, getSellPrice, computeStock } from './scripts/db.js';
+            import { initHeader, getCartSafe as getCart, setCartSafe as setCart, updateCartBadge, openCart, closeCart, toggleCart } from './scripts/header.js';
+            import { session } from './scripts/utils.js';
             
-            function getCart(){ try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch { return []; } }
-            function setCart(c){ localStorage.setItem('cart', JSON.stringify(c)); }
             function formatCurrency(v){ return new Intl.NumberFormat('vi-VN').format(v); }
-            function updateCartBadge(){ const b=document.getElementById('cart-badge'); if(b) b.textContent=getCart().length; }
-            function openCart(){ window.location.href='cart.html'; }
-            function closeCart(){ /* no-op */ }
-            function toggleCart(){ window.location.href='cart.html'; }
             // Track current stock levels
             let productStocks = new Map();
             
@@ -488,13 +500,13 @@
                                             data-id="${product.id}" 
                                             data-name="${product.name}" 
                                             data-price="${priceInfo.price}"
-                                            onclick="event.stopPropagation(); addToCart(this);"
+                                            onclick="event.stopPropagation(); ${isAvailable ? 'addToCart(this);' : ''}"
                                             ${!isAvailable ? 'disabled style="opacity: 0.6; cursor: not-allowed;"' : ''}>
                                         ${isAvailable ? 'Thêm vào giỏ' : 'Hết hàng'}
                                     </button>
                                     <button class="buy-now" 
                                             data-id="${product.id}"
-                                            onclick="event.stopPropagation(); buyNow(event, '${product.id}');"
+                                            onclick="event.stopPropagation(); ${isAvailable ? `buyNow(event, '${product.id}');` : ''}"
                                             ${!isAvailable ? 'disabled style="opacity: 0.6; cursor: not-allowed;"' : ''}>
                                         Mua ngay
                                     </button>
@@ -591,33 +603,20 @@
                 }
             }
 
-            // Add to cart function with login check
+            // Add to cart function with login check (aligned with arabica.html)
             function addToCart(buttonOrData){
-                // Check if user is logged in
-                if (!checkAuth()) {
-                    showLoginRequired();
-                    return false;
-                }
-                
+                if (!requireLogin()) return false;
                 const productId = buttonOrData.dataset ? buttonOrData.dataset.id : buttonOrData.id;
                 const product = Products.list().find(p => p.id === productId);
                 if (!product) return false;
-                
-                // Check if product is in stock
-                const availableStock = getAvailableStock(productId);
-                const currentQuantity = getCart().find(i => i.id === productId)?.quantity || 0;
-                const newQuantity = currentQuantity + 1;
-                
-                if (newQuantity > availableStock) {
-                    showToast(`Chỉ còn ${availableStock} sản phẩm trong kho`, 'error');
-                    return false;
-                }
-                
+                if (!isInStock(productId, 1)) return false;
+
                 const cart = getCart();
                 const existing = cart.find(i => i.id === productId);
-                
-                if (existing) { 
-                    existing.quantity = newQuantity; 
+                const available = getAvailableStock(productId);
+
+                if (existing) {
+                    existing.quantity = Math.min(available, (existing.quantity || 1) + 1);
                 } else {
                     cart.push({ 
                         id: productId, 
@@ -627,16 +626,11 @@
                         image: product.image || ''
                     });
                 }
-                
+
                 setCart(cart);
                 updateCartBadge();
                 renderCart();
-                
-                if (buttonOrData.dataset) { 
-                    showAddedToCart(buttonOrData);
-                }
-                
-                showToast('Đã thêm vào giỏ hàng', 'success');
+                if (buttonOrData.dataset) showAddedToCart(buttonOrData);
                 return true;
             }
             window.addToCart = addToCart;
@@ -646,15 +640,17 @@
             function buyNow(event, productId) { 
                 event.stopPropagation(); 
                 
-                // Check if user is logged in
-                if (!checkAuth()) {
-                    showLoginRequired('checkout.html');
-                    return;
-                }
+                // Require login, redirect back to cart similar to arabica
+                if (!requireLogin('cart.html')) return;
                 
-                // Add to cart and proceed to checkout
+                // Ensure product exists and in stock before proceeding
+                const product = Products.list().find(p => p.id === productId);
+                if (!product) return;
+                if (!isInStock(productId, 1)) return;
+                
+                // Add to cart and redirect to cart page (align with arabica)
                 addToCart({ id: productId });
-                window.location.href = 'checkout.html';
+                window.location.href = 'cart.html';
             }
             window.buyNow = buyNow;
             
@@ -717,11 +713,54 @@
                 }, 3000);
             }
 
-            // Global events for cart (header link navigates directly)
+            // Auth guard
+            function requireLogin(redirectUrl = window.location.href) {
+                if (!session.isLoggedIn()) {
+                    if (confirm('Vui lòng đăng nhập để tiếp tục. Chuyển sang trang đăng nhập?')) {
+                        window.location.href = `login.html?redirect=${encodeURIComponent(redirectUrl)}`;
+                    }
+                    return false;
+                }
+                return true;
+            }
+
+            // Auth header UI
+            function updateAuthUI() {
+                const accountText = document.getElementById('accountText');
+                const loginItem = document.getElementById('loginItem');
+                const registerItem = document.getElementById('registerItem');
+                const profileItem = document.getElementById('profileItem');
+                const logoutItem = document.getElementById('logoutItem');
+                if (!accountText) return;
+                if (session.isLoggedIn()) {
+                    const user = session.getUser();
+                    accountText.textContent = `Xin chào, ${user.name}`;
+                    if (loginItem) loginItem.style.display = 'none';
+                    if (registerItem) registerItem.style.display = 'none';
+                    if (profileItem) profileItem.style.display = 'block';
+                    if (logoutItem) logoutItem.style.display = 'block';
+                } else {
+                    accountText.textContent = 'Đăng nhập / Đăng ký';
+                    if (loginItem) loginItem.style.display = 'block';
+                    if (registerItem) registerItem.style.display = 'block';
+                    if (profileItem) profileItem.style.display = 'none';
+                    if (logoutItem) logoutItem.style.display = 'none';
+                }
+            }
+            updateAuthUI();
+            document.getElementById('logoutLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                    session.logout();
+                    updateAuthUI();
+                }
+            });
 
             // Initialize the page
+            window.CART_MODE = 'navigate';
+            initHeader();
             init();
-
+            updateCartBadge();
             closeCart();
         </script>
     </body>

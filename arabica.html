@@ -12,6 +12,7 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="styles/user.css" />
+        <link rel="stylesheet" href="styles/header.css" />
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
@@ -129,6 +130,21 @@
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
                     <a href="index.html#lien-he">Liên hệ</a>
 
+                    <!-- Tài khoản -->
+                    <div class="account-menu" id="accountMenu">
+                        <div class="account-toggle">
+                            <i class="fa fa-user"></i>
+                            <span id="accountText">Đăng nhập / Đăng ký</span>
+                            <span class="caret">▼</span>
+                        </div>
+                        <ul class="account-dropdown">
+                            <li id="loginItem"><a href="login.html"><i class="fa fa-sign-in-alt"></i> Đăng nhập</a></li>
+                            <li id="registerItem"><a href="register.html"><i class="fa fa-user-plus"></i> Đăng ký</a></li>
+                            <li id="profileItem" style="display: none;"><a href="profile.html"><i class="fa fa-user-circle"></i> Thông tin cá nhân</a></li>
+                            <li id="logoutItem" style="display: none;"><a href="#" id="logoutLink"><i class="fa fa-sign-out-alt"></i> Đăng xuất</a></li>
+                        </ul>
+                    </div>
+
                     <!-- Giỏ hàng -->
                     <a href="cart.html" class="badge" aria-label="Giỏ hàng">
                         Giỏ hàng
@@ -236,20 +252,22 @@
         </footer>
 
         <script type="module">
-            import { Products, Types } from './scripts/db.js';
-            function getCart(){ try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch { return []; } }
-            function setCart(c){ localStorage.setItem('cart', JSON.stringify(c)); }
+            import { Products, Types, computeStock } from './scripts/db.js';
+            import { initHeader, getCartSafe as getCart, setCartSafe as setCart, updateCartBadge, toggleCart, closeCart, openCart } from './scripts/header.js';
+            import { session } from './scripts/utils.js';
             function formatCurrencyGlobal(v){ return new Intl.NumberFormat('vi-VN').format(v); }
-            function updateCartBadge(){ const b=document.getElementById('cart-badge'); if(b) b.textContent=getCart().length; }
-            function openCart(){ renderCart(); const d=document.getElementById('cartDrawer'); const o=document.getElementById('cartDrawerOverlay'); if(d&&o){ d.hidden=false; o.hidden=false; }}
-            function closeCart(){ const d=document.getElementById('cartDrawer'); const o=document.getElementById('cartDrawerOverlay'); if(d&&o){ d.hidden=true; o.hidden=true; }}
-            function toggleCart(){ const d=document.getElementById('cartDrawer'); if(!d) return; d.hidden?openCart():closeCart(); }
             function renderCart(){ const c=getCart(); const box=document.getElementById('cartItems'); const sub=document.getElementById('cartSubtotal'); if(!box||!sub) return; if(c.length===0){ box.innerHTML='<p>Giỏ hàng trống.</p>'; sub.textContent='0đ'; return;} box.innerHTML=c.map(item=>`<div class="cart-item" data-id="${item.id}" style="padding:12px 0; border-bottom:1px solid #f2f2f2;"><div style="display:flex; align-items:start; justify-content: space-between; gap:10px;"><div style="flex:1; min-width:0;"><div style="font-weight:600;">${item.name}</div><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><button class="qty-dec" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;">-</button><input class="qty-input" type="number" min="1" value="${item.quantity}" style="width:48px; text-align:center; border:1px solid #ddd; height:28px;" /><button class="qty-inc" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;">+</button><button class="remove-item" style="margin-left:8px; background:#fff; border:1px solid #f2d7d7; color:#c62828; cursor:pointer; height:28px; padding:0 10px; border-radius:6px;">Xóa</button></div></div><div style="min-width:100px; text-align:right; font-weight:600; color:var(--coffee);">${formatCurrencyGlobal(item.price*item.quantity)}đ</div></div></div>`).join(''); const total=c.reduce((s,i)=>s+i.price*i.quantity,0); sub.textContent=`${formatCurrencyGlobal(total)}đ`; box.querySelectorAll('.qty-dec').forEach(b=>b.addEventListener('click',onDec)); box.querySelectorAll('.qty-inc').forEach(b=>b.addEventListener('click',onInc)); box.querySelectorAll('.qty-input').forEach(i=>i.addEventListener('change',onChange)); box.querySelectorAll('.remove-item').forEach(b=>b.addEventListener('click',onRemove)); }
             function onDec(e){ const id=e.target.closest('.cart-item')?.dataset.id; const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity=Math.max(1,it.quantity-1); setCart(c); updateCartBadge(); renderCart(); }
             function onInc(e){ const id=e.target.closest('.cart-item')?.dataset.id; const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity+=1; setCart(c); updateCartBadge(); renderCart(); }
             function onChange(e){ const id=e.target.closest('.cart-item')?.dataset.id; const v=Math.max(1, parseInt(e.target.value||'1',10)); const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity=v; setCart(c); updateCartBadge(); renderCart(); }
             function onRemove(e){ const id=e.target.closest('.cart-item')?.dataset.id; const c=getCart().filter(i=>i.id!==id); setCart(c); updateCartBadge(); renderCart(); }
             
+            // Stock helpers
+            let productStocks = new Map();
+            function updateStockLevels(){ productStocks = computeStock(); }
+            function getAvailableStock(productId){ return productStocks.get(productId)||0; }
+            function isInStock(productId, qty=1){ return getAvailableStock(productId) >= qty; }
+
             // Constants
             const ITEMS_PER_PAGE = 6;
             let currentPage = 1;
@@ -333,13 +351,7 @@
                     applyFilters();
                 });
 
-                // Mobile menu toggle
-                document.getElementById('menuBtn').addEventListener('click', () => {
-                    const menu = document.getElementById('mobileMenu');
-                    const expanded = menu.hidden;
-                    menu.hidden = !expanded;
-                    menuBtn.setAttribute('aria-expanded', expanded);
-                });
+                // Header interactions handled by header.js
             }
 
             // Render products for current page
@@ -355,10 +367,15 @@
                     return;
                 }
 
-                grid.innerHTML = pageProducts.map(product => `
-                    <article class="card" onclick="window.location.href='product-detail.html?id=${product.id}'" style="cursor: pointer;">
+                grid.innerHTML = pageProducts.map(product => {
+                    const available = getAvailableStock(product.id);
+                    const availableText = available > 0 ? `Còn ${available} sản phẩm` : 'Tạm hết hàng';
+                    const isAvailable = available > 0;
+                    return `
+                    <article class="card" onclick="window.location.href='product-detail.html?id=${product.id}'" style="cursor: pointer; position: relative;">
+                        ${!isAvailable ? '<div style="position:absolute;top:10px;left:10px;background:rgba(244,67,54,0.9);color:#fff;padding:4px 8px;border-radius:4px;font-size:0.8em;font-weight:700;">HẾT HÀNG</div>' : ''}
                         <img src="${product.image || 'https://via.placeholder.com/400x300?text=No+Image'}" 
-                             alt="${product.name}">
+                             alt="${product.name}" ${!isAvailable ? 'style="opacity:.7;"' : ''}>
                         <div class="card-body">
                             <span class="chip">${getTypeName(product.typeId)}</span>
                             <div class="spacer"></div>
@@ -368,24 +385,25 @@
                                     <div>
                                         <span class="price">${formatCurrency(getSellPrice(product.id).price)}đ</span>
                                     </div>
+                                    <div style="margin-top:6px; font-size: 0.9em; ${isAvailable ? 'color:#4caf50;' : 'color:#f44336;'}">${availableText}</div>
                                 </div>
                                 <div class="button-group">
                                     <button class="add" data-id="${product.id}" 
                                             data-name="${product.name}" 
                                             data-price="${getSellPrice(product.id).price}"
-                                            onclick="event.stopPropagation()">
-                                        Thêm vào giỏ
+                                            onclick="event.stopPropagation(); addBlend(this, '${product.id}')" ${!isAvailable ? 'disabled style=\"opacity:.6;cursor:not-allowed;\"' : ''}>
+                                        ${isAvailable ? 'Thêm vào giỏ' : 'Hết hàng'}
                                     </button>
                                     <button class="buy-now" 
                                             data-id="${product.id}"
-                                            onclick="buyNow(event, '${product.id}')">
-                                        Mua ngay
+                                            onclick="buyNow(event, '${product.id}')" ${!isAvailable ? 'disabled style="opacity:.6;cursor:not-allowed;"' : ''}>
+                                        ${isAvailable ? 'Mua ngay' : 'Hết hàng'}
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </article>
-                `).join('');
+                `;}).join('');
             }
 
             // Render pagination
@@ -436,10 +454,12 @@
             // Buy now functionality
             function buyNow(event, productId) {
                 event.stopPropagation();
+                if (!requireLogin('cart.html')) return;
                 const product = Products.list().find(p => p.id === productId);
                 if (!product) return;
 
                 const price = getSellPrice(productId).price;
+                if(!isInStock(productId, 1)) return;
                 
                 // Add to cart
                 const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -485,14 +505,86 @@
                 };
             }
 
-            // Global events for cart
-            document.querySelector('a[aria-label="Giỏ hàng"]')?.addEventListener('click', (e)=>{ e.preventDefault(); toggleCart(); });
-            document.getElementById('closeCartBtn')?.addEventListener('click', closeCart);
-            document.getElementById('cartDrawerOverlay')?.addEventListener('click', closeCart);
             document.getElementById('checkoutBtn')?.addEventListener('click', ()=>{ window.location.href='checkout.html'; });
-            document.addEventListener('keydown', (ev)=>{ if(ev.key==='Escape') closeCart(); });
+
+            // Auth header UI
+            function updateAuthUI() {
+                const accountText = document.getElementById('accountText');
+                const loginItem = document.getElementById('loginItem');
+                const registerItem = document.getElementById('registerItem');
+                const profileItem = document.getElementById('profileItem');
+                const logoutItem = document.getElementById('logoutItem');
+                if (!accountText) return;
+                if (session.isLoggedIn()) {
+                    const user = session.getUser();
+                    accountText.textContent = `Xin chào, ${user.name}`;
+                    if (loginItem) loginItem.style.display = 'none';
+                    if (registerItem) registerItem.style.display = 'none';
+                    if (profileItem) profileItem.style.display = 'block';
+                    if (logoutItem) logoutItem.style.display = 'block';
+                } else {
+                    accountText.textContent = 'Đăng nhập / Đăng ký';
+                    if (loginItem) loginItem.style.display = 'block';
+                    if (registerItem) registerItem.style.display = 'block';
+                    if (profileItem) profileItem.style.display = 'none';
+                    if (logoutItem) logoutItem.style.display = 'none';
+                }
+            }
+            updateAuthUI();
+            document.getElementById('logoutLink')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                    session.logout();
+                    updateAuthUI();
+                }
+            });
+
+            // Auth guard
+            function requireLogin(redirectUrl = window.location.href) {
+                if (!session.isLoggedIn()) {
+                    if (confirm('Vui lòng đăng nhập để tiếp tục. Chuyển sang trang đăng nhập?')) {
+                        window.location.href = `login.html?redirect=${encodeURIComponent(redirectUrl)}`;
+                    }
+                    return false;
+                }
+                return true;
+            }
+
+            // Add to cart handler for this page (Blend) - stock-aware like arabica
+            function addBlend(button, productId){
+                if (!requireLogin()) return;
+                if (!isInStock(productId, 1)) return;
+                const product = Products.list().find(p => p.id === productId);
+                if (!product) return;
+                const cart = getCart();
+                const existing = cart.find(i => i.id === productId);
+                const available = getAvailableStock(productId);
+                if (existing) {
+                    existing.quantity = Math.min(available, (existing.quantity || 1) + 1);
+                } else {
+                    cart.push({ id: productId, name: product.name, price: getSellPrice(productId).price, quantity: 1 });
+                }
+                setCart(cart);
+                updateCartBadge();
+                if (button) showAddedToCart(button);
+            }
+            window.addBlend = addBlend;
+
+            // Visual feedback after adding to cart (like products.html)
+            function showAddedToCart(button) {
+                const original = button.textContent;
+                button.textContent = 'Đã thêm';
+                button.disabled = true;
+                setTimeout(() => {
+                    button.textContent = original;
+                    button.disabled = false;
+                }, 2000);
+            }
 
             // Initialize the page
+            window.CART_MODE = 'navigate';
+            initHeader();
+            updateStockLevels();
             init();
             updateCartBadge();
             closeCart();
