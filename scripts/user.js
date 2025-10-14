@@ -35,6 +35,7 @@ document.getElementById("logoutLink")?.addEventListener("click", (e) => {
     if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
         session.logout();
         updateAuthUI();
+        updateCartBadge(); // Update cart badge after logout
         // Show success message
         const successMsg = document.createElement("div");
         successMsg.style.cssText = `
@@ -85,11 +86,11 @@ menuBtn?.addEventListener("click", () => {
 
 // Cart functionality
 function updateCartBadge() {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     if (cartBadge) {
-        cartBadge.textContent = totalItems > 0 ? String(totalItems) : '';
-        cartBadge.style.display = totalItems > 0 ? 'flex' : 'none';
+        cartBadge.textContent = totalItems > 0 ? String(totalItems) : "";
+        cartBadge.style.display = totalItems > 0 ? "flex" : "none";
     }
     return totalItems;
 }
@@ -98,40 +99,105 @@ function updateCartBadge() {
 updateCartBadge();
 
 // Add to cart function
-window.addToCart = function(button) {
+window.addToCart = function (button) {
     const productId = button.dataset.id;
     const productName = button.dataset.name;
     const price = parseFloat(button.dataset.price) || 0;
     const quantity = 1;
-    
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingItem = cart.find(item => item.id === productId);
-    
-    if (existingItem) {
-        existingItem.quantity += quantity;
-    } else {
-        cart.push({
-            id: productId,
-            name: productName,
-            price: price,
-            quantity: quantity
+
+    // Check stock availability before adding to cart
+    import("./scripts/db.js")
+        .then(({ computeStock }) => {
+            const stock = computeStock();
+            const availableStock = stock.get(productId) || 0;
+
+            let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+            const existingItem = cart.find((item) => item.id === productId);
+            const currentCartQuantity = existingItem
+                ? existingItem.quantity
+                : 0;
+
+            if (currentCartQuantity + quantity > availableStock) {
+                alert(
+                    `Chỉ còn ${availableStock} sản phẩm trong kho. Bạn đã có ${currentCartQuantity} sản phẩm trong giỏ.`
+                );
+                return;
+            }
+
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: productName,
+                    price: price,
+                    quantity: quantity,
+                });
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+
+            // Also save to user-specific storage if user is logged in
+            const user = session.getUser();
+            if (user) {
+                try {
+                    const carts = JSON.parse(
+                        localStorage.getItem("userCarts") || "{}"
+                    );
+                    carts[user.id] = cart;
+                    localStorage.setItem("userCarts", JSON.stringify(carts));
+                } catch (e) {
+                    console.error("Error saving to user-specific cart:", e);
+                }
+            }
+
+            updateCartBadge();
+
+            // Show added to cart message
+            button.textContent = "Đã thêm";
+            button.disabled = true;
+            setTimeout(() => {
+                button.textContent = "Thêm vào giỏ";
+                button.disabled = false;
+            }, 1500);
+        })
+        .catch((error) => {
+            console.error("Error checking stock:", error);
+            // Fallback to original behavior if stock check fails
+            let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+            const existingItem = cart.find((item) => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += quantity;
+            } else {
+                cart.push({
+                    id: productId,
+                    name: productName,
+                    price: price,
+                    quantity: quantity,
+                });
+            }
+
+            localStorage.setItem("cart", JSON.stringify(cart));
+            updateCartBadge();
+
+            button.textContent = "Đã thêm";
+            button.disabled = true;
+            setTimeout(() => {
+                button.textContent = "Thêm vào giỏ";
+                button.disabled = false;
+            }, 1500);
         });
-    }
-    
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartBadge();
-    
-    // Show added to cart message
-    button.textContent = 'Đã thêm';
-    button.disabled = true;
-    setTimeout(() => {
-        button.textContent = 'Thêm vào giỏ';
-        button.disabled = false;
-    }, 1500);
 };
 
 // Initialize auth UI
 updateAuthUI();
+
+// Listen for stock update events to refresh cart badge
+window.addEventListener("stockUpdated", () => {
+    updateCartBadge();
+    console.log("Stock updated, refreshing cart badge");
+});
 
 // Ẩn menu con khi cuộn xuống, hiện lại khi cuộn lên
 let lastScrollTop = 0;

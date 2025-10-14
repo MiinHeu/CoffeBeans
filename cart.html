@@ -6,9 +6,15 @@
         <title>Giỏ hàng - Cà Phê Đậm Đà</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
         <link rel="stylesheet" href="styles/user.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
     </head>
     <body>
         <!-- Header -->
@@ -16,13 +22,27 @@
             <div class="container nav">
                 <div class="brand">
                     <a href="index.html">
-                        <img src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9" alt="Logo Cà Phê Đậm Đà" class="brand-logo">
+                        <img
+                            src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9"
+                            alt="Logo Cà Phê Đậm Đà"
+                            class="brand-logo"
+                        />
                         <span class="brand-name">Cà Phê Đậm Đà</span>
                     </a>
                 </div>
-                <form class="search-bar" role="search" id="searchForm" onsubmit="handleSearch(event)">
+                <form
+                    class="search-bar"
+                    role="search"
+                    id="searchForm"
+                    onsubmit="handleSearch(event)"
+                >
                     <button class="search-btn" type="submit">🔍</button>
-                    <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." aria-label="Tìm kiếm" />
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Tìm sản phẩm..."
+                        aria-label="Tìm kiếm"
+                    />
                 </form>
 
                 <nav class="menu" aria-label="Chính">
@@ -30,7 +50,7 @@
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
                     <a href="index.html#loi-ich">Lợi ích</a>
                     <a href="index.html#lien-he">Liên hệ</a>
-                    <a href="order-history.html" style="margin-right: 10px;">
+                    <a href="order-history.html" style="margin-right: 10px">
                         <i class="fas fa-history"></i> Đơn hàng
                     </a>
                     <a href="cart.html" class="badge" aria-label="Giỏ hàng">
@@ -39,7 +59,12 @@
                     </a>
                 </nav>
 
-                <button id="menuBtn" class="mobile-toggle" aria-expanded="false" aria-controls="mobileMenu">
+                <button
+                    id="menuBtn"
+                    class="mobile-toggle"
+                    aria-expanded="false"
+                    aria-controls="mobileMenu"
+                >
                     Menu
                 </button>
             </div>
@@ -47,28 +72,105 @@
 
         <nav id="mobileMenu" hidden class="mobile-menu"></nav>
 
-        <main class="container" style="padding: 24px 20px;">
+        <main class="container" style="padding: 24px 20px">
             <h1 class="section-title">Giỏ hàng của bạn</h1>
-            <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; align-items:start; margin-top:16px;">
+            <div
+                style="
+                    display: grid;
+                    grid-template-columns: 1.2fr 0.8fr;
+                    gap: 20px;
+                    align-items: start;
+                    margin-top: 16px;
+                "
+            >
                 <!-- Cart items -->
-                <section style="background:#fff; border-radius:12px; padding:16px; box-shadow: 0 6px 18px rgba(0,0,0,0.06);">
-                    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <section
+                    style="
+                        background: #fff;
+                        border-radius: 12px;
+                        padding: 16px;
+                        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+                    "
+                >
+                    <div
+                        style="
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                            margin-bottom: 10px;
+                        "
+                    >
                         <input type="checkbox" id="selectAll" />
-                        <label for="selectAll" style="user-select:none; cursor:pointer;">Chọn tất cả</label>
+                        <label
+                            for="selectAll"
+                            style="user-select: none; cursor: pointer"
+                            >Chọn tất cả</label
+                        >
                     </div>
                     <div id="cartItems"></div>
                 </section>
 
                 <!-- Summary -->
-                <aside style="background:#fff; border-radius:12px; padding:16px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); position: sticky; top: 84px;">
+                <aside
+                    style="
+                        background: #fff;
+                        border-radius: 12px;
+                        padding: 16px;
+                        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+                        position: sticky;
+                        top: 84px;
+                    "
+                >
                     <h3>Tổng kết</h3>
-                    <div style="display:grid; gap:8px; margin-top:10px;">
-                        <div style="display:flex; justify-content:space-between;"><span>Đã chọn</span><strong id="selectedCount">0</strong></div>
-                        <div style="display:flex; justify-content:space-between;"><span>Tạm tính</span><strong id="subtotal">0đ</strong></div>
+                    <div style="display: grid; gap: 8px; margin-top: 10px">
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                            "
+                        >
+                            <span>Đã chọn</span
+                            ><strong id="selectedCount">0</strong>
+                        </div>
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: space-between;
+                            "
+                        >
+                            <span>Tạm tính</span
+                            ><strong id="subtotal">0đ</strong>
+                        </div>
                     </div>
-                    <div style="display:flex; gap:12px; margin-top:12px;">
-                        <a href="products.html" style="flex:1; text-align:center; padding:12px 14px; background:#fff; color:#333; border: 1px solid #ddd; border-radius: 8px; font-weight:600;">Tiếp tục mua</a>
-                        <a href="checkout.html" style="flex:1; text-align:center; padding:12px 14px; background: var(--gold); color: var(--coffee-900); border:none; border-radius: 8px; font-weight: 600;">Thanh toán</a>
+                    <div style="display: flex; gap: 12px; margin-top: 12px">
+                        <a
+                            href="products.html"
+                            style="
+                                flex: 1;
+                                text-align: center;
+                                padding: 12px 14px;
+                                background: #fff;
+                                color: #333;
+                                border: 1px solid #ddd;
+                                border-radius: 8px;
+                                font-weight: 600;
+                            "
+                            >Tiếp tục mua</a
+                        >
+                        <a
+                            href="checkout.html"
+                            style="
+                                flex: 1;
+                                text-align: center;
+                                padding: 12px 14px;
+                                background: var(--gold);
+                                color: var(--coffee-900);
+                                border: none;
+                                border-radius: 8px;
+                                font-weight: 600;
+                            "
+                            >Thanh toán</a
+                        >
                     </div>
                 </aside>
             </div>
@@ -78,11 +180,14 @@
             <div class="container foot">
                 <div>
                     <h4>Cà Phê Đậm Đà</h4>
-                    <p>Hạt cà phê rang xay chất lượng cao. Đồng hành cùng ly cà phê ngon mỗi ngày.</p>
+                    <p>
+                        Hạt cà phê rang xay chất lượng cao. Đồng hành cùng ly cà
+                        phê ngon mỗi ngày.
+                    </p>
                 </div>
                 <div>
                     <h4>Liên hệ</h4>
-                    <p>Hotline: 0901 234 567<br/>Email: hello@caphedamda.vn</p>
+                    <p>Hotline: 0901 234 567<br />Email: hello@caphedamda.vn</p>
                 </div>
                 <div>
                     <h4>Địa chỉ</h4>
@@ -95,46 +200,89 @@
         </footer>
 
         <script type="module">
-            import { Products, Types, getSellPrice, computeStock } from './scripts/db.js';
-            
+            import {
+                Products,
+                Types,
+                getSellPrice,
+                computeStock,
+            } from "./scripts/db.js";
+            import { session } from "./scripts/utils.js";
+
             // Track current stock levels
             let productStocks = new Map();
-            
+
             // Initialize stock levels
             function updateStockLevels() {
                 const stockMap = computeStock();
                 productStocks = stockMap;
                 return stockMap;
             }
-            
+
             // Get available stock for a product
             function getAvailableStock(productId) {
                 return productStocks.get(productId) || 0;
             }
-            
+
             // Check if a product is in stock
             function isInStock(productId, quantity = 1) {
                 return getAvailableStock(productId) >= quantity;
             }
-            
+
             // Initialize stock levels when the page loads
             updateStockLevels();
 
+            // Force update stock after a short delay to ensure data is loaded
+            setTimeout(() => {
+                updateStockLevels();
+                render();
+            }, 500);
+
+            // Update stock levels periodically to reflect changes
+            setInterval(() => {
+                updateStockLevels();
+                render(); // Re-render to update stock display
+            }, 2000); // Update every 2 seconds
+
+            // Listen for stock update events (e.g., after order placement)
+            window.addEventListener("stockUpdated", () => {
+                updateStockLevels();
+                render();
+                console.log("Stock updated after order placement");
+            });
+
             // Utility functions
-            function formatCurrency(v) { 
-                return new Intl.NumberFormat('vi-VN').format(v); 
+            function formatCurrency(v) {
+                return new Intl.NumberFormat("vi-VN").format(v);
             }
-            
-            function getCart() { 
-                try { 
-                    return JSON.parse(localStorage.getItem('cart') || '[]'); 
-                } catch { 
-                    return []; 
-                } 
+
+            function getCart() {
+                try {
+                    return JSON.parse(localStorage.getItem("cart") || "[]");
+                } catch {
+                    return [];
+                }
             }
-            
-            function setCart(cart) { 
-                localStorage.setItem('cart', JSON.stringify(cart));
+
+            function setCart(cart) {
+                localStorage.setItem("cart", JSON.stringify(cart));
+
+                // Also save to user-specific storage if user is logged in
+                const user = session.getUser();
+                if (user) {
+                    try {
+                        const carts = JSON.parse(
+                            localStorage.getItem("userCarts") || "{}"
+                        );
+                        carts[user.id] = cart;
+                        localStorage.setItem(
+                            "userCarts",
+                            JSON.stringify(carts)
+                        );
+                    } catch (e) {
+                        console.error("Error saving to user-specific cart:", e);
+                    }
+                }
+
                 updateCartBadge();
             }
 
@@ -143,39 +291,81 @@
                 const cart = getCart();
                 // Show number of distinct items on the cart page
                 const distinctCount = cart.length;
-                const badge = document.getElementById('cart-badge');
+                const badge = document.getElementById("cart-badge");
                 if (badge) {
-                    badge.textContent = distinctCount > 0 ? String(distinctCount) : '';
-                    badge.style.display = distinctCount > 0 ? 'flex' : 'none';
+                    badge.textContent =
+                        distinctCount > 0 ? String(distinctCount) : "";
+                    badge.style.display = distinctCount > 0 ? "flex" : "none";
                 }
                 return distinctCount;
             }
 
             // Get selected item IDs from localStorage
-            function getSelectedIds() { 
-                try { 
-                    return new Set(JSON.parse(localStorage.getItem('cart_selected') || '[]')); 
-                } catch { 
-                    return new Set(); 
-                } 
+            function getSelectedIds() {
+                try {
+                    // First try to get from generic storage
+                    const genericSelected = JSON.parse(
+                        localStorage.getItem("cart_selected") || "[]"
+                    );
+                    if (genericSelected.length > 0) {
+                        return new Set(genericSelected);
+                    }
+
+                    // If no generic selection, try user-specific storage
+                    const user = session.getUser();
+                    if (user) {
+                        const selectedCarts = JSON.parse(
+                            localStorage.getItem("userCartSelected") || "{}"
+                        );
+                        const userSelected = selectedCarts[user.id] || [];
+                        return new Set(userSelected);
+                    }
+
+                    return new Set();
+                } catch {
+                    return new Set();
+                }
             }
-            
+
             // Save selected item IDs to localStorage
-            function setSelectedIds(ids) { 
-                localStorage.setItem('cart_selected', JSON.stringify(Array.from(ids))); 
+            function setSelectedIds(ids) {
+                localStorage.setItem(
+                    "cart_selected",
+                    JSON.stringify(Array.from(ids))
+                );
+
+                // Also save to user-specific storage if user is logged in
+                const user = session.getUser();
+                if (user) {
+                    try {
+                        const selectedCarts = JSON.parse(
+                            localStorage.getItem("userCartSelected") || "{}"
+                        );
+                        selectedCarts[user.id] = Array.from(ids);
+                        localStorage.setItem(
+                            "userCartSelected",
+                            JSON.stringify(selectedCarts)
+                        );
+                    } catch (e) {
+                        console.error(
+                            "Error saving selected items to user-specific storage:",
+                            e
+                        );
+                    }
+                }
             }
 
             // Handle item selection toggle
-            function onToggleSelect(e) { 
-                const id = e.target.closest('.cart-item')?.dataset.id; 
-                if (!id) return; 
-                const selected = getSelectedIds(); 
-                if (e.target.checked) { 
-                    selected.add(id); 
-                } else { 
-                    selected.delete(id); 
-                } 
-                setSelectedIds(selected); 
+            function onToggleSelect(e) {
+                const id = e.target.closest(".cart-item")?.dataset.id;
+                if (!id) return;
+                const selected = getSelectedIds();
+                if (e.target.checked) {
+                    selected.add(id);
+                } else {
+                    selected.delete(id);
+                }
+                setSelectedIds(selected);
                 updateCartSummary();
             }
 
@@ -183,61 +373,71 @@
             function updateCartSummary() {
                 const cart = getCart();
                 const selectedIds = getSelectedIds();
-                const selectedItems = cart.filter(item => selectedIds.has(item.id));
-                
+                const selectedItems = cart.filter((item) =>
+                    selectedIds.has(item.id)
+                );
+
                 let totalItems = 0;
                 let subtotal = 0;
                 let hasOutOfStockItems = false;
-                
-                selectedItems.forEach(item => {
+
+                selectedItems.forEach((item) => {
                     const priceInfo = getSellPrice(item.id);
-                    const price = priceInfo.price > 0 ? priceInfo.price : item.price;
+                    const price =
+                        priceInfo.price > 0 ? priceInfo.price : item.price;
                     const availableStock = getAvailableStock(item.id);
-                    
+
                     if (item.quantity > availableStock) {
                         hasOutOfStockItems = true;
                     }
-                    
+
                     totalItems += item.quantity;
                     subtotal += price * item.quantity;
                 });
-                
-                const selectedCountEl = document.getElementById('selectedCount');
-                const subtotalEl = document.getElementById('subtotal');
-                const checkoutBtn = document.querySelector('a[href="checkout.html"]');
-                
+
+                const selectedCountEl =
+                    document.getElementById("selectedCount");
+                const subtotalEl = document.getElementById("subtotal");
+                const checkoutBtn = document.querySelector(
+                    'a[href="checkout.html"]'
+                );
+
                 if (selectedCountEl) selectedCountEl.textContent = totalItems;
-                if (subtotalEl) subtotalEl.textContent = formatCurrency(subtotal) + 'đ';
-                
+                if (subtotalEl)
+                    subtotalEl.textContent = formatCurrency(subtotal) + "đ";
+
                 // Update checkout button state
                 if (checkoutBtn) {
                     if (hasOutOfStockItems || selectedItems.length === 0) {
-                        checkoutBtn.style.opacity = '0.6';
-                        checkoutBtn.style.pointerEvents = 'none';
-                        checkoutBtn.title = hasOutOfStockItems ? 
-                            'Vui lòng kiểm tra lại số lượng sản phẩm trong giỏ hàng' : 
-                            'Vui lòng chọn sản phẩm để thanh toán';
+                        checkoutBtn.style.opacity = "0.6";
+                        checkoutBtn.style.pointerEvents = "none";
+                        checkoutBtn.title = hasOutOfStockItems
+                            ? "Vui lòng kiểm tra lại số lượng sản phẩm trong giỏ hàng"
+                            : "Vui lòng chọn sản phẩm để thanh toán";
                     } else {
-                        checkoutBtn.style.opacity = '1';
-                        checkoutBtn.style.pointerEvents = 'auto';
-                        checkoutBtn.title = '';
+                        checkoutBtn.style.opacity = "1";
+                        checkoutBtn.style.pointerEvents = "auto";
+                        checkoutBtn.title = "";
                     }
                 }
-                
+
                 return !hasOutOfStockItems && selectedItems.length > 0;
             }
 
             // Update item quantity in cart
             function updateQuantity(id, quantity) {
                 const cart = getCart();
-                const item = cart.find(i => i.id === id);
+                const item = cart.find((i) => i.id === id);
                 if (!item) return false;
-                
+
                 // Get available stock
                 const availableStock = getAvailableStock(id);
                 // Ensure quantity doesn't exceed available stock
-                const newQuantity = Math.max(1, Math.min(quantity, availableStock));
-                
+                const newQuantity = Math.max(
+                    1,
+                    Math.min(quantity, availableStock)
+                );
+
                 // Only update if quantity changed
                 if (newQuantity !== item.quantity) {
                     item.quantity = newQuantity;
@@ -251,72 +451,81 @@
 
             // Event handlers
             function onInc(e) {
-                const id = e.target.closest('.cart-item')?.dataset.id;
+                const id = e.target.closest(".cart-item")?.dataset.id;
                 if (!id) return;
                 const cart = getCart();
-                const item = cart.find(i => i.id === id);
+                const item = cart.find((i) => i.id === id);
                 if (!item) return;
-                
+
                 // Check if we can increase the quantity
                 const availableStock = getAvailableStock(id);
                 if (item.quantity >= availableStock) {
-                    showToast(`Chỉ còn ${availableStock} sản phẩm trong kho`, 'warning');
+                    showToast(
+                        `Chỉ còn ${availableStock} sản phẩm trong kho`,
+                        "warning"
+                    );
                     return;
                 }
-                
+
                 updateQuantity(id, item.quantity + 1);
             }
-            
+
             function onDec(e) {
-                const id = e.target.closest('.cart-item')?.dataset.id;
+                const id = e.target.closest(".cart-item")?.dataset.id;
                 if (!id) return;
                 const cart = getCart();
-                const item = cart.find(i => i.id === id);
+                const item = cart.find((i) => i.id === id);
                 if (!item) return;
                 updateQuantity(id, item.quantity - 1);
             }
-            
+
             function onChange(e) {
-                const id = e.target.closest('.cart-item')?.dataset.id;
-                const quantity = Math.max(1, parseInt(e.target.value || '1', 10));
+                const id = e.target.closest(".cart-item")?.dataset.id;
+                const quantity = Math.max(
+                    1,
+                    parseInt(e.target.value || "1", 10)
+                );
                 const availableStock = getAvailableStock(id);
-                
+
                 if (quantity > availableStock) {
-                    showToast(`Chỉ còn ${availableStock} sản phẩm trong kho`, 'warning');
+                    showToast(
+                        `Chỉ còn ${availableStock} sản phẩm trong kho`,
+                        "warning"
+                    );
                     e.target.value = Math.min(quantity, availableStock);
                     return;
                 }
-                
+
                 updateQuantity(id, quantity);
             }
-            
+
             function onRemove(e) {
-                const id = e.target.closest('.cart-item')?.dataset.id;
+                const id = e.target.closest(".cart-item")?.dataset.id;
                 if (!id) return;
-                const updatedCart = getCart().filter(i => i.id !== id);
+                const updatedCart = getCart().filter((i) => i.id !== id);
                 setCart(updatedCart);
                 render();
             }
-            
-            function onChangeNote(e) { 
-                const id = e.target.closest('.cart-item')?.dataset.id; 
-                if (!id) return; 
-                const cart = getCart(); 
-                const item = cart.find(i => i.id === id); 
-                if (!item) return; 
-                item.note = e.target.value.trim(); 
-                setCart(cart); 
+
+            function onChangeNote(e) {
+                const id = e.target.closest(".cart-item")?.dataset.id;
+                if (!id) return;
+                const cart = getCart();
+                const item = cart.find((i) => i.id === id);
+                if (!item) return;
+                item.note = e.target.value.trim();
+                setCart(cart);
             }
 
             // Render cart items
             function render() {
-                const box = document.getElementById('cartItems');
+                const box = document.getElementById("cartItems");
                 const cart = getCart();
                 const selectedIds = getSelectedIds();
-                
+
                 // If no selection saved and we have items, select all by default
                 if (selectedIds.size === 0 && cart.length > 0) {
-                    const allIds = new Set(cart.map(item => item.id));
+                    const allIds = new Set(cart.map((item) => item.id));
                     setSelectedIds(allIds);
                 }
 
@@ -330,38 +539,39 @@
                                 Tiếp tục mua sắm
                             </a>
                         </div>`;
-                    
-                    const subtotalEl = document.getElementById('subtotal');
-                    const selectedCountEl = document.getElementById('selectedCount');
-                    
-                    if (subtotalEl) subtotalEl.textContent = '0đ';
-                    if (selectedCountEl) selectedCountEl.textContent = '0';
-                    
+
+                    const subtotalEl = document.getElementById("subtotal");
+                    const selectedCountEl =
+                        document.getElementById("selectedCount");
+
+                    if (subtotalEl) subtotalEl.textContent = "0đ";
+                    if (selectedCountEl) selectedCountEl.textContent = "0";
+
                     return;
                 }
-                
+
                 // Get all products and stock information
                 const products = Products.list();
-                
+
                 // Check for out of stock items
                 let hasOutOfStockItems = false;
-                const cartWithStock = cart.map(item => {
+                const cartWithStock = cart.map((item) => {
                     const available = getAvailableStock(item.id);
                     const isAvailable = available >= item.quantity;
                     if (!isAvailable) hasOutOfStockItems = true;
                     return { ...item, available, isAvailable };
                 });
-                
+
                 // Show out of stock warning if needed
                 if (hasOutOfStockItems) {
-                    const warning = document.createElement('div');
-                    warning.className = 'alert alert-warning';
-                    warning.style.marginBottom = '20px';
-                    warning.style.padding = '12px';
-                    warning.style.borderRadius = '4px';
-                    warning.style.backgroundColor = '#fff3cd';
-                    warning.style.color = '#856404';
-                    warning.style.border = '1px solid #ffeeba';
+                    const warning = document.createElement("div");
+                    warning.className = "alert alert-warning";
+                    warning.style.marginBottom = "20px";
+                    warning.style.padding = "12px";
+                    warning.style.borderRadius = "4px";
+                    warning.style.backgroundColor = "#fff3cd";
+                    warning.style.color = "#856404";
+                    warning.style.border = "1px solid #ffeeba";
                     warning.innerHTML = `
                         <i class="fas fa-exclamation-triangle"></i>
                         Một số sản phẩm trong giỏ hàng đã hết hàng hoặc không đủ số lượng. 
@@ -369,35 +579,63 @@
                     `;
                     box.parentNode.insertBefore(warning, box);
                 }
-                
-                box.innerHTML = cartWithStock.map(item => {
-                    const product = products.find(p => p.id === item.id) || {};
-                    const priceInfo = getSellPrice(item.id);
-                    const price = priceInfo.price > 0 ? priceInfo.price : item.price;
-                    const isSelected = Array.from(selectedIds).includes(item.id);
-                    const isAvailable = item.isAvailable;
-                    const availableStock = item.available;
-                    
-                    return `
-                    <div class="cart-item" data-id="${item.id}" style="padding: 16px 0; border-bottom: 1px solid #eee; ${!isAvailable ? 'opacity: 0.7;' : ''}">
+
+                box.innerHTML = cartWithStock
+                    .map((item) => {
+                        const product =
+                            products.find((p) => p.id === item.id) || {};
+                        const priceInfo = getSellPrice(item.id);
+                        const price =
+                            priceInfo.price > 0 ? priceInfo.price : item.price;
+                        const isSelected = Array.from(selectedIds).includes(
+                            item.id
+                        );
+                        const isAvailable = item.isAvailable;
+                        const availableStock = item.available;
+
+                        return `
+                    <div class="cart-item" data-id="${
+                        item.id
+                    }" style="padding: 16px 0; border-bottom: 1px solid #eee; ${
+                            !isAvailable ? "opacity: 0.7;" : ""
+                        }">
                         <div style="display: flex; gap: 16px; align-items: flex-start; position: relative;">
-                            ${!isAvailable ? '<div style="position: absolute; top: 0; left: 0; background: #f44336; color: white; padding: 2px 6px; font-size: 10px; border-radius: 3px; font-weight: bold;">HẾT HÀNG</div>' : ''}
+                            ${
+                                !isAvailable
+                                    ? '<div style="position: absolute; top: 0; left: 0; background: #f44336; color: white; padding: 2px 6px; font-size: 10px; border-radius: 3px; font-weight: bold;">HẾT HÀNG</div>'
+                                    : ""
+                            }
                             <div style="flex: 0 0 24px; padding-top: 4px;">
                                 <input type="checkbox" class="select-item" 
-                                       ${isSelected && isAvailable ? 'checked' : ''} 
-                                       ${!isAvailable ? 'disabled' : ''}
-                                       style="width: 16px; height: 16px; margin: 0; ${!isAvailable ? 'opacity: 0.5;' : ''}">
+                                       ${
+                                           isSelected && isAvailable
+                                               ? "checked"
+                                               : ""
+                                       } 
+                                       ${!isAvailable ? "disabled" : ""}
+                                       style="width: 16px; height: 16px; margin: 0; ${
+                                           !isAvailable ? "opacity: 0.5;" : ""
+                                       }">
                             </div>
-                            <img src="${product.image || 'https://via.placeholder.com/80'}" 
+                            <img src="${
+                                product.image ||
+                                "https://via.placeholder.com/80"
+                            }" 
                                  alt="${item.name}" 
                                  style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;">
                             <div style="flex: 1; min-width: 0;">
-                                <div style="margin-bottom: 8px; font-weight: 500;">${item.name}</div>
-                                <div style="color: #d4a76a; font-weight: 600; margin-bottom: 12px;">${formatCurrency(price)}đ</div>
+                                <div style="margin-bottom: 8px; font-weight: 500;">${
+                                    item.name
+                                }</div>
+                                <div style="color: #d4a76a; font-weight: 600; margin-bottom: 12px;">${formatCurrency(
+                                    price
+                                )}đ</div>
                                 
                                 <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
                                     <button class="qty-dec" style="width: 28px; height: 28px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">-</button>
-                                    <input type="number" value="${item.quantity}" min="1" class="qty-input" 
+                                    <input type="number" value="${
+                                        item.quantity
+                                    }" min="1" class="qty-input" 
                                            style="width: 50px; text-align: center; padding: 4px; border: 1px solid #ddd; border-radius: 4px;">
                                     <button class="qty-inc" style="width: 28px; height: 28px; border: 1px solid #ddd; background: white; border-radius: 4px; cursor: pointer;">+</button>
                                     
@@ -409,7 +647,7 @@
                                 <div>
                                     <input type="text" class="note-input" 
                                            placeholder="Ghi chú cho người bán" 
-                                           value="${item.note || ''}"
+                                           value="${item.note || ""}"
                                            style="width: 100%; padding: 6px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 13px;">
                                 </div>
                             </div>
@@ -419,29 +657,46 @@
                             </div>
                         </div>
                     </div>`;
-                }).join('');
-                
+                    })
+                    .join("");
+
                 // Add event listeners to the newly created elements
-                box.querySelectorAll('.qty-dec').forEach(btn => btn.addEventListener('click', onDec));
-                box.querySelectorAll('.qty-inc').forEach(btn => btn.addEventListener('click', onInc));
-                box.querySelectorAll('.qty-input').forEach(inp => inp.addEventListener('change', onChange));
-                box.querySelectorAll('.remove-item').forEach(btn => btn.addEventListener('click', onRemove));
-                box.querySelectorAll('.note-input').forEach(inp => inp.addEventListener('change', onChangeNote));
-                box.querySelectorAll('.select-item').forEach(inp => inp.addEventListener('change', onToggleSelect));
-                
+                box.querySelectorAll(".qty-dec").forEach((btn) =>
+                    btn.addEventListener("click", onDec)
+                );
+                box.querySelectorAll(".qty-inc").forEach((btn) =>
+                    btn.addEventListener("click", onInc)
+                );
+                box.querySelectorAll(".qty-input").forEach((inp) =>
+                    inp.addEventListener("change", onChange)
+                );
+                box.querySelectorAll(".remove-item").forEach((btn) =>
+                    btn.addEventListener("click", onRemove)
+                );
+                box.querySelectorAll(".note-input").forEach((inp) =>
+                    inp.addEventListener("change", onChangeNote)
+                );
+                box.querySelectorAll(".select-item").forEach((inp) =>
+                    inp.addEventListener("change", onToggleSelect)
+                );
+
                 // Update select all checkbox
-                const selectAllCheckbox = document.getElementById('selectAll');
+                const selectAllCheckbox = document.getElementById("selectAll");
                 if (selectAllCheckbox) {
-                    const selectedCount = Array.from(selectedIds).filter(id => 
-                        cart.some(item => item.id === id)
+                    const selectedCount = Array.from(selectedIds).filter((id) =>
+                        cart.some((item) => item.id === id)
                     ).length;
-                    
-                    selectAllCheckbox.checked = selectedCount === cart.length && cart.length > 0;
-                    selectAllCheckbox.indeterminate = selectedCount > 0 && selectedCount < cart.length;
-                    
+
+                    selectAllCheckbox.checked =
+                        selectedCount === cart.length && cart.length > 0;
+                    selectAllCheckbox.indeterminate =
+                        selectedCount > 0 && selectedCount < cart.length;
+
                     selectAllCheckbox.onchange = () => {
                         if (selectAllCheckbox.checked) {
-                            setSelectedIds(new Set(cart.map(item => item.id)));
+                            setSelectedIds(
+                                new Set(cart.map((item) => item.id))
+                            );
                         } else {
                             setSelectedIds(new Set());
                         }
@@ -454,47 +709,54 @@
             }
 
             // Search submit
-            function handleSearch(event) { 
-                event.preventDefault(); 
-                const q = document.getElementById('searchInput').value.trim(); 
-                if (q) { 
-                    window.location.href = `products.html?search=${encodeURIComponent(q)}`; 
-                } 
+            function handleSearch(event) {
+                event.preventDefault();
+                const q = document.getElementById("searchInput").value.trim();
+                if (q) {
+                    window.location.href = `products.html?search=${encodeURIComponent(
+                        q
+                    )}`;
+                }
             }
             window.handleSearch = handleSearch;
 
             // Show toast message
-            function showToast(message, type = 'info') {
-                const toast = document.createElement('div');
+            function showToast(message, type = "info") {
+                const toast = document.createElement("div");
                 toast.className = `toast toast-${type}`;
-                toast.style.position = 'fixed';
-                toast.style.bottom = '20px';
-                toast.style.right = '20px';
-                toast.style.padding = '12px 24px';
-                toast.style.background = type === 'success' ? '#4caf50' : 
-                                      type === 'error' ? '#f44336' : 
-                                      type === 'warning' ? '#ff9800' : '#2196f3';
-                toast.style.color = 'white';
-                toast.style.borderRadius = '4px';
-                toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-                toast.style.zIndex = '1000';
-                toast.style.transition = 'opacity 0.3s, transform 0.3s';
-                toast.style.transform = 'translateY(20px)';
-                toast.style.opacity = '0';
+                toast.style.position = "fixed";
+                toast.style.bottom = "20px";
+                toast.style.right = "20px";
+                toast.style.padding = "12px 24px";
+                toast.style.background =
+                    type === "success"
+                        ? "#4caf50"
+                        : type === "error"
+                        ? "#f44336"
+                        : type === "warning"
+                        ? "#ff9800"
+                        : "#2196f3";
+                toast.style.color = "white";
+                toast.style.borderRadius = "4px";
+                toast.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
+                toast.style.zIndex = "1000";
+                toast.style.transition = "opacity 0.3s, transform 0.3s";
+                toast.style.transform = "translateY(20px)";
+                toast.style.opacity = "0";
                 toast.textContent = message;
-                
+
                 document.body.appendChild(toast);
-                
+
                 // Trigger reflow
                 setTimeout(() => {
-                    toast.style.transform = 'translateY(0)';
-                    toast.style.opacity = '1';
+                    toast.style.transform = "translateY(0)";
+                    toast.style.opacity = "1";
                 }, 10);
-                
+
                 // Remove after delay
                 setTimeout(() => {
-                    toast.style.opacity = '0';
-                    toast.style.transform = 'translateY(-20px)';
+                    toast.style.opacity = "0";
+                    toast.style.transform = "translateY(-20px)";
                     setTimeout(() => {
                         if (toast.parentNode) {
                             document.body.removeChild(toast);
@@ -502,22 +764,20 @@
                     }, 300);
                 }, 3000);
             }
-            
+
             // Initialize the page
-            document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener("DOMContentLoaded", () => {
                 updateStockLevels();
                 updateCartBadge();
                 render();
                 updateCartSummary();
-                
+
                 // Add event listener for search form if it exists
-                const searchForm = document.getElementById('searchForm');
+                const searchForm = document.getElementById("searchForm");
                 if (searchForm) {
-                    searchForm.addEventListener('submit', handleSearch);
+                    searchForm.addEventListener("submit", handleSearch);
                 }
             });
         </script>
     </body>
 </html>
-
-

@@ -54,8 +54,8 @@ const DefaultDB = {
                 shelfLife: "12 tháng kể từ ngày sản xuất",
                 origin: "Việt Nam",
                 altitude: "1500m",
-                processingMethod: "Ướt"
-            }
+                processingMethod: "Ướt",
+            },
         },
         {
             id: "p2",
@@ -212,8 +212,8 @@ export const Products = {
                 shelfLife: "12 tháng kể từ ngày sản xuất",
                 origin: "",
                 altitude: "",
-                processingMethod: "Ướt"
-            }
+                processingMethod: "Ướt",
+            },
         };
         db.products.push(item);
         saveDB(db);
@@ -286,23 +286,23 @@ export const Orders = {
             status: order.status || "new",
             date: order.date || new Date().toISOString(),
             userId: order.userId,
-            customerName: order.customerName || '',
-            customerPhone: order.customerPhone || '',
-            customerEmail: order.customerEmail || '',
-            shippingAddress: order.shippingAddress || '',
-            deliveryMethod: order.deliveryMethod || 'delivery',
-            paymentMethod: order.paymentMethod || 'cod',
+            customerName: order.customerName || "",
+            customerPhone: order.customerPhone || "",
+            customerEmail: order.customerEmail || "",
+            shippingAddress: order.shippingAddress || "",
+            deliveryMethod: order.deliveryMethod || "delivery",
+            paymentMethod: order.paymentMethod || "cod",
             note: order.note || "",
             subtotal: order.subtotal || 0,
             shipping: order.shipping || 0,
             total: order.total || 0,
-            items: order.items.map(item => ({
+            items: order.items.map((item) => ({
                 productId: item.productId,
                 name: item.name,
                 price: item.price,
                 quantity: item.quantity,
-                image: item.image || ''
-            }))
+                image: item.image || "",
+            })),
         };
         db.orders.push(item);
         saveDB(db);
@@ -312,29 +312,29 @@ export const Orders = {
         const db = loadDB();
         const it = db.orders.find((x) => x.id === id);
         if (!it) return null;
-        
+
         // Nếu đơn hàng đã bị hủy, không cho phép cập nhật trạng thái
-        if (it.status === 'canceled') {
-            throw new Error('Không thể thay đổi trạng thái đơn hàng đã hủy');
+        if (it.status === "canceled") {
+            throw new Error("Không thể thay đổi trạng thái đơn hàng đã hủy");
         }
 
         // Nếu đang cập nhật trạng thái thành 'hủy', thêm hàng trở lại kho
-        if (patch.status === 'canceled') {
+        if (patch.status === "canceled") {
             // Tạo phiếu nhập kho để cộng lại hàng
             const receipt = {
-                id: uid('rec'),
+                id: uid("rec"),
                 date: new Date().toISOString(),
-                status: 'done',
+                status: "done",
                 note: `Hủy đơn hàng #${id}`,
-                items: it.items.map(item => ({
+                items: it.items.map((item) => ({
                     productId: item.productId,
                     qty: item.quantity,
-                    costPrice: 0 // Không theo dõi giá gốc khi hủy đơn
-                }))
+                    costPrice: 0, // Không theo dõi giá gốc khi hủy đơn
+                })),
             };
             db.receipts.push(receipt);
         }
-        
+
         // Cập nhật thông tin đơn hàng
         Object.assign(it, patch);
         saveDB(db);
@@ -346,58 +346,70 @@ export const Orders = {
 export function computeStock() {
     const { receipts, orders, products } = loadDB();
     const map = new Map(products.map((p) => [p.id, 0]));
-    receipts.forEach((r) => {
-        r.items.forEach((it) => {
-            map.set(
-                it.productId,
-                (map.get(it.productId) || 0) + Number(it.qty)
-            );
+    // Only count receipts that are completed (status = 'done')
+    receipts
+        .filter((r) => r.status === "done")
+        .forEach((r) => {
+            r.items.forEach((it) => {
+                map.set(
+                    it.productId,
+                    (map.get(it.productId) || 0) + Number(it.qty)
+                );
+            });
         });
-    });
-    orders.forEach((o) => {
-        o.items.forEach((it) => {
-            map.set(
-                it.productId,
-                (map.get(it.productId) || 0) - Number(it.qty)
-            );
+    // Only subtract stock for orders that are not canceled
+    orders
+        .filter((o) => o.status !== "canceled")
+        .forEach((o) => {
+            o.items.forEach((it) => {
+                map.set(
+                    it.productId,
+                    (map.get(it.productId) || 0) -
+                        Number(it.quantity || it.qty || 0)
+                );
+            });
         });
-    });
     return map; // productId -> qty
 }
 
 export function getSellPrice(productId) {
     const db = loadDB();
     const product = db.products.find((p) => p.id === productId);
-    
+
     // If product has a direct price set, use that
-    if (product && typeof product.price === 'number' && product.price > 0) {
-        return { 
-            cost: 0, 
-            percent: 0, 
-            price: product.price 
+    if (product && typeof product.price === "number" && product.price > 0) {
+        return {
+            cost: 0,
+            percent: 0,
+            price: product.price,
         };
     }
-    
+
     // Otherwise calculate price based on cost and profit percentage
+    // Only consider completed receipts (status = 'done')
     let totalQty = 0;
     let totalCost = 0;
-    db.receipts.forEach((r) => {
-        r.items.forEach((it) => {
-            if (it.productId === productId) {
-                totalQty += Number(it.qty);
-                totalCost += Number(it.qty) * Number(it.costPrice);
-            }
+    db.receipts
+        .filter((r) => r.status === "done")
+        .forEach((r) => {
+            r.items.forEach((it) => {
+                if (it.productId === productId) {
+                    totalQty += Number(it.qty);
+                    totalCost += Number(it.qty) * Number(it.costPrice);
+                }
+            });
         });
-    });
-    
+
     const cost = totalQty > 0 ? totalCost / totalQty : 0;
-    const type = product ? db.productTypes.find((t) => t.id === product.typeId) : null;
+    const type = product
+        ? db.productTypes.find((t) => t.id === product.typeId)
+        : null;
     const percent = (product?.profitPercent ?? type?.profitPercent) || 0;
-    const price = Math.round(cost * (1 + (percent / 100)));
-    
-    return { 
-        cost, 
-        percent, 
-        price: price > 0 ? price : 0 
+    const price = Math.round(cost * (1 + percent / 100));
+
+    return {
+        cost,
+        percent,
+        price: price > 0 ? price : 0,
     };
 }

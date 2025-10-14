@@ -6,48 +6,73 @@
         <title>Thanh toán - Cà Phê Đậm Đà</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
         <link rel="stylesheet" href="styles/user.css" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
         <style>
             /* Animations */
             @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(10px); }
-                to { opacity: 1; transform: translateY(0); }
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
-            
+
             @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.05); }
-                100% { transform: scale(1); }
+                0% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.05);
+                }
+                100% {
+                    transform: scale(1);
+                }
             }
-            
+
             /* Form styles */
             .form-control:focus {
                 border-color: var(--coffee-500);
                 box-shadow: 0 0 0 0.25rem rgba(139, 87, 42, 0.25);
             }
-            
+
             .is-invalid {
                 border-color: #dc3545 !important;
                 animation: shake 0.5s;
             }
-            
+
             @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-5px); }
-                75% { transform: translateX(5px); }
+                0%,
+                100% {
+                    transform: translateX(0);
+                }
+                25% {
+                    transform: translateX(-5px);
+                }
+                75% {
+                    transform: translateX(5px);
+                }
             }
-            
+
             /* Loading states */
             .loading {
                 position: relative;
                 pointer-events: none;
                 opacity: 0.8;
             }
-            
+
             .loading::after {
-                content: '';
+                content: "";
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -57,74 +82,79 @@
                 z-index: 1;
                 border-radius: 8px;
             }
-            
+
             /* Button animations */
             .btn-checkout {
                 transition: all 0.3s ease;
                 position: relative;
                 overflow: hidden;
             }
-            
+
             .btn-checkout:disabled {
                 opacity: 0.7;
                 cursor: not-allowed;
             }
-            
+
             .btn-checkout.animate-pulse {
                 animation: pulse 1.5s infinite;
             }
-            
+
             /* Cart item animations */
             .cart-item {
                 transition: all 0.3s ease;
                 position: relative;
             }
-            
+
             .cart-item.updating {
                 opacity: 0.7;
                 pointer-events: none;
             }
-            
+
             /* Success state */
             .order-success {
                 animation: fadeIn 0.5s ease-out;
             }
-            
+
             /* Payment method selection */
             .payment-option {
                 transition: all 0.2s ease;
                 position: relative;
                 overflow: hidden;
             }
-            
+
             .payment-option::after {
-                content: '';
+                content: "";
                 position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent
+                );
                 transform: translateX(-100%);
                 transition: transform 0.6s;
             }
-            
+
             .payment-option:hover::after {
                 transform: translateX(100%);
             }
-            
+
             .payment-option.selected {
                 border-color: var(--coffee-500);
                 background-color: rgba(139, 87, 42, 0.05);
             }
-            
+
             /* Responsive adjustments */
             @media (max-width: 768px) {
                 .checkout-container {
                     grid-template-columns: 1fr;
                     gap: 1.5rem;
                 }
-                
+
                 .checkout-section {
                     padding: 1.5rem;
                 }
@@ -367,7 +397,7 @@
             }
 
             .loading::after {
-                content: '';
+                content: "";
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -382,8 +412,14 @@
 
             /* Animations */
             @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(10px); }
-                to { opacity: 1; transform: translateY(0); }
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .checkout-section {
@@ -394,96 +430,192 @@
     <body>
         <!-- Header (reuse) -->
         <header class="header">
-  <div class="container nav">
-    <div class="brand">
-      <a href="index.html">
-         <img src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9" alt="Logo Cà Phê Đậm Đà" class="brand-logo">
-         <span class="brand-name">Cà Phê Đậm Đà</span>
-      </a>
-    </div>
+            <div class="container nav">
+                <div class="brand">
+                    <a href="index.html">
+                        <img
+                            src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9"
+                            alt="Logo Cà Phê Đậm Đà"
+                            class="brand-logo"
+                        />
+                        <span class="brand-name">Cà Phê Đậm Đà</span>
+                    </a>
+                </div>
 
-    <form class="search-bar" role="search" id="searchForm" onsubmit="handleSearch(event)">
-      <button class="search-btn" type="submit">🔍</button>
-      <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." aria-label="Tìm kiếm" />
-    </form>
+                <form
+                    class="search-bar"
+                    role="search"
+                    id="searchForm"
+                    onsubmit="handleSearch(event)"
+                >
+                    <button class="search-btn" type="submit">🔍</button>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Tìm sản phẩm..."
+                        aria-label="Tìm kiếm"
+                    />
+                </form>
 
-    <nav class="menu" aria-label="Chính">
-        <a href="products.html">Sản phẩm</a>
-        <a href="index.html#ve-chung-toi">Giới thiệu</a>
-        <a href="index.html#loi-ich">Lợi ích</a>
-        <a href="index.html#lien-he">Liên hệ</a>
-        <a href="order-history.html" style="margin-right: 10px;">
-            <i class="fas fa-history"></i> Đơn hàng
-        </a>
-        <a href="cart.html" class="badge" aria-label="Giỏ hàng">
-            <i class="fas fa-shopping-cart"></i>
-            <span id="cart-badge" class="badge-count">0</span>
-        </a>
-    </nav>
+                <nav class="menu" aria-label="Chính">
+                    <a href="products.html">Sản phẩm</a>
+                    <a href="index.html#ve-chung-toi">Giới thiệu</a>
+                    <a href="index.html#loi-ich">Lợi ích</a>
+                    <a href="index.html#lien-he">Liên hệ</a>
+                    <a href="order-history.html" style="margin-right: 10px">
+                        <i class="fas fa-history"></i> Đơn hàng
+                    </a>
+                    <a href="cart.html" class="badge" aria-label="Giỏ hàng">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-badge" class="badge-count">0</span>
+                    </a>
+                </nav>
 
-    <button id="menuBtn" class="mobile-toggle" aria-expanded="false" aria-controls="mobileMenu">
-      Menu
-    </button>
-  </div>
-</header>
+                <button
+                    id="menuBtn"
+                    class="mobile-toggle"
+                    aria-expanded="false"
+                    aria-controls="mobileMenu"
+                >
+                    Menu
+                </button>
+            </div>
+        </header>
 
         <!-- Mobile menu (portal) -->
-        <nav id="mobileMenu" hidden style="position: fixed; inset: 64px 16px auto; z-index: 60; background: var(--coffee-900); color: #fff; border-radius: 14px; padding: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);"></nav>
+        <nav
+            id="mobileMenu"
+            hidden
+            style="
+                position: fixed;
+                inset: 64px 16px auto;
+                z-index: 60;
+                background: var(--coffee-900);
+                color: #fff;
+                border-radius: 14px;
+                padding: 14px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            "
+        ></nav>
 
-        
-
-        <main class="container" style="padding: 2rem 1.25rem; max-width: 1200px; margin: 0 auto;">
-            <h1 style="margin: 0 0 1.5rem; font-size: 1.75rem; color: #2d3748; font-weight: 700;">
-                <i class="fas fa-shopping-bag" style="margin-right: 0.5rem; color: var(--coffee-500);"></i>
+        <main
+            class="container"
+            style="padding: 2rem 1.25rem; max-width: 1200px; margin: 0 auto"
+        >
+            <h1
+                style="
+                    margin: 0 0 1.5rem;
+                    font-size: 1.75rem;
+                    color: #2d3748;
+                    font-weight: 700;
+                "
+            >
+                <i
+                    class="fas fa-shopping-bag"
+                    style="margin-right: 0.5rem; color: var(--coffee-500)"
+                ></i>
                 Thanh toán đơn hàng
             </h1>
-            
+
             <div class="checkout-container">
                 <!-- Left: Customer Information -->
                 <div class="checkout-section">
                     <h2 class="section-title">
-                        <i class="fas fa-user-circle" style="margin-right: 0.5rem;"></i>
+                        <i
+                            class="fas fa-user-circle"
+                            style="margin-right: 0.5rem"
+                        ></i>
                         Thông tin khách hàng
                     </h2>
                     <form id="checkoutForm">
                         <div class="form-group">
-                            <label for="fullName">Họ và tên <span style="color: #e53e3e;">*</span></label>
-                            <input type="text" id="fullName" class="form-control" required 
-                                   placeholder="Nhập họ và tên đầy đủ">
+                            <label for="fullName"
+                                >Họ và tên
+                                <span style="color: #e53e3e">*</span></label
+                            >
+                            <input
+                                type="text"
+                                id="fullName"
+                                class="form-control"
+                                required
+                                placeholder="Nhập họ và tên đầy đủ"
+                            />
                         </div>
-                        
+
                         <div class="form-group">
-                            <label for="phone">Số điện thoại <span style="color: #e53e3e;">*</span></label>
-                            <input type="tel" id="phone" class="form-control" required
-                                   placeholder="Nhập số điện thoại">
+                            <label for="phone"
+                                >Số điện thoại
+                                <span style="color: #e53e3e">*</span></label
+                            >
+                            <input
+                                type="tel"
+                                id="phone"
+                                class="form-control"
+                                required
+                                placeholder="Nhập số điện thoại"
+                            />
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" class="form-control"
-                                   placeholder="email@example.com">
-                            <small class="text-muted">Để nhận thông báo đơn hàng</small>
+                            <input
+                                type="email"
+                                id="email"
+                                class="form-control"
+                                placeholder="email@example.com"
+                            />
+                            <small class="text-muted"
+                                >Để nhận thông báo đơn hàng</small
+                            >
                         </div>
-                        
+
                         <div class="form-group">
-                            <label for="address">Địa chỉ nhận hàng <span style="color: #e53e3e;">*</span></label>
-                            <textarea id="address" class="form-control" rows="3" required
-                                     placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố"></textarea>
+                            <label for="address"
+                                >Địa chỉ nhận hàng
+                                <span style="color: #e53e3e">*</span></label
+                            >
+                            <textarea
+                                id="address"
+                                class="form-control"
+                                rows="3"
+                                required
+                                placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố"
+                            ></textarea>
                         </div>
-                        
+
                         <div class="form-group">
                             <label>Phương thức vận chuyển</label>
-                            <div class="form-control" style="padding: 0; overflow: hidden;">
-                                <div class="payment-option selected" data-method="delivery">
-                                    <input type="radio" name="deliveryMethod" id="deliveryHome" value="delivery" checked>
+                            <div
+                                class="form-control"
+                                style="padding: 0; overflow: hidden"
+                            >
+                                <div
+                                    class="payment-option selected"
+                                    data-method="delivery"
+                                >
+                                    <input
+                                        type="radio"
+                                        name="deliveryMethod"
+                                        id="deliveryHome"
+                                        value="delivery"
+                                        checked
+                                    />
                                     <i class="fas fa-truck icon"></i>
                                     <div>
                                         <div>Giao hàng tận nơi</div>
                                         <small>Phí vận chuyển: 30,000đ</small>
                                     </div>
                                 </div>
-                                <div class="payment-option" data-method="pickup">
-                                    <input type="radio" name="deliveryMethod" id="pickupStore" value="pickup">
+                                <div
+                                    class="payment-option"
+                                    data-method="pickup"
+                                >
+                                    <input
+                                        type="radio"
+                                        name="deliveryMethod"
+                                        id="pickupStore"
+                                        value="pickup"
+                                    />
                                     <i class="fas fa-store icon"></i>
                                     <div>
                                         <div>Nhận tại cửa hàng</div>
@@ -492,57 +624,141 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <h2 class="section-title">
-                            <i class="fas fa-credit-card" style="margin-right: 0.5rem;"></i>
+                            <i
+                                class="fas fa-credit-card"
+                                style="margin-right: 0.5rem"
+                            ></i>
                             Phương thức thanh toán
                         </h2>
                         <div class="payment-method">
-                            <div class="payment-option selected" data-payment="cod">
-                                <input type="radio" name="paymentMethod" id="cod" value="cod" checked>
+                            <div
+                                class="payment-option selected"
+                                data-payment="cod"
+                            >
+                                <input
+                                    type="radio"
+                                    name="paymentMethod"
+                                    id="cod"
+                                    value="cod"
+                                    checked
+                                />
                                 <i class="fas fa-money-bill-wave icon"></i>
                                 <div>
                                     <div>Thanh toán khi nhận hàng (COD)</div>
-                                    <small>Nhận hàng mới thanh toán tiền mặt</small>
+                                    <small
+                                        >Nhận hàng mới thanh toán tiền
+                                        mặt</small
+                                    >
                                 </div>
-                                <i class="fas fa-check-circle" style="color: var(--coffee-500); font-size: 1.25rem; margin-left: 1rem; display: none;" id="cod-check"></i>
+                                <i
+                                    class="fas fa-check-circle"
+                                    style="
+                                        color: var(--coffee-500);
+                                        font-size: 1.25rem;
+                                        margin-left: 1rem;
+                                        display: none;
+                                    "
+                                    id="cod-check"
+                                ></i>
                             </div>
-                            
+
                             <div class="payment-option" data-payment="bank">
-                                <input type="radio" name="paymentMethod" id="bankTransfer" value="bank">
+                                <input
+                                    type="radio"
+                                    name="paymentMethod"
+                                    id="bankTransfer"
+                                    value="bank"
+                                />
                                 <i class="fas fa-university icon"></i>
                                 <div>
                                     <div>Chuyển khoản ngân hàng</div>
-                                    <small>Ưu đãi 5% khi thanh toán chuyển khoản</small>
+                                    <small
+                                        >Ưu đãi 5% khi thanh toán chuyển
+                                        khoản</small
+                                    >
                                 </div>
-                                <i class="fas fa-check-circle" style="color: var(--coffee-500); font-size: 1.25rem; margin-left: 1rem; display: none;" id="bank-check"></i>
+                                <i
+                                    class="fas fa-check-circle"
+                                    style="
+                                        color: var(--coffee-500);
+                                        font-size: 1.25rem;
+                                        margin-left: 1rem;
+                                        display: none;
+                                    "
+                                    id="bank-check"
+                                ></i>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="note">Ghi chú đơn hàng</label>
-                            <textarea id="note" class="form-control" rows="3" placeholder="Ghi chú về đơn hàng, địa chỉ..."></textarea>
+                            <textarea
+                                id="note"
+                                class="form-control"
+                                rows="3"
+                                placeholder="Ghi chú về đơn hàng, địa chỉ..."
+                            ></textarea>
                         </div>
                     </form>
                 </div>
 
                 <!-- Right: Order Summary -->
-                <div class="checkout-section" style="position: sticky; top: 1.5rem;">
+                <div
+                    class="checkout-section"
+                    style="position: sticky; top: 1.5rem"
+                >
                     <h2 class="section-title">
-                        <i class="fas fa-shopping-basket" style="margin-right: 0.5rem;"></i>
+                        <i
+                            class="fas fa-shopping-basket"
+                            style="margin-right: 0.5rem"
+                        ></i>
                         Đơn hàng của bạn
                     </h2>
                     <div id="orderItems">
                         <!-- Cart items will be dynamically inserted here -->
-                        <div class="empty-cart" style="text-align: center; padding: 2rem 0; color: #a0aec0;">
-                            <i class="fas fa-shopping-cart" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.2;"></i>
-                            <p style="font-size: 1.1rem; margin: 0.5rem 0 1rem;">Giỏ hàng của bạn đang trống</p>
-                            <a href="products.html" class="btn" style="display: inline-block; background: var(--coffee-100); color: var(--coffee-700); padding: 0.5rem 1.5rem; border-radius: 6px; text-decoration: none; transition: all 0.2s ease;">
-                                <i class="fas fa-arrow-left" style="margin-right: 0.5rem;"></i>Tiếp tục mua sắm
+                        <div
+                            class="empty-cart"
+                            style="
+                                text-align: center;
+                                padding: 2rem 0;
+                                color: #a0aec0;
+                            "
+                        >
+                            <i
+                                class="fas fa-shopping-cart"
+                                style="
+                                    font-size: 3rem;
+                                    margin-bottom: 1rem;
+                                    opacity: 0.2;
+                                "
+                            ></i>
+                            <p style="font-size: 1.1rem; margin: 0.5rem 0 1rem">
+                                Giỏ hàng của bạn đang trống
+                            </p>
+                            <a
+                                href="products.html"
+                                class="btn"
+                                style="
+                                    display: inline-block;
+                                    background: var(--coffee-100);
+                                    color: var(--coffee-700);
+                                    padding: 0.5rem 1.5rem;
+                                    border-radius: 6px;
+                                    text-decoration: none;
+                                    transition: all 0.2s ease;
+                                "
+                            >
+                                <i
+                                    class="fas fa-arrow-left"
+                                    style="margin-right: 0.5rem"
+                                ></i
+                                >Tiếp tục mua sắm
                             </a>
                         </div>
                     </div>
-                    
+
                     <div class="order-summary">
                         <div class="order-summary-item">
                             <span>Tạm tính:</span>
@@ -561,74 +777,90 @@
                             <span id="total">0đ</span>
                         </div>
                     </div>
-                    
+
                     <button id="placeOrderBtn" class="btn-checkout">
                         Đặt hàng
                     </button>
-                    
-                    <div style="margin-top: 15px; font-size: 13px; color: #666; text-align: center;">
-                        Bằng cách nhấn nút đặt hàng, bạn đồng ý với <a href="#" style="color: var(--coffee);">điều khoản và điều kiện</a> của chúng tôi.
+
+                    <div
+                        style="
+                            margin-top: 15px;
+                            font-size: 13px;
+                            color: #666;
+                            text-align: center;
+                        "
+                    >
+                        Bằng cách nhấn nút đặt hàng, bạn đồng ý với
+                        <a href="#" style="color: var(--coffee)"
+                            >điều khoản và điều kiện</a
+                        >
+                        của chúng tôi.
                     </div>
                 </div>
-
             </div>
         </main>
 
         <script src="scripts/user.js" defer></script>
         <script type="module">
-            import { Orders, Products } from './scripts/db.js';
-            import { session, fmt } from './scripts/utils.js';
-            
+            import { Orders, Products } from "./scripts/db.js";
+            import { session, fmt } from "./scripts/utils.js";
+
             // DOM Elements
-            const orderItemsEl = document.getElementById('orderItems');
-            const subtotalEl = document.getElementById('subtotal');
-            const shippingFeeEl = document.getElementById('shippingFee');
-            const discountEl = document.getElementById('discount');
-            const totalEl = document.getElementById('total');
-            const placeOrderBtn = document.getElementById('placeOrderBtn');
-            const checkoutForm = document.getElementById('checkoutForm');
-            const orderLoading = document.getElementById('orderLoading');
-            
+            const orderItemsEl = document.getElementById("orderItems");
+            const subtotalEl = document.getElementById("subtotal");
+            const shippingFeeEl = document.getElementById("shippingFee");
+            const discountEl = document.getElementById("discount");
+            const totalEl = document.getElementById("total");
+            const placeOrderBtn = document.getElementById("placeOrderBtn");
+            const checkoutForm = document.getElementById("checkoutForm");
+            const orderLoading = document.getElementById("orderLoading");
+
             // Initialize tooltips
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            const tooltipTriggerList = [].slice.call(
+                document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            );
+            const tooltipList = tooltipTriggerList.map(function (
+                tooltipTriggerEl
+            ) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
-            
+
             // Add smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
+            document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+                anchor.addEventListener("click", function (e) {
                     e.preventDefault();
-                    const target = document.querySelector(this.getAttribute('href'));
+                    const target = document.querySelector(
+                        this.getAttribute("href")
+                    );
                     if (target) {
                         target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
+                            behavior: "smooth",
+                            block: "start",
                         });
                     }
                 });
             });
-            
+
             // State
             let cart = [];
             let selectedItems = [];
             let shippingFee = 30000;
             let discount = 0;
-            
+
             // Initialize
-            document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener("DOMContentLoaded", () => {
                 loadCart();
                 renderOrderSummary();
                 setupEventListeners();
                 autoFillUserInfo();
             });
-            
+
             // Load cart from localStorage with animation
             function loadCart() {
                 try {
-                    const cartData = localStorage.getItem('cart');
-                    const selectedData = localStorage.getItem('cart_selected');
-                    
+                    const cartData = localStorage.getItem("cart");
+                    const selectedData = localStorage.getItem("cart_selected");
+
                     // Show loading state
                     orderItemsEl.innerHTML = `
                         <div style="display: flex; justify-content: center; padding: 2rem;">
@@ -636,45 +868,49 @@
                                 <span class="visually-hidden">Loading...</span>
                             </div>
                         </div>`;
-                    
+
                     // Simulate loading for better UX
                     setTimeout(() => {
                         cart = cartData ? JSON.parse(cartData) : [];
-                        selectedItems = selectedData ? JSON.parse(selectedData) : [];
-                        
+                        selectedItems = selectedData
+                            ? JSON.parse(selectedData)
+                            : [];
+
                         // If no items are selected, select all by default
                         if (selectedItems.length === 0 && cart.length > 0) {
-                            selectedItems = cart.map(item => item.id);
-                            localStorage.setItem('cart_selected', JSON.stringify(selectedItems));
+                            selectedItems = cart.map((item) => item.id);
+                            localStorage.setItem(
+                                "cart_selected",
+                                JSON.stringify(selectedItems)
+                            );
                         }
-                        
+
                         updateCartBadge();
                         renderOrderItems();
-                        
+
                         // Add animation to cart items
                         setTimeout(() => {
-                            const items = document.querySelectorAll('.cart-item');
+                            const items =
+                                document.querySelectorAll(".cart-item");
                             items.forEach((item, index) => {
                                 setTimeout(() => {
-                                    item.style.opacity = '0';
-                                    item.style.transform = 'translateY(10px)';
-                                    item.style.transition = 'all 0.3s ease-out';
-                                    
+                                    item.style.opacity = "0";
+                                    item.style.transform = "translateY(10px)";
+                                    item.style.transition = "all 0.3s ease-out";
+
                                     setTimeout(() => {
-                                        item.style.opacity = '1';
-                                        item.style.transform = 'translateY(0)';
+                                        item.style.opacity = "1";
+                                        item.style.transform = "translateY(0)";
                                     }, 50);
                                 }, index * 50);
                             });
                         }, 100);
-                        
                     }, 300);
-                    
                 } catch (error) {
-                    console.error('Error loading cart:', error);
+                    console.error("Error loading cart:", error);
                     cart = [];
                     selectedItems = [];
-                    
+
                     // Show error state
                     orderItemsEl.innerHTML = `
                         <div class="alert alert-warning" role="alert">
@@ -683,7 +919,7 @@
                         </div>`;
                 }
             }
-            
+
             // Render order items
             function renderOrderItems() {
                 if (!cart || cart.length === 0 || selectedItems.length === 0) {
@@ -695,98 +931,151 @@
                     `;
                     return;
                 }
-                
-                const selectedCartItems = cart.filter(item => selectedItems.includes(item.id));
-                
-                orderItemsEl.innerHTML = selectedCartItems.map(item => `
+
+                const selectedCartItems = cart.filter((item) =>
+                    selectedItems.includes(item.id)
+                );
+
+                orderItemsEl.innerHTML = selectedCartItems
+                    .map(
+                        (item) => `
                     <div class="cart-item" data-id="${item.id}">
-                        <img src="${item.image || 'https://via.placeholder.com/60'}" alt="${item.name}">
+                        <img src="${
+                            item.image || "https://via.placeholder.com/60"
+                        }" alt="${item.name}">
                         <div class="cart-item-details">
                             <div class="cart-item-title">${item.name}</div>
-                            <div class="cart-item-price">${fmt.currency(item.price)}đ</div>
+                            <div class="cart-item-price">${fmt.currency(
+                                item.price
+                            )}đ</div>
                         </div>
                         <div class="cart-item-quantity">
-                            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
-                            <input type="number" class="quantity-input" value="${item.quantity}" min="1" 
-                                   onchange="updateQuantity('${item.id}', this.value)">
-                            <button class="quantity-btn" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+                            <button class="quantity-btn" onclick="updateQuantity('${
+                                item.id
+                            }', ${item.quantity - 1})">-</button>
+                            <input type="number" class="quantity-input" value="${
+                                item.quantity
+                            }" min="1" 
+                                   onchange="updateQuantity('${
+                                       item.id
+                                   }', this.value)">
+                            <button class="quantity-btn" onclick="updateQuantity('${
+                                item.id
+                            }', ${item.quantity + 1})">+</button>
                         </div>
                     </div>
-                `).join('');
-                
+                `
+                    )
+                    .join("");
+
                 renderOrderSummary();
             }
-            
+
             // Render order summary
             function renderOrderSummary() {
-                const selectedCartItems = cart.filter(item => selectedItems.includes(item.id));
-                const subtotal = selectedCartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                const isPickup = document.querySelector('input[name="deliveryMethod"]:checked').value === 'pickup';
-                const isBankTransfer = document.querySelector('input[name="paymentMethod"]:checked').value === 'bank';
-                
+                const selectedCartItems = cart.filter((item) =>
+                    selectedItems.includes(item.id)
+                );
+                const subtotal = selectedCartItems.reduce(
+                    (sum, item) => sum + item.price * item.quantity,
+                    0
+                );
+                const isPickup =
+                    document.querySelector(
+                        'input[name="deliveryMethod"]:checked'
+                    ).value === "pickup";
+                const isBankTransfer =
+                    document.querySelector(
+                        'input[name="paymentMethod"]:checked'
+                    ).value === "bank";
+
                 // Calculate shipping
                 const currentShippingFee = isPickup ? 0 : shippingFee;
-                
+
                 // Calculate discount (5% for bank transfer)
-                const currentDiscount = isBankTransfer ? Math.round(subtotal * 0.05) : 0;
-                
+                const currentDiscount = isBankTransfer
+                    ? Math.round(subtotal * 0.05)
+                    : 0;
+
                 // Calculate total
                 const total = subtotal + currentShippingFee - currentDiscount;
-                
+
                 // Update UI
                 subtotalEl.textContent = `${fmt.currency(subtotal)}đ`;
-                shippingFeeEl.textContent = currentShippingFee > 0 ? `${fmt.currency(currentShippingFee)}đ` : 'Miễn phí';
-                discountEl.textContent = currentDiscount > 0 ? `-${fmt.currency(currentDiscount)}đ` : '0đ';
+                shippingFeeEl.textContent =
+                    currentShippingFee > 0
+                        ? `${fmt.currency(currentShippingFee)}đ`
+                        : "Miễn phí";
+                discountEl.textContent =
+                    currentDiscount > 0
+                        ? `-${fmt.currency(currentDiscount)}đ`
+                        : "0đ";
                 totalEl.textContent = `${fmt.currency(total)}đ`;
-                
+
                 // Update state
                 shippingFee = currentShippingFee;
                 discount = currentDiscount;
             }
-            
+
             // Setup event listeners
             function setupEventListeners() {
                 // Payment method change
-                document.querySelectorAll('input[name="deliveryMethod"]').forEach(radio => {
-                    radio.addEventListener('change', renderOrderSummary);
-                });
-                
-                // Payment method change
-                document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
-                    radio.addEventListener('change', renderOrderSummary);
-                });
-                
-                // Payment option click
-                document.querySelectorAll('.payment-option').forEach(option => {
-                    option.addEventListener('click', (e) => {
-                        const radio = option.querySelector('input[type="radio"]');
-                        if (radio) {
-                            radio.checked = true;
-                            document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
-                            option.classList.add('selected');
-                            renderOrderSummary();
-                        }
+                document
+                    .querySelectorAll('input[name="deliveryMethod"]')
+                    .forEach((radio) => {
+                        radio.addEventListener("change", renderOrderSummary);
                     });
-                });
-                
+
+                // Payment method change
+                document
+                    .querySelectorAll('input[name="paymentMethod"]')
+                    .forEach((radio) => {
+                        radio.addEventListener("change", renderOrderSummary);
+                    });
+
+                // Payment option click
+                document
+                    .querySelectorAll(".payment-option")
+                    .forEach((option) => {
+                        option.addEventListener("click", (e) => {
+                            const radio = option.querySelector(
+                                'input[type="radio"]'
+                            );
+                            if (radio) {
+                                radio.checked = true;
+                                document
+                                    .querySelectorAll(".payment-option")
+                                    .forEach((opt) =>
+                                        opt.classList.remove("selected")
+                                    );
+                                option.classList.add("selected");
+                                renderOrderSummary();
+                            }
+                        });
+                    });
+
                 // Place order button
                 if (placeOrderBtn) {
-                    placeOrderBtn.addEventListener('click', handlePlaceOrder);
+                    placeOrderBtn.addEventListener("click", handlePlaceOrder);
                 }
             }
-            
+
             // Auto-fill user info from session profile
             function autoFillUserInfo() {
-                const fullNameInput = document.getElementById('fullName');
-                const emailInput = document.getElementById('email');
-                const phoneInput = document.getElementById('phone');
-                const addressInput = document.getElementById('address');
+                const fullNameInput = document.getElementById("fullName");
+                const emailInput = document.getElementById("email");
+                const phoneInput = document.getElementById("phone");
+                const addressInput = document.getElementById("address");
 
                 if (!session.isLoggedIn()) {
                     // Offer to login for autofill and guard checkout
-                    const wantLogin = confirm('Vui lòng đăng nhập để tự động điền thông tin. Chuyển đến trang đăng nhập?');
+                    const wantLogin = confirm(
+                        "Vui lòng đăng nhập để tự động điền thông tin. Chuyển đến trang đăng nhập?"
+                    );
                     if (wantLogin) {
-                        window.location.href = `login.html?redirect=${encodeURIComponent('checkout.html')}`;
+                        window.location.href = `login.html?redirect=${encodeURIComponent(
+                            "checkout.html"
+                        )}`;
                     }
                     return;
                 }
@@ -794,227 +1083,331 @@
                 const user = session.getUser();
                 if (!user) return;
 
-                if (fullNameInput && !fullNameInput.value && user.name) fullNameInput.value = user.name;
-                if (emailInput && !emailInput.value && user.email) emailInput.value = user.email;
-                if (phoneInput && !phoneInput.value && user.phone) phoneInput.value = user.phone;
-                if (addressInput && !addressInput.value && user.address) addressInput.value = user.address;
+                if (fullNameInput && !fullNameInput.value && user.name)
+                    fullNameInput.value = user.name;
+                if (emailInput && !emailInput.value && user.email)
+                    emailInput.value = user.email;
+                if (phoneInput && !phoneInput.value && user.phone)
+                    phoneInput.value = user.phone;
+                if (addressInput && !addressInput.value && user.address)
+                    addressInput.value = user.address;
             }
-            
+
             // Update cart badge (distinct items count)
             function updateCartBadge() {
-                const badge = document.getElementById('cart-badge');
+                const badge = document.getElementById("cart-badge");
                 if (badge) {
                     const distinctCount = Array.isArray(cart) ? cart.length : 0;
-                    badge.textContent = distinctCount > 0 ? String(distinctCount) : '0';
+                    badge.textContent =
+                        distinctCount > 0 ? String(distinctCount) : "0";
                 }
             }
-            
+
             // Update quantity with animation
-            window.updateQuantity = function(id, newQuantity, inputElement = null) {
+            window.updateQuantity = function (
+                id,
+                newQuantity,
+                inputElement = null
+            ) {
                 newQuantity = parseInt(newQuantity);
                 if (isNaN(newQuantity) || newQuantity < 1) newQuantity = 1;
-                
+
                 // Update input value if provided
                 if (inputElement) {
                     inputElement.value = newQuantity;
                 }
-                
+
                 // Add loading class to the specific item
-                const itemElement = document.querySelector(`.cart-item[data-id="${id}"]`);
+                const itemElement = document.querySelector(
+                    `.cart-item[data-id="${id}"]`
+                );
                 if (itemElement) {
-                    itemElement.classList.add('updating');
+                    itemElement.classList.add("updating");
                 }
-                
+
                 // Debounce the update to prevent rapid firing
                 clearTimeout(window.quantityUpdateTimeout);
                 window.quantityUpdateTimeout = setTimeout(() => {
-                    const itemIndex = cart.findIndex(item => item.id === id);
+                    const itemIndex = cart.findIndex((item) => item.id === id);
                     if (itemIndex !== -1) {
                         cart[itemIndex].quantity = newQuantity;
-                        localStorage.setItem('cart', JSON.stringify(cart));
-                        
+                        localStorage.setItem("cart", JSON.stringify(cart));
+
+                        // Also save to user-specific storage if user is logged in
+                        const user = session.getUser();
+                        if (user) {
+                            try {
+                                const carts = JSON.parse(
+                                    localStorage.getItem("userCarts") || "{}"
+                                );
+                                carts[user.id] = cart;
+                                localStorage.setItem(
+                                    "userCarts",
+                                    JSON.stringify(carts)
+                                );
+                            } catch (e) {
+                                console.error(
+                                    "Error saving to user-specific cart:",
+                                    e
+                                );
+                            }
+                        }
+
                         // Update the UI with animation
                         if (itemElement) {
-                            itemElement.style.transform = 'scale(0.98)';
+                            itemElement.style.transform = "scale(0.98)";
                             setTimeout(() => {
-                                itemElement.style.transform = 'scale(1)';
-                                itemElement.classList.remove('updating');
+                                itemElement.style.transform = "scale(1)";
+                                itemElement.classList.remove("updating");
                             }, 200);
                         }
-                        
+
                         renderOrderSummary();
                         renderOrderItems();
                     }
                 }, 300);
             };
-            
+
             // Reset button state helper function
             function resetPlaceOrderButton() {
                 placeOrderBtn.disabled = false;
-                if (orderLoading) orderLoading.style.display = 'none';
-                const buttonText = placeOrderBtn.querySelector('span');
-                if (buttonText) buttonText.textContent = 'Đặt hàng';
-                if (checkoutForm) checkoutForm.classList.remove('loading');
+                if (orderLoading) orderLoading.style.display = "none";
+                const buttonText = placeOrderBtn.querySelector("span");
+                if (buttonText) buttonText.textContent = "Đặt hàng";
+                if (checkoutForm) checkoutForm.classList.remove("loading");
             }
 
             // Handle place order
             async function handlePlaceOrder() {
                 // Show loading state
                 placeOrderBtn.disabled = true;
-                if (orderLoading) orderLoading.style.display = 'inline-block';
-                const buttonText = placeOrderBtn.querySelector('span');
-                if (buttonText) buttonText.textContent = 'Đang xử lý...';
-                
+                if (orderLoading) orderLoading.style.display = "inline-block";
+                const buttonText = placeOrderBtn.querySelector("span");
+                if (buttonText) buttonText.textContent = "Đang xử lý...";
+
                 // Add loading class to form
-                if (checkoutForm) checkoutForm.classList.add('loading');
-                
+                if (checkoutForm) checkoutForm.classList.add("loading");
+
                 // Validate form
                 if (checkoutForm && !checkoutForm.checkValidity()) {
                     // Scroll to first invalid field
-                    const firstInvalid = checkoutForm.querySelector(':invalid');
+                    const firstInvalid = checkoutForm.querySelector(":invalid");
                     if (firstInvalid) {
                         firstInvalid.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center'
+                            behavior: "smooth",
+                            block: "center",
                         });
-                        
+
                         // Add error class
-                        firstInvalid.classList.add('is-invalid');
-                        
+                        firstInvalid.classList.add("is-invalid");
+
                         // Remove error class after animation
                         setTimeout(() => {
-                            firstInvalid.classList.remove('is-invalid');
+                            firstInvalid.classList.remove("is-invalid");
                         }, 2000);
                     }
-                    
+
                     checkoutForm.reportValidity();
                     resetPlaceOrderButton();
                     return;
                 }
-                
-                if (!Array.isArray(cart) || !Array.isArray(selectedItems) || cart.length === 0 || selectedItems.length === 0) {
-                    alert('Vui lòng thêm sản phẩm vào giỏ hàng trước khi đặt hàng.');
+
+                if (
+                    !Array.isArray(cart) ||
+                    !Array.isArray(selectedItems) ||
+                    cart.length === 0 ||
+                    selectedItems.length === 0
+                ) {
+                    alert(
+                        "Vui lòng thêm sản phẩm vào giỏ hàng trước khi đặt hàng."
+                    );
                     resetPlaceOrderButton();
                     return;
                 }
-                
+
                 try {
                     // Get form data
                     const formData = new FormData(checkoutForm);
                     const formValues = Object.fromEntries(formData.entries());
-                    
+
                     // Get selected items
-                    const selectedCartItems = cart.filter(item => selectedItems.includes(item.id));
-                    const subtotal = selectedCartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-                    const isPickup = formValues.deliveryMethod === 'pickup';
-                    const isBankTransfer = formValues.paymentMethod === 'bank';
-                    const currentDiscount = isBankTransfer ? Math.round(subtotal * 0.05) : 0;
-                    
+                    const selectedCartItems = cart.filter((item) =>
+                        selectedItems.includes(item.id)
+                    );
+                    const subtotal = selectedCartItems.reduce(
+                        (sum, item) => sum + item.price * item.quantity,
+                        0
+                    );
+                    const isPickup = formValues.deliveryMethod === "pickup";
+                    const isBankTransfer = formValues.paymentMethod === "bank";
+                    const currentDiscount = isBankTransfer
+                        ? Math.round(subtotal * 0.05)
+                        : 0;
+
                     // Create order object
                     const order = {
-                        id: 'ORD-' + Date.now().toString().slice(-6).toUpperCase(),
-                        userId: sessionStorage.getItem('user_id') || 'guest',
+                        id:
+                            "ORD-" +
+                            Date.now().toString().slice(-6).toUpperCase(),
+                        userId: sessionStorage.getItem("user_id") || "guest",
                         date: new Date().toISOString(),
-                        status: 'pending',
+                        status: "pending",
                         customerName: formValues.fullName,
                         customerPhone: formValues.phone,
-                        customerEmail: formValues.email || '',
-                        shippingAddress: isPickup ? 'Nhận tại cửa hàng' : formValues.address,
+                        customerEmail: formValues.email || "",
+                        shippingAddress: isPickup
+                            ? "Nhận tại cửa hàng"
+                            : formValues.address,
                         deliveryMethod: formValues.deliveryMethod,
                         paymentMethod: formValues.paymentMethod,
-                        note: formValues.note || '',
+                        note: formValues.note || "",
                         subtotal: subtotal,
                         shipping: isPickup ? 0 : shippingFee,
                         discount: currentDiscount,
-                        total: subtotal + (isPickup ? 0 : shippingFee) - currentDiscount,
-                        items: selectedCartItems.map(item => ({
+                        total:
+                            subtotal +
+                            (isPickup ? 0 : shippingFee) -
+                            currentDiscount,
+                        items: selectedCartItems.map((item) => ({
                             productId: item.id,
                             name: item.name,
                             price: item.price,
                             quantity: item.quantity,
-                            image: item.image || ''
-                        }))
+                            image: item.image || "",
+                        })),
                     };
-                    
+
                     // Show success animation
                     placeOrderBtn.innerHTML = `
                         <i class="fas fa-check-circle"></i>
                         <span>Đặt hàng thành công!</span>
                     `;
-                    
+
                     // Add success class
-                    document.body.classList.add('order-success');
-                    
+                    document.body.classList.add("order-success");
+
                     try {
                         // Save order to database
                         const savedOrder = await Orders.create(order);
-                        
+
                         if (!savedOrder || !savedOrder.id) {
-                            throw new Error('Không nhận được phản hồi từ hệ thống');
+                            throw new Error(
+                                "Không nhận được phản hồi từ hệ thống"
+                            );
                         }
-                        
+
+                        // Force stock update by triggering a custom event
+                        window.dispatchEvent(new CustomEvent("stockUpdated"));
+
                         // Clear cart and selected items
-                        const updatedCart = cart.filter(item => !selectedItems.includes(item.id));
+                        const updatedCart = cart.filter(
+                            (item) => !selectedItems.includes(item.id)
+                        );
                         try {
-                            localStorage.setItem('cart', JSON.stringify(updatedCart));
-                            localStorage.removeItem('cart_selected');
-                            
-                            // Update cart badge
-                            const cartBadge = document.getElementById('cart-badge');
-                            if (cartBadge) {
-                                cartBadge.textContent = '0';
+                            localStorage.setItem(
+                                "cart",
+                                JSON.stringify(updatedCart)
+                            );
+                            localStorage.removeItem("cart_selected");
+
+                            // Also update user-specific storage if user is logged in
+                            const user = session.getUser();
+                            if (user) {
+                                try {
+                                    const carts = JSON.parse(
+                                        localStorage.getItem("userCarts") ||
+                                            "{}"
+                                    );
+                                    carts[user.id] = updatedCart;
+                                    localStorage.setItem(
+                                        "userCarts",
+                                        JSON.stringify(carts)
+                                    );
+
+                                    // Clear selected items from user-specific storage
+                                    const selectedCarts = JSON.parse(
+                                        localStorage.getItem(
+                                            "userCartSelected"
+                                        ) || "{}"
+                                    );
+                                    delete selectedCarts[user.id];
+                                    localStorage.setItem(
+                                        "userCartSelected",
+                                        JSON.stringify(selectedCarts)
+                                    );
+                                } catch (e) {
+                                    console.error(
+                                        "Error updating user-specific cart:",
+                                        e
+                                    );
+                                }
                             }
-                            
+
+                            // Update cart badge
+                            const cartBadge =
+                                document.getElementById("cart-badge");
+                            if (cartBadge) {
+                                cartBadge.textContent = "0";
+                            }
+
                             // Show success state
                             placeOrderBtn.innerHTML = `
                                 <i class="fas fa-check-circle"></i>
                                 <span>Đặt hàng thành công!</span>
                             `;
-                            
+
                             // Redirect to order confirmation after a short delay
                             setTimeout(() => {
-                                window.location.href = 'order-confirmation.html?orderId=' + savedOrder.id;
+                                window.location.href =
+                                    "order-confirmation.html?orderId=" +
+                                    savedOrder.id;
                             }, 1000);
-                            
                         } catch (storageError) {
-                            console.error('Error updating local storage:', storageError);
+                            console.error(
+                                "Error updating local storage:",
+                                storageError
+                            );
                             // Continue with redirect even if storage update fails
-                            window.location.href = 'order-confirmation.html?orderId=' + savedOrder.id;
+                            window.location.href =
+                                "order-confirmation.html?orderId=" +
+                                savedOrder.id;
                         }
-                        
                     } catch (error) {
-                        console.error('Order error:', error);
-                        
+                        console.error("Order error:", error);
+
                         // Show error state with more specific message
-                        const errorMessage = error.message || 'Không thể đặt hàng. Vui lòng thử lại sau.';
-                        alert('Lỗi: ' + errorMessage);
-                        
+                        const errorMessage =
+                            error.message ||
+                            "Không thể đặt hàng. Vui lòng thử lại sau.";
+                        alert("Lỗi: " + errorMessage);
+
                         // Reset button state
                         resetPlaceOrderButton();
-                        
+
                         // Update button text to allow retry
                         if (buttonText) {
-                            buttonText.textContent = 'Thử lại';
+                            buttonText.textContent = "Thử lại";
                         }
                     }
-                    
                 } catch (error) {
-                    console.error('Order placement error:', error);
-                    
+                    console.error("Order placement error:", error);
+
                     // Show error state with more specific error message
-                    const errorMessage = error.message || 'Không thể đặt hàng. Vui lòng thử lại sau.';
-                    alert('Lỗi: ' + errorMessage);
-                    
+                    const errorMessage =
+                        error.message ||
+                        "Không thể đặt hàng. Vui lòng thử lại sau.";
+                    alert("Lỗi: " + errorMessage);
+
                     // Reset button state
                     resetPlaceOrderButton();
-                    
+
                     // Update button text to allow retry
                     if (buttonText) {
-                        buttonText.textContent = 'Thử lại';
+                        buttonText.textContent = "Thử lại";
                     }
                 }
             }
-            
+
             // Make functions available globally
             window.updateQuantity = updateQuantity;
         </script>

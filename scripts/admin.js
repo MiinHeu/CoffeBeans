@@ -26,14 +26,15 @@ document.getElementById("logout")?.addEventListener("click", (e) => {
 // Khởi tạo ứng dụng
 const app = document.getElementById("app");
 if (!app) {
-    document.body.innerHTML = '<div style="padding: 20px; color: red;">Lỗi: Không tìm thấy phần tử #app</div>';
-    throw new Error('Không tìm thấy phần tử #app');
+    document.body.innerHTML =
+        '<div style="padding: 20px; color: red;">Lỗi: Không tìm thấy phần tử #app</div>';
+    throw new Error("Không tìm thấy phần tử #app");
 }
 
 // Khởi tạo sidebar
 const side = document.querySelectorAll(".sidebar button");
 if (side.length === 0) {
-    console.warn('Không tìm thấy nút điều hướng trong sidebar');
+    console.warn("Không tìm thấy nút điều hướng trong sidebar");
 } else {
     side.forEach((b) => {
         b.addEventListener("click", () => {
@@ -42,11 +43,11 @@ if (side.length === 0) {
             try {
                 route(b.dataset.view);
             } catch (error) {
-                console.error('Lỗi khi chuyển trang:', error);
+                console.error("Lỗi khi chuyển trang:", error);
                 app.innerHTML = `
                     <div class="alert alert-danger">
                         <h3>Đã xảy ra lỗi</h3>
-                        <p>${error.message || 'Không thể tải trang'}</p>
+                        <p>${error.message || "Không thể tải trang"}</p>
                     </div>`;
             }
         });
@@ -75,7 +76,10 @@ function route(view) {
             renderOrders();
             break;
         case "stock":
-            renderStock();
+            // Force refresh stock data when navigating to stock page
+            setTimeout(() => {
+                renderStock();
+            }, 100);
             break;
         default:
             renderDashboard();
@@ -376,6 +380,9 @@ function renderReceipts() {
             Receipts.create({ date, items: list });
         }
         renderReceipts();
+
+        // Trigger stock update event for user pages
+        window.dispatchEvent(new CustomEvent("stockUpdated"));
     });
     qs("#resetR").addEventListener("click", () => renderReceipts());
 
@@ -416,6 +423,17 @@ function renderReceipts() {
         if (act === "done") {
             Receipts.complete(id);
             paint();
+
+            // If we're on the stock page, refresh it too
+            const activeButton = document.querySelector(
+                ".sidebar button.active"
+            );
+            if (activeButton && activeButton.dataset.view === "stock") {
+                renderStock();
+            }
+
+            // Trigger stock update event for user pages
+            window.dispatchEvent(new CustomEvent("stockUpdated"));
         }
     });
 }
@@ -536,23 +554,24 @@ function renderOrders() {
             </table>
         </div>
     </section>`;
-    
+
     const tb = qs("#tb");
-    
+
     function paint() {
         const d1 = qs("#d1").value;
         const d2 = qs("#d2").value;
         const st = qs("#st").value;
         let list = [...orders]; // Tạo bản sao của danh sách đơn hàng
-        
+
         // Lọc đơn hàng
         if (d1) list = list.filter((o) => o.date >= d1);
         if (d2) list = list.filter((o) => o.date <= d2);
         if (st) list = list.filter((o) => o.status === st);
-        
+
         // Hiển thị danh sách đơn hàng
         tb.innerHTML = list
-            .map((o, i) => `
+            .map(
+                (o, i) => `
                 <tr>
                     <td>${i + 1}</td>
                     <td>${o.date}</td>
@@ -560,23 +579,26 @@ function renderOrders() {
                     <td>${o.items.length}</td>
                     <td>${getStatusDisplay(o.status)}</td>
                     <td style="text-align:right">
-                        <button class="btn" data-id="${o.id}" data-act="view">Xem</button>
+                        <button class="btn" data-id="${
+                            o.id
+                        }" data-act="view">Xem</button>
                     </td>
                 </tr>`
-            ).join("");
+            )
+            .join("");
     }
-    
+
     // Hàm chuyển đổi mã trạng thái thành tên hiển thị
     function getStatusDisplay(status) {
         const statusMap = {
-            'new': 'Mới đặt',
-            'processing': 'Đã xử lý',
-            'shipped': 'Đã giao',
-            'canceled': 'Đã hủy'
+            new: "Mới đặt",
+            processing: "Đã xử lý",
+            shipped: "Đã giao",
+            canceled: "Đã hủy",
         };
         return statusMap[status] || status;
     }
-    
+
     // Thêm sự kiện lọc
     ["d1", "d2", "st"].forEach((id) => {
         const element = qs("#" + id);
@@ -584,19 +606,19 @@ function renderOrders() {
             element.addEventListener("change", paint);
         }
     });
-    
+
     // Vẽ danh sách ban đầu
     paint();
-    
+
     // Xử lý sự kiện xem chi tiết đơn hàng
     tb.addEventListener("click", (e) => {
         const b = e.target.closest('button[data-act="view"]');
         if (!b) return;
-        
+
         const id = b.getAttribute("data-id");
         const order = Orders.list().find((x) => x.id === id);
         if (!order) return;
-        
+
         showOrderDetail(order);
     });
 }
@@ -606,17 +628,20 @@ function showOrderDetail(order) {
     const user = Users.list().find((u) => u.id === order.userId);
     const products = Products.list();
     const pmap = new Map(products.map((p) => [p.id, p]));
-    const total = order.items.reduce((sum, it) => sum + (it.quantity * it.price), 0);
-    
+    const total = order.items.reduce(
+        (sum, it) => sum + it.quantity * it.price,
+        0
+    );
+
     const statusMessages = {
-        'new': 'Mới đặt',
-        'processing': 'Đã xử lý',
-        'shipped': 'Đã giao',
-        'canceled': 'Đã hủy'
+        new: "Mới đặt",
+        processing: "Đã xử lý",
+        shipped: "Đã giao",
+        canceled: "Đã hủy",
     };
-    
-    const isCanceled = order.status === 'canceled';
-    
+
+    const isCanceled = order.status === "canceled";
+
     const html = `
     <div class="order-detail">
         <div class="row" style="justify-content: space-between; align-items: center;">
@@ -629,26 +654,52 @@ function showOrderDetail(order) {
                 <h4>Thông tin đơn hàng</h4>
                 <p><strong>Ngày đặt:</strong> ${order.date}</p>
                 <p><strong>Trạng thái:</strong> 
-                    <select id="ust" style="margin-left: 8px;" ${isCanceled ? 'disabled' : ''}>
-                        <option value="new" ${order.status === 'new' ? 'selected' : ''}>Mới đặt</option>
-                        <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Đã xử lý</option>
-                        <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Đã giao</option>
-                        <option value="canceled" ${order.status === 'canceled' ? 'selected' : ''}>Hủy</option>
+                    <select id="ust" style="margin-left: 8px;" ${
+                        isCanceled ? "disabled" : ""
+                    }>
+                        <option value="new" ${
+                            order.status === "new" ? "selected" : ""
+                        }>Mới đặt</option>
+                        <option value="processing" ${
+                            order.status === "processing" ? "selected" : ""
+                        }>Đã xử lý</option>
+                        <option value="shipped" ${
+                            order.status === "shipped" ? "selected" : ""
+                        }>Đã giao</option>
+                        <option value="canceled" ${
+                            order.status === "canceled" ? "selected" : ""
+                        }>Hủy</option>
                     </select>
-                    ${isCanceled ? '<p style="color: red; margin-top: 5px;">Không thể thay đổi trạng thái đơn hàng đã hủy</p>' : ''}
+                    ${
+                        isCanceled
+                            ? '<p style="color: red; margin-top: 5px;">Không thể thay đổi trạng thái đơn hàng đã hủy</p>'
+                            : ""
+                    }
                 </p>
                 <p><strong>Tổng tiền:</strong> ${fmt.currency(total)}</p>
-                ${order.note ? `<p><strong>Ghi chú:</strong> ${order.note}</p>` : ""}
+                ${
+                    order.note
+                        ? `<p><strong>Ghi chú:</strong> ${order.note}</p>`
+                        : ""
+                }
             </div>
             
             <div>
                 <h4>Thông tin khách hàng</h4>
-                ${user ? `
-                    <p><strong>Tên:</strong> ${user.name || 'N/A'}</p>
-                    <p><strong>Email:</strong> ${user.email || 'N/A'}</p>
-                    <p><strong>Điện thoại:</strong> ${user.phone || 'Chưa cập nhật'}</p>
-                    <p><strong>Địa chỉ:</strong> ${user.address || 'Chưa cập nhật'}</p>
-                ` : '<p>Khách vãng lai</p>'}
+                ${
+                    user
+                        ? `
+                    <p><strong>Tên:</strong> ${user.name || "N/A"}</p>
+                    <p><strong>Email:</strong> ${user.email || "N/A"}</p>
+                    <p><strong>Điện thoại:</strong> ${
+                        user.phone || "Chưa cập nhật"
+                    }</p>
+                    <p><strong>Địa chỉ:</strong> ${
+                        user.address || "Chưa cập nhật"
+                    }</p>
+                `
+                        : "<p>Khách vãng lai</p>"
+                }
             </div>
         </div>
         
@@ -666,24 +717,36 @@ function showOrderDetail(order) {
                         </tr>
                     </thead>
                     <tbody>
-                        ${order.items.map(item => {
-                            const product = pmap.get(item.productId);
-                            return `
+                        ${order.items
+                            .map((item) => {
+                                const product = pmap.get(item.productId);
+                                return `
                                 <tr>
-                                    <td>${product ? product.name : item.productId}</td>
-                                    <td>${product ? (product.code || 'N/A') : item.productId}</td>
+                                    <td>${
+                                        product ? product.name : item.productId
+                                    }</td>
+                                    <td>${
+                                        product
+                                            ? product.code || "N/A"
+                                            : item.productId
+                                    }</td>
                                     <td>${item.quantity}</td>
                                     <td>${fmt.currency(item.price)}</td>
-                                    <td>${fmt.currency(item.quantity * item.price)}</td>
+                                    <td>${fmt.currency(
+                                        item.quantity * item.price
+                                    )}</td>
                                 </tr>`;
-                        }).join('')}
+                            })
+                            .join("")}
                     </tbody>
                 </table>
             </div>
         </div>
         
         <div class="row" style="margin-top: 20px;">
-            <button class="btn-primary" id="save" ${isCanceled ? 'disabled' : ''}>
+            <button class="btn-primary" id="save" ${
+                isCanceled ? "disabled" : ""
+            }>
                 Cập nhật trạng thái
             </button>
             <button class="btn" id="closeBtn">
@@ -691,107 +754,96 @@ function showOrderDetail(order) {
             </button>
         </div>
     </div>`;
-    
+
     // Tạo và hiển thị modal
     const wrap = document.createElement("section");
     wrap.className = "panel";
     wrap.style.marginBottom = "20px";
     wrap.innerHTML = html;
-    
+
     // Xóa các modal cũ nếu có
-    document.querySelectorAll('.order-detail-modal').forEach(el => el.remove());
-    
+    document
+        .querySelectorAll(".order-detail-modal")
+        .forEach((el) => el.remove());
+
     // Thêm modal mới
-    const modal = document.createElement('div');
-    modal.className = 'order-detail-modal';
-    modal.style.position = 'fixed';
-    modal.style.top = '0';
-    modal.style.left = '0';
-    modal.style.right = '0';
-    modal.style.bottom = '0';
-    modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
-    modal.style.display = 'flex';
-    modal.style.justifyContent = 'center';
-    modal.style.alignItems = 'flex-start';
-    modal.style.padding = '40px 20px';
-    modal.style.overflowY = 'auto';
-    modal.style.zIndex = '1000';
-    
+    const modal = document.createElement("div");
+    modal.className = "order-detail-modal";
+    modal.style.position = "fixed";
+    modal.style.top = "0";
+    modal.style.left = "0";
+    modal.style.right = "0";
+    modal.style.bottom = "0";
+    modal.style.backgroundColor = "rgba(0,0,0,0.5)";
+    modal.style.display = "flex";
+    modal.style.justifyContent = "center";
+    modal.style.alignItems = "flex-start";
+    modal.style.padding = "40px 20px";
+    modal.style.overflowY = "auto";
+    modal.style.zIndex = "1000";
+
     modal.appendChild(wrap);
     document.body.appendChild(modal);
-    
+
     // Xử lý sự kiện đóng modal
     const closeModal = () => {
         modal.remove();
     };
-    
+
     // Đóng khi click ra ngoài modal
-    modal.addEventListener('click', (e) => {
+    modal.addEventListener("click", (e) => {
         if (e.target === modal) {
             closeModal();
         }
     });
-    
+
     // Đóng khi click nút đóng
-    const closeBtn = wrap.querySelector('#closeBtn');
-    const closeDetailBtn = wrap.querySelector('#closeDetail');
-    
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-    if (closeDetailBtn) closeDetailBtn.addEventListener('click', closeModal);
-    
+    const closeBtn = wrap.querySelector("#closeBtn");
+    const closeDetailBtn = wrap.querySelector("#closeDetail");
+
+    if (closeBtn) closeBtn.addEventListener("click", closeModal);
+    if (closeDetailBtn) closeDetailBtn.addEventListener("click", closeModal);
+
     // Xử lý sự kiện lưu
-    const saveBtn = wrap.querySelector('#save');
+    const saveBtn = wrap.querySelector("#save");
     if (saveBtn) {
-        saveBtn.addEventListener('click', function() {
-            const newStatus = wrap.querySelector('#ust').value;
+        saveBtn.addEventListener("click", function () {
+            const newStatus = wrap.querySelector("#ust").value;
             const oldStatus = order.status;
             const stock = computeStock(); // Lấy thông tin tồn kho mới nhất
-            
+
             try {
                 // Kiểm tra nếu đơn hàng đã bị hủy
-                if (oldStatus === 'canceled') {
-                    throw new Error('Không thể thay đổi trạng thái đơn hàng đã hủy');
+                if (oldStatus === "canceled") {
+                    throw new Error(
+                        "Không thể thay đổi trạng thái đơn hàng đã hủy"
+                    );
                 }
-                
+
                 // Cập nhật trạng thái đơn hàng
                 Orders.update(order.id, { status: newStatus });
-                
-                // Nếu hủy đơn hàng, cần cập nhật lại số lượng tồn kho
-                if (newStatus === 'canceled' && oldStatus !== 'canceled') {
-                    // Lấy danh sách sản phẩm trong đơn hàng
-                    order.items.forEach(item => {
-                        // Cập nhật số lượng tồn kho
-                        const currentStock = stock.get(item.productId) || 0;
-                        
-                        // Cập nhật vào cơ sở dữ liệu
-                        const db = dbGet();
-                        const product = db.products.find(p => p.id === item.productId);
-                        if (product) {
-                            product.stock = (product.stock || 0) + item.quantity;
-                            dbSet(db);
-                            
-                            // Cập nhật lại stock trong bộ nhớ
-                            stock.set(item.productId, product.stock);
-                        }
-                    });
-                }
-                
+
+                // Logic hủy đơn hàng đã được xử lý trong Orders.update()
+                // Không cần xử lý thêm ở đây vì Orders.update() đã tạo receipt để cộng hàng trở lại kho
+
                 // Hiển thị thông báo thành công
-                if (newStatus === 'canceled') {
-                    alert('Đã hủy đơn hàng và cập nhật lại số lượng tồn kho.');
+                if (newStatus === "canceled") {
+                    alert("Đã hủy đơn hàng và cập nhật lại số lượng tồn kho.");
                 } else {
                     const statusText = statusMessages[newStatus] || newStatus;
                     alert(`Cập nhật trạng thái đơn hàng thành: ${statusText}`);
                 }
-                
+
                 // Đóng modal và làm mới danh sách
                 closeModal();
                 renderOrders();
-                
             } catch (error) {
                 // Hiển thị thông báo lỗi nếu có
-                console.error('Lỗi khi cập nhật đơn hàng:', error);
-                alert(error.message || 'Có lỗi xảy ra khi cập nhật trạng thái đơn hàng');
+                console.error("Lỗi khi cập nhật đơn hàng:", error);
+                alert(
+                    error.message ||
+                        "Có lỗi xảy ra khi cập nhật trạng thái đơn hàng"
+                );
             }
         });
     }
@@ -804,13 +856,13 @@ function renderStock() {
         const products = Products.list();
         const stock = computeStock();
         const lowStockProducts = [];
-        
+
         // Kiểm tra phần tử app
         if (!app) {
-            console.error('Không tìm thấy phần tử app');
+            console.error("Không tìm thấy phần tử app");
             return;
         }
-        
+
         // Tạo giao diện bảng tồn kho
         app.innerHTML = `
         <section class="panel">
@@ -833,50 +885,53 @@ function renderStock() {
                         </tr>
                     </thead>
                     <tbody id="stockTableBody">
-                        ${products.length === 0 ? 
-                            '<tr><td colspan="4" class="text-center">Không có sản phẩm nào</td></tr>' : ''
+                        ${
+                            products.length === 0
+                                ? '<tr><td colspan="4" class="text-center">Không có sản phẩm nào</td></tr>'
+                                : ""
                         }
                     </tbody>
                 </table>
             </div>
         </section>`;
-        
+
         // Lấy tham chiếu đến tbody
         const tbody = qs("#stockTableBody");
         if (!tbody) {
-            console.error('Không tìm thấy bảng tồn kho');
+            console.error("Không tìm thấy bảng tồn kho");
             return;
         }
-        
+
         // Nếu không có sản phẩm, không cần render tiếp
         if (products.length === 0) return;
-        
+
         // Render danh sách sản phẩm
         tbody.innerHTML = products
             .map((product) => {
                 const quantity = stock.get(product.id) || 0;
                 const isLowStock = quantity < 5;
-                let status = '';
-                
+                let status = "";
+
                 if (isLowStock) {
                     lowStockProducts.push(product.name);
                     status = '<span class="badge badge-warning">Sắp hết</span>';
                 } else if (quantity === 0) {
                     status = '<span class="badge badge-danger">Hết hàng</span>';
                 } else {
-                    status = '<span class="badge badge-success">Còn hàng</span>';
+                    status =
+                        '<span class="badge badge-success">Còn hàng</span>';
                 }
-                
+
                 return `
                     <tr>
-                        <td>${product.code || 'N/A'}</td>
-                        <td>${product.name || 'N/A'}</td>
+                        <td>${product.code || "N/A"}</td>
+                        <td>${product.name || "N/A"}</td>
                         <td class="text-right">${quantity.toLocaleString()}</td>
                         <td>${status}</td>
                     </tr>`;
             })
             .join("");
-        
+
         // Thêm sự kiện làm mới
         const refreshBtn = qs("#refreshStock");
         if (refreshBtn) {
@@ -884,20 +939,39 @@ function renderStock() {
                 renderStock();
             });
         }
-        
+
+        // Auto-refresh stock every 3 seconds when on stock page
+        const stockRefreshInterval = setInterval(() => {
+            // Only refresh if we're currently on the stock page
+            const activeButton = document.querySelector(
+                ".sidebar button.active"
+            );
+            if (activeButton && activeButton.dataset.view === "stock") {
+                renderStock();
+            }
+        }, 3000);
+
+        // Clean up interval when leaving stock page
+        const originalRoute = window.route;
+        window.route = function (view) {
+            if (view !== "stock") {
+                clearInterval(stockRefreshInterval);
+            }
+            originalRoute(view);
+        };
+
         // Hiển thị cảnh báo nếu có sản phẩm sắp hết hàng
         if (lowStockProducts.length > 0) {
             const warningMsg = `Cảnh báo: Có ${lowStockProducts.length} sản phẩm sắp hết hàng`;
             console.warn(warningMsg, lowStockProducts);
         }
-            
     } catch (error) {
-        console.error('Lỗi khi tải kho hàng:', error);
+        console.error("Lỗi khi tải kho hàng:", error);
         if (app) {
             app.innerHTML = `
             <div class="alert alert-danger">
                 <h3>Đã xảy ra lỗi khi tải kho hàng</h3>
-                <p>${error.message || 'Vui lòng thử lại sau'}</p>
+                <p>${error.message || "Vui lòng thử lại sau"}</p>
                 <button onclick="location.reload()" class="btn btn-primary mt-2">
                     <i class="fas fa-sync-alt"></i> Tải lại trang
                 </button>
