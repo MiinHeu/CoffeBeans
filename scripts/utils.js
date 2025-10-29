@@ -1,3 +1,8 @@
+// Global prototype flag: Only login/register simulation is allowed
+if (typeof window !== "undefined") {
+    window.PROTOTYPE_MODE = true;
+}
+
 export const fmt = {
     currency(v) {
         return Number(v || 0).toLocaleString("vi-VN");
