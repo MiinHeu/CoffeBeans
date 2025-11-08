@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8" />
@@ -127,41 +127,25 @@
         </div>
     </main>
 
-    <script type="module">
-        import { Orders, Products } from './scripts/db.js';
-        import { fmt } from './scripts/utils.js';
+    <script>
+        // Pure JS prototype confirmation: read order summary from sessionStorage
+        function currency(v){ return new Intl.NumberFormat('vi-VN').format(Number(v||0)); }
 
-        // Get order ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const orderId = urlParams.get('orderId');
+        function loadOrderDetails(){
+            let summary = null;
+            try { summary = JSON.parse(sessionStorage.getItem('last_order_summary')||'null'); } catch { summary = null; }
+            if (!summary) { window.location.href = 'index.html'; return; }
 
-        // If no order ID, redirect to home
-        if (!orderId) {
-            window.location.href = 'index.html';
+            const idEl = document.getElementById('orderId');
+            const dateEl = document.getElementById('orderDate');
+            const totalEl = document.getElementById('orderTotal');
+
+            if (idEl) idEl.textContent = '#' + (summary.id || '000000');
+            if (dateEl) dateEl.textContent = new Date(summary.date || Date.now()).toLocaleDateString('vi-VN');
+            if (totalEl) totalEl.textContent = currency(summary.total || 0) + 'đ';
         }
 
-        // Load order details
-        function loadOrderDetails() {
-            const order = Orders.list().find(o => o.id === orderId);
-            
-            if (!order) {
-                window.location.href = 'index.html';
-                return;
-            }
-
-            // Update UI with order details
-            document.getElementById('orderId').textContent = '#' + order.id;
-            document.getElementById('orderDate').textContent = new Date(order.date).toLocaleDateString('vi-VN');
-            
-            // Calculate total
-            const total = order.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            document.getElementById('orderTotal').textContent = fmt.currency(total) + 'đ';
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            loadOrderDetails();
-        });
+        document.addEventListener('DOMContentLoaded', loadOrderDetails);
     </script>
 </body>
 </html>

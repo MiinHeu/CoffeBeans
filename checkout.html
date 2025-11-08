@@ -618,8 +618,7 @@
                                     />
                                     <i class="fas fa-store icon"></i>
                                     <div>
-                                        <div>Nhận tại cửa hàng</div>
-                                        <small>Miễn phí vận chuyển</small>
+                                        <div>Nhận tại cửa hàng</div>                                    
                                     </div>
                                 </div>
                             </div>
@@ -762,19 +761,19 @@
                     <div class="order-summary">
                         <div class="order-summary-item">
                             <span>Tạm tính:</span>
-                            <span id="subtotal">0đ</span>
+                            <span id="subtotal">1.811.000đ</span>
                         </div>
                         <div class="order-summary-item">
                             <span>Phí vận chuyển:</span>
-                            <span id="shippingFee">30,000đ</span>
+                            <span id="shippingFee">30.000đ</span>
                         </div>
                         <div class="order-summary-item">
                             <span>Giảm giá:</span>
-                            <span id="discount">-0đ</span>
+                            <span id="discount">0đ</span>
                         </div>
                         <div class="order-total">
                             <span>Tổng cộng:</span>
-                            <span id="total">0đ</span>
+                            <span id="total">1.841.000đ</span>
                         </div>
                     </div>
 
@@ -801,9 +800,10 @@
         </main>
 
         <script src="scripts/user.js" defer></script>
-        <script type="module">
-            import { Orders, Products } from "./scripts/db.js";
-            import { session, fmt } from "./scripts/utils.js";
+        <script>
+            // Prototype-only: no admin/db dependencies
+            const session = { getUser: () => { try { return JSON.parse(localStorage.getItem('currentUser')||'null'); } catch { return null; } }, isLoggedIn: () => !!localStorage.getItem('currentUser') };
+            const fmt = { currency: (v) => new Intl.NumberFormat('vi-VN').format(Number(v||0)) };
 
             // DOM Elements
             const orderItemsEl = document.getElementById("orderItems");
@@ -844,13 +844,11 @@
             // State
             let cart = [];
             let selectedItems = [];
-            let shippingFee = 30000;
-            let discount = 0;
 
             // Initialize
             document.addEventListener("DOMContentLoaded", () => {
                 loadCart();
-                renderOrderSummary();
+                // Totals are static in HTML for prototype - no JS computation needed
                 setupEventListeners();
                 autoFillUserInfo();
             });
@@ -968,69 +966,23 @@
                     )
                     .join("");
 
-                renderOrderSummary();
             }
 
-            // Render order summary
-            function renderOrderSummary() {
-                const selectedCartItems = cart.filter((item) =>
-                    selectedItems.includes(item.id)
-                );
-                const subtotal = selectedCartItems.reduce(
-                    (sum, item) => sum + item.price * item.quantity,
-                    0
-                );
-                const isPickup =
-                    document.querySelector(
-                        'input[name="deliveryMethod"]:checked'
-                    ).value === "pickup";
-                const isBankTransfer =
-                    document.querySelector(
-                        'input[name="paymentMethod"]:checked'
-                    ).value === "bank";
-
-                // Calculate shipping
-                const currentShippingFee = isPickup ? 0 : shippingFee;
-
-                // Calculate discount (5% for bank transfer)
-                const currentDiscount = isBankTransfer
-                    ? Math.round(subtotal * 0.05)
-                    : 0;
-
-                // Calculate total
-                const total = subtotal + currentShippingFee - currentDiscount;
-
-                // Update UI
-                subtotalEl.textContent = `${fmt.currency(subtotal)}đ`;
-                shippingFeeEl.textContent =
-                    currentShippingFee > 0
-                        ? `${fmt.currency(currentShippingFee)}đ`
-                        : "Miễn phí";
-                discountEl.textContent =
-                    currentDiscount > 0
-                        ? `-${fmt.currency(currentDiscount)}đ`
-                        : "0đ";
-                totalEl.textContent = `${fmt.currency(total)}đ`;
-
-                // Update state
-                shippingFee = currentShippingFee;
-                discount = currentDiscount;
-            }
+            // Totals are static in this prototype. No dynamic calculation function.
 
             // Setup event listeners
             function setupEventListeners() {
-                // Payment method change
-                document
-                    .querySelectorAll('input[name="deliveryMethod"]')
-                    .forEach((radio) => {
-                        radio.addEventListener("change", renderOrderSummary);
-                    });
-
-                // Payment method change
+                // Payment method change - update selected UI only (do not recalc totals)
                 document
                     .querySelectorAll('input[name="paymentMethod"]')
                     .forEach((radio) => {
-                        radio.addEventListener("change", renderOrderSummary);
+                        radio.addEventListener("change", (e) => {
+                            document.querySelectorAll('.payment-option').forEach((opt) => {
+                                const r = opt.querySelector('input[type="radio"]');
+                                if (r && r.checked) opt.classList.add('selected');
+                                else opt.classList.remove('selected');
+                            });
+                        });
                     });
 
                 // Payment option click
@@ -1049,7 +1001,7 @@
                                         opt.classList.remove("selected")
                                     );
                                 option.classList.add("selected");
-                                renderOrderSummary();
+                                // Do not recalculate totals - totals are static in this prototype
                             }
                         });
                     });
@@ -1067,30 +1019,34 @@
                 const phoneInput = document.getElementById("phone");
                 const addressInput = document.getElementById("address");
 
-                if (!session.isLoggedIn()) {
-                    // Offer to login for autofill and guard checkout
-                    const wantLogin = confirm(
-                        "Vui lòng đăng nhập để tự động điền thông tin. Chuyển đến trang đăng nhập?"
-                    );
-                    if (wantLogin) {
-                        window.location.href = `login.html?redirect=${encodeURIComponent(
-                            "checkout.html"
-                        )}`;
-                    }
-                    return;
+                // Get user data from session or set default values
+                const user = session.getUser() || {};
+                
+                // Set default values for customer information
+                if (fullNameInput) {
+                    fullNameInput.value = user.name || "Khách hàng 1";
+                    fullNameInput.classList.add('is-filled');
+                }
+                if (emailInput) {
+                    emailInput.value = user.email || "user@example.com";
+                    emailInput.classList.add('is-filled');
+                }
+                if (phoneInput) {
+                    phoneInput.value = user.phone || "0987654321";
+                    phoneInput.classList.add('is-filled');
+                }
+                if (addressInput) {
+                    addressInput.value = user.address || "456 Đường XYZ, Quận 3, TP.HCM";
+                    addressInput.classList.add('is-filled');
                 }
 
-                const user = session.getUser();
-                if (!user) return;
-
-                if (fullNameInput && !fullNameInput.value && user.name)
-                    fullNameInput.value = user.name;
-                if (emailInput && !emailInput.value && user.email)
-                    emailInput.value = user.email;
-                if (phoneInput && !phoneInput.value && user.phone)
-                    phoneInput.value = user.phone;
-                if (addressInput && !addressInput.value && user.address)
-                    addressInput.value = user.address;
+                // Add visual feedback that fields were auto-filled
+                [fullNameInput, emailInput, phoneInput, addressInput].forEach(input => {
+                    if (input && input.value) {
+                        // Add a subtle flash animation
+                        input.style.animation = 'fadeIn 0.5s ease-out';
+                    }
+                });
             }
 
             // Update cart badge (distinct items count)
@@ -1162,7 +1118,6 @@
                             }, 200);
                         }
 
-                        renderOrderSummary();
                         renderOrderItems();
                     }
                 }, 300);
@@ -1177,7 +1132,7 @@
                 if (checkoutForm) checkoutForm.classList.remove("loading");
             }
 
-            // Handle place order
+            // Handle place order (prototype: save basic summary and redirect)
             async function handlePlaceOrder() {
                 // Show loading state
                 placeOrderBtn.disabled = true;
@@ -1230,184 +1185,36 @@
                     const formData = new FormData(checkoutForm);
                     const formValues = Object.fromEntries(formData.entries());
 
-                    // Get selected items
-                    const selectedCartItems = cart.filter((item) =>
-                        selectedItems.includes(item.id)
-                    );
-                    const subtotal = selectedCartItems.reduce(
-                        (sum, item) => sum + item.price * item.quantity,
-                        0
-                    );
-                    const isPickup = formValues.deliveryMethod === "pickup";
-                    const isBankTransfer = formValues.paymentMethod === "bank";
-                    const currentDiscount = isBankTransfer
-                        ? Math.round(subtotal * 0.05)
-                        : 0;
+                    // Use static totals for order (prototype)
+                    const subtotal = 1811000; // 1.811.000đ
+                    const shipping = 30000; // 30.000đ
+                    const currentDiscount = 0;
+                    const total = 1811000 + 30000 - 0; // 1.841.000đ
 
-                    // Create order object
+                    // Create a lightweight order summary and stash to sessionStorage
                     const order = {
-                        id:
-                            "ORD-" +
-                            Date.now().toString().slice(-6).toUpperCase(),
-                        userId: sessionStorage.getItem("user_id") || "guest",
+                        id: "ORD-" + Date.now().toString().slice(-6).toUpperCase(),
                         date: new Date().toISOString(),
-                        status: "pending",
                         customerName: formValues.fullName,
-                        customerPhone: formValues.phone,
-                        customerEmail: formValues.email || "",
-                        shippingAddress: isPickup
-                            ? "Nhận tại cửa hàng"
-                            : formValues.address,
-                        deliveryMethod: formValues.deliveryMethod,
                         paymentMethod: formValues.paymentMethod,
-                        note: formValues.note || "",
-                        subtotal: subtotal,
-                        shipping: isPickup ? 0 : shippingFee,
-                        discount: currentDiscount,
-                        total:
-                            subtotal +
-                            (isPickup ? 0 : shippingFee) -
-                            currentDiscount,
-                        items: selectedCartItems.map((item) => ({
-                            productId: item.id,
-                            name: item.name,
-                            price: item.price,
-                            quantity: item.quantity,
-                            image: item.image || "",
-                        })),
+                        subtotal, shipping, discount: currentDiscount, total
                     };
+                    sessionStorage.setItem('last_order_summary', JSON.stringify(order));
 
-                    // Show success animation
+                    // Success UI then redirect to confirmation
                     placeOrderBtn.innerHTML = `
                         <i class="fas fa-check-circle"></i>
                         <span>Đặt hàng thành công!</span>
                     `;
-
-                    // Add success class
                     document.body.classList.add("order-success");
-
-                    try {
-                        // Save order to database
-                        const savedOrder = await Orders.create(order);
-
-                        if (!savedOrder || !savedOrder.id) {
-                            throw new Error(
-                                "Không nhận được phản hồi từ hệ thống"
-                            );
-                        }
-
-                        // Force stock update by triggering a custom event
-                        window.dispatchEvent(new CustomEvent("stockUpdated"));
-
-                        // Clear cart and selected items
-                        const updatedCart = cart.filter(
-                            (item) => !selectedItems.includes(item.id)
-                        );
-                        try {
-                            localStorage.setItem(
-                                "cart",
-                                JSON.stringify(updatedCart)
-                            );
-                            localStorage.removeItem("cart_selected");
-
-                            // Also update user-specific storage if user is logged in
-                            const user = session.getUser();
-                            if (user) {
-                                try {
-                                    const carts = JSON.parse(
-                                        localStorage.getItem("userCarts") ||
-                                            "{}"
-                                    );
-                                    carts[user.id] = updatedCart;
-                                    localStorage.setItem(
-                                        "userCarts",
-                                        JSON.stringify(carts)
-                                    );
-
-                                    // Clear selected items from user-specific storage
-                                    const selectedCarts = JSON.parse(
-                                        localStorage.getItem(
-                                            "userCartSelected"
-                                        ) || "{}"
-                                    );
-                                    delete selectedCarts[user.id];
-                                    localStorage.setItem(
-                                        "userCartSelected",
-                                        JSON.stringify(selectedCarts)
-                                    );
-                                } catch (e) {
-                                    console.error(
-                                        "Error updating user-specific cart:",
-                                        e
-                                    );
-                                }
-                            }
-
-                            // Update cart badge
-                            const cartBadge =
-                                document.getElementById("cart-badge");
-                            if (cartBadge) {
-                                cartBadge.textContent = "0";
-                            }
-
-                            // Show success state
-                            placeOrderBtn.innerHTML = `
-                                <i class="fas fa-check-circle"></i>
-                                <span>Đặt hàng thành công!</span>
-                            `;
-
-                            // Redirect to order confirmation after a short delay
-                            setTimeout(() => {
-                                window.location.href =
-                                    "order-confirmation.html?orderId=" +
-                                    savedOrder.id;
-                            }, 1000);
-                        } catch (storageError) {
-                            console.error(
-                                "Error updating local storage:",
-                                storageError
-                            );
-                            // Continue with redirect even if storage update fails
-                            window.location.href =
-                                "order-confirmation.html?orderId=" +
-                                savedOrder.id;
-                        }
-                    } catch (error) {
-                        console.error("Order error:", error);
-
-                        // Show error state with more specific message
-                        const errorMessage =
-                            error.message ||
-                            "Không thể đặt hàng. Vui lòng thử lại sau.";
-                        alert("Lỗi: " + errorMessage);
-
-                        // Reset button state
-                        resetPlaceOrderButton();
-
-                        // Update button text to allow retry
-                        if (buttonText) {
-                            buttonText.textContent = "Thử lại";
-                        }
-                    }
+                    setTimeout(() => { window.location.href = 'order-confirmation.html'; }, 600);
                 } catch (error) {
-                    console.error("Order placement error:", error);
-
-                    // Show error state with more specific error message
-                    const errorMessage =
-                        error.message ||
-                        "Không thể đặt hàng. Vui lòng thử lại sau.";
-                    alert("Lỗi: " + errorMessage);
-
-                    // Reset button state
+                    alert("Lỗi: Không thể xử lý đơn hàng. Vui lòng thử lại.");
                     resetPlaceOrderButton();
-
-                    // Update button text to allow retry
-                    if (buttonText) {
-                        buttonText.textContent = "Thử lại";
-                    }
+                    if (buttonText) { buttonText.textContent = "Đặt hàng"; }
                 }
             }
-
+            
             // Make functions available globally
             window.updateQuantity = updateQuantity;
         </script>

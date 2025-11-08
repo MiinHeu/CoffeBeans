@@ -88,6 +88,39 @@
                 gap: 20px;
                 margin-top: 30px;
             }
+            /* Align product row layout like index.html */
+            .product-grid .card .prod {
+                display: grid;
+                grid-template-columns: 64px 1fr auto;
+                align-items: center;
+                gap: 12px;
+            }
+            .product-grid .card .prod img {
+                width: 64px;
+                height: 64px;
+                border-radius: 8px;
+                object-fit: cover;
+            }
+            .product-grid .card .button-group {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            .product-grid .card .button-group .add,
+            .product-grid .card .button-group .buy-now {
+                border: none;
+                padding: 8px 14px;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+            .product-grid .card .button-group .add {
+                background: var(--coffee);
+                color: #fff;
+            }
+            .product-grid .card .button-group .buy-now {
+                background: #d6b692;
+                color: var(--coffee-900);
+            }
             @media (max-width: 960px) {
                 .product-grid {
                     grid-template-columns: repeat(2, 1fr);
@@ -104,6 +137,7 @@
                 color: var(--muted);
                 font-size: 1.1em;
             }
+            
         </style>
     </head>
     <body>
@@ -138,8 +172,8 @@
                         <a href="products.html" class="active">Sản phẩm</a>
                         <div class="dropdown-content">
                             <a href="arabica.html" class="active">Arabica</a>
-                            <a href="robusta.html">Robusta</a>
-                            <a href="blend.html">Blend</a>
+                            <a href="arabica.html">Robusta</a>
+                            <a href="arabica.html">Blend</a>
                         </div>
                     </div>
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
@@ -160,7 +194,7 @@
                                 >
                             </li>
                             <li id="registerItem">
-                                <a href="register.html"
+                                <a href="index.html"
                                     ><i class="fa fa-user-plus"></i> Đăng ký</a
                                 >
                             </li>
@@ -204,8 +238,8 @@
                 <a href="products.html" class="active">Sản phẩm</a>
                 <div class="mobile-dropdown-content">
                     <a href="arabica.html" class="active">Arabica</a>
-                    <a href="robusta.html">Robusta</a>
-                    <a href="blend.html">Blend</a>
+                    <a href="arabica.html">Robusta</a>
+                    <a href="arabica.html">Blend</a>
                 </div>
             </div>
             <a href="index.html#ve-chung-toi">Giới thiệu</a>
@@ -227,64 +261,78 @@
             </div>
 
             <div class="container">
-                <!-- Filter panel -->
-                <section class="filter-panel">
-                    <form id="filterForm">
-                        <div class="grid-2">
-                            <div class="filter-group">
-                                <label>Khoảng giá</label>
-                                <select id="priceRange" name="priceRange">
-                                    <option value="">Tất cả mức giá</option>
-                                    <option value="0-100000">
-                                        Dưới 100.000đ
-                                    </option>
-                                    <option value="100000-200000">
-                                        100.000đ - 200.000đ
-                                    </option>
-                                    <option value="200000-300000">
-                                        200.000đ - 300.000đ
-                                    </option>
-                                    <option value="300000-500000">
-                                        300.000đ - 500.000đ
-                                    </option>
-                                    <option value="500000-up">
-                                        Trên 500.000đ
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="filter-group">
-                                <label>Sắp xếp</label>
-                                <select id="sort">
-                                    <option value="default">Mặc định</option>
-                                    <option value="price-asc">
-                                        Giá tăng dần
-                                    </option>
-                                    <option value="price-desc">
-                                        Giá giảm dần
-                                    </option>
-                                    <option value="name-asc">Tên A-Z</option>
-                                    <option value="name-desc">Tên Z-A</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="filter-buttons">
-                            <button type="submit" class="apply-filter">
-                                Áp dụng
-                            </button>
-                            <button type="reset" class="reset-filter">
-                                Đặt lại
-                            </button>
-                        </div>
-                    </form>
-                </section>
-
-                <!-- Products grid -->
+                <!-- Products grid (static like index.html) -->
                 <section class="product-grid" id="productGrid">
-                    <!-- Products will be inserted here by JavaScript -->
+                    <article class="card">
+                        <img
+                            src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1200&auto=format&fit=crop"
+                            alt="Arabica"
+                        />
+                        <div class="card-body">
+                            <span class="chip">Arabica</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <img
+                                    src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=300&auto=format&fit=crop"
+                                    alt="Arabica Premium"
+                                />
+                                <div>
+                                    <h4>Arabica Premium 250g</h4>
+                                    <div><span class="price">135.000đ</span></div>
+                                </div>
+                                <div class="button-group">
+                                    <button class="add" data-name="Arabica Premium 250g" data-price="135000">Thêm vào giỏ</button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <img
+                            src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop"
+                            alt="Robusta"
+                        />
+                        <div class="card-body">
+                            <span class="chip">Robusta</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <img
+                                    src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=300&auto=format&fit=crop"
+                                    alt="Robusta Bold"
+                                />
+                                <div>
+                                    <h4>Robusta Bold 500g</h4>
+                                    <div><span class="price">129.000đ</span></div>
+                                </div>
+                                <div class="button-group">
+                                    <button class="add" data-name="Robusta Bold 500g" data-price="129000">Thêm vào giỏ</button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="card">
+                        <img
+                            src="https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?q=80&w=1200&auto=format&fit=crop"
+                            alt="Blend"
+                        />
+                        <div class="card-body">
+                            <span class="chip">Signature Blend</span>
+                            <div class="spacer"></div>
+                            <div class="prod">
+                                <img
+                                    src="https://images.unsplash.com/photo-1442550528053-c431ecb55509?q=80&w=300&auto=format&fit=crop"
+                                    alt="Signature Blend"
+                                />
+                                <div>
+                                    <h4>Signature Blend 1kg</h4>
+                                    <div><span class="price">265.000đ</span></div>
+                                </div>
+                                <div class="button-group">
+                                    <button class="add" data-name="Signature Blend 1kg" data-price="265000">Thêm vào giỏ</button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
                 </section>
-
-                <!-- Pagination -->
-                <div id="pagination" class="pagination"></div>
             </div>
         </main>
 
@@ -313,532 +361,71 @@
         </footer>
 
         <script type="module">
-            import { Products, Types, computeStock } from "./scripts/db.js";
-            import {
-                initHeader,
-                getCartSafe as getCart,
-                setCartSafe as setCart,
-                updateCartBadge,
-                toggleCart,
-                closeCart,
-                openCart,
-            } from "./scripts/header.js";
-            import { session } from "./scripts/utils.js";
-            function formatCurrencyGlobal(v) {
-                return new Intl.NumberFormat("vi-VN").format(v);
-            }
-            function renderCart() {
-                const c = getCart();
-                const box = document.getElementById("cartItems");
-                const sub = document.getElementById("cartSubtotal");
-                if (!box || !sub) return;
-                if (c.length === 0) {
-                    box.innerHTML = "<p>Giỏ hàng trống.</p>";
-                    sub.textContent = "0đ";
-                    return;
-                }
-                box.innerHTML = c
-                    .map(
-                        (item) =>
-                            `<div class="cart-item" data-id="${
-                                item.id
-                            }" style="padding:12px 0; border-bottom:1px solid #f2f2f2;"><div style="display:flex; align-items:start; justify-content: space-between; gap:10px;"><div style="flex:1; min-width:0;"><div style="font-weight:600;">${
-                                item.name
-                            }</div><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><button class="qty-dec" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;">-</button><input class="qty-input" type="number" min="1" value="${
-                                item.quantity
-                            }" style="width:48px; text-align:center; border:1px solid #ddd; height:28px;" /><button class="qty-inc" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;">+</button><button class="remove-item" style="margin-left:8px; background:#fff; border:1px solid #f2d7d7; color:#c62828; cursor:pointer; height:28px; padding:0 10px; border-radius:6px;">Xóa</button></div></div><div style="min-width:100px; text-align:right; font-weight:600; color:var(--coffee);">${formatCurrencyGlobal(
-                                item.price * item.quantity
-                            )}đ</div></div></div>`
-                    )
-                    .join("");
-                const total = c.reduce((s, i) => s + i.price * i.quantity, 0);
-                sub.textContent = `${formatCurrencyGlobal(total)}đ`;
-                box.querySelectorAll(".qty-dec").forEach((b) =>
-                    b.addEventListener("click", onDec)
-                );
-                box.querySelectorAll(".qty-inc").forEach((b) =>
-                    b.addEventListener("click", onInc)
-                );
-                box.querySelectorAll(".qty-input").forEach((i) =>
-                    i.addEventListener("change", onChange)
-                );
-                box.querySelectorAll(".remove-item").forEach((b) =>
-                    b.addEventListener("click", onRemove)
-                );
-            }
-            function onDec(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const c = getCart();
-                const it = c.find((i) => i.id === id);
-                if (!it) return;
-                it.quantity = Math.max(1, it.quantity - 1);
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-            function onInc(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const c = getCart();
-                const it = c.find((i) => i.id === id);
-                if (!it) return;
-                it.quantity += 1;
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-            function onChange(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const v = Math.max(1, parseInt(e.target.value || "1", 10));
-                const c = getCart();
-                const it = c.find((i) => i.id === id);
-                if (!it) return;
-                it.quantity = v;
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-            function onRemove(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const c = getCart().filter((i) => i.id !== id);
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-
-            // Stock helpers
-            let productStocks = new Map();
-            function updateStockLevels() {
-                productStocks = computeStock();
-            }
-            function getAvailableStock(productId) {
-                return productStocks.get(productId) || 0;
-            }
-            function isInStock(productId, qty = 1) {
-                return getAvailableStock(productId) >= qty;
-            }
-
-            // Constants
-            const ITEMS_PER_PAGE = 6;
-            let currentPage = 1;
-            let filteredProducts = [];
-
-            // Initialize
-            function init() {
-                loadProducts();
-                setupEventListeners();
-            }
-
-            // Load products
-            function loadProducts(filters = {}) {
-                // Get all Arabica products
-                filteredProducts = Products.list().filter(
-                    (p) => !p.hidden && p.typeId === "t1"
-                );
-
-                // Apply price range filter
-                if (filters.priceRange) {
-                    const [min, max] = filters.priceRange
-                        .split("-")
-                        .map(Number);
-                    filteredProducts = filteredProducts.filter((product) => {
-                        const price = getSellPrice(product.id).price;
-                        if (max === undefined) return price >= min;
-                        return price >= min && price <= max;
-                    });
-                }
-
-                // Apply search filter
-                if (filters.search) {
-                    const searchTerm = filters.search.toLowerCase();
-                    filteredProducts = filteredProducts.filter(
-                        (product) =>
-                            product.name.toLowerCase().includes(searchTerm) ||
-                            product.desc.toLowerCase().includes(searchTerm)
-                    );
-                }
-
-                // Apply sorting
-                if (filters.sort) {
-                    switch (filters.sort) {
-                        case "price-asc":
-                            filteredProducts.sort(
-                                (a, b) =>
-                                    getSellPrice(a.id).price -
-                                    getSellPrice(b.id).price
-                            );
-                            break;
-                        case "price-desc":
-                            filteredProducts.sort(
-                                (a, b) =>
-                                    getSellPrice(b.id).price -
-                                    getSellPrice(a.id).price
-                            );
-                            break;
-                        case "name-asc":
-                            filteredProducts.sort((a, b) =>
-                                a.name.localeCompare(b.name)
-                            );
-                            break;
-                        case "name-desc":
-                            filteredProducts.sort((a, b) =>
-                                b.name.localeCompare(a.name)
-                            );
-                            break;
-                    }
-                }
-
-                renderProducts();
-                renderPagination();
-            }
-
-            // Setup event listeners
-            function setupEventListeners() {
-                // Search form submit
-                document
-                    .getElementById("searchForm")
-                    .addEventListener("submit", (e) => {
-                        e.preventDefault();
-                        applyFilters();
-                    });
-
-                // Filter form submit
-                document
-                    .getElementById("filterForm")
-                    .addEventListener("submit", (e) => {
-                        e.preventDefault();
-                        applyFilters();
-                    });
-
-                // Reset filters
-                document
-                    .getElementById("filterForm")
-                    .addEventListener("reset", () => {
-                        setTimeout(() => {
-                            applyFilters();
-                        }, 0);
-                    });
-
-                // Sort change
-                document
-                    .getElementById("sort")
-                    .addEventListener("change", () => {
-                        applyFilters();
-                    });
-
-                // Header interactions handled by header.js
-            }
-
-            // Render products for current page
-            function renderProducts() {
-                const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-                const endIndex = startIndex + ITEMS_PER_PAGE;
-                const pageProducts = filteredProducts.slice(
-                    startIndex,
-                    endIndex
-                );
-
-                const grid = document.getElementById("productGrid");
-
-                if (pageProducts.length === 0) {
-                    grid.innerHTML =
-                        '<div class="no-results">Không tìm thấy sản phẩm phù hợp</div>';
-                    return;
-                }
-
-                grid.innerHTML = pageProducts
-                    .map((product) => {
-                        const available = getAvailableStock(product.id);
-                        const availableText =
-                            available > 0
-                                ? `Còn ${available} sản phẩm`
-                                : "Tạm hết hàng";
-                        const isAvailable = available > 0;
-                        return `
-                    <article class="card" onclick="window.location.href='product-detail.html?id=${
-                        product.id
-                    }'" style="cursor: pointer; position: relative;">
-                        ${
-                            !isAvailable
-                                ? '<div style="position:absolute;top:10px;left:10px;background:rgba(244,67,54,0.9);color:#fff;padding:4px 8px;border-radius:4px;font-size:0.8em;font-weight:700;">HẾT HÀNG</div>'
-                                : ""
-                        }
-                        <img src="${
-                            product.image ||
-                            "https://via.placeholder.com/400x300?text=No+Image"
-                        }" 
-                             alt="${product.name}" ${
-                            !isAvailable ? 'style="opacity:.7;"' : ""
-                        }>
-                        <div class="card-body">
-                            <span class="chip">${getTypeName(
-                                product.typeId
-                            )}</span>
-                            <div class="spacer"></div>
-                            <div class="prod">
-                                <div>
-                                    <h4>${product.name}</h4>
-                                    <div>
-                                        <span class="price">${formatCurrency(
-                                            getSellPrice(product.id).price
-                                        )}đ</span>
-                                    </div>
-                                    <div style="margin-top:6px; font-size: 0.9em; ${
-                                        isAvailable
-                                            ? "color:#4caf50;"
-                                            : "color:#f44336;"
-                                    }">${availableText}</div>
-                                </div>
-                                <div class="button-group">
-                                    <button class="add" data-id="${product.id}" 
-                                            data-name="${product.name}" 
-                                            data-price="${
-                                                getSellPrice(product.id).price
-                                            }"
-                                            onclick="event.stopPropagation(); addBlend(this, '${
-                                                product.id
-                                            }')" ${
-                            !isAvailable
-                                ? 'disabled style="opacity:.6;cursor:not-allowed;"'
-                                : ""
-                        }>
-                                        ${
-                                            isAvailable
-                                                ? "Thêm vào giỏ"
-                                                : "Hết hàng"
-                                        }
-                                    </button>
-                                    <button class="buy-now" 
-                                            data-id="${product.id}"
-                                            onclick="buyNow(event, '${
-                                                product.id
-                                            }')" ${
-                            !isAvailable
-                                ? 'disabled style="opacity:.6;cursor:not-allowed;"'
-                                : ""
-                        }>
-                                        ${isAvailable ? "Mua ngay" : "Hết hàng"}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                `;
-                    })
-                    .join("");
-            }
-
-            // Render pagination
-            function renderPagination() {
-                const totalPages = Math.ceil(
-                    filteredProducts.length / ITEMS_PER_PAGE
-                );
-                const pagination = document.getElementById("pagination");
-
-                let html = "";
-
-                // Previous button
-                html += `<button ${
-                    currentPage === 1 ? "disabled" : ""
-                } data-page="${currentPage - 1}">&lt;</button>`;
-
-                // Page numbers
-                for (let i = 1; i <= totalPages; i++) {
-                    html += `<button ${
-                        i === currentPage ? 'class="active"' : ""
-                    } data-page="${i}">${i}</button>`;
-                }
-
-                // Next button
-                html += `<button ${
-                    currentPage === totalPages ? "disabled" : ""
-                } data-page="${currentPage + 1}">&gt;</button>`;
-
-                pagination.innerHTML = html;
-
-                // Add click handlers
-                pagination.querySelectorAll("button").forEach((button) => {
-                    button.addEventListener("click", () => {
-                        if (!button.disabled) {
-                            currentPage = parseInt(button.dataset.page);
-                            renderProducts();
-                            renderPagination();
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                        }
-                    });
-                });
-            }
-
-            // Apply all filters
-            function applyFilters() {
-                const filters = {
-                    priceRange: document.getElementById("priceRange").value,
-                    search: document.getElementById("searchInput").value.trim(),
-                    sort: document.getElementById("sort").value,
-                };
-
-                currentPage = 1;
-                loadProducts(filters);
-            }
-
-            // Buy now functionality
-            function buyNow(event, productId) {
-                event.stopPropagation();
-                if (!requireLogin("cart.html")) return;
-                const product = Products.list().find((p) => p.id === productId);
-                if (!product) return;
-
-                const price = getSellPrice(productId).price;
-                if (!isInStock(productId, 1)) return;
-
-                // Add to cart
-                const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-                cart.push({
-                    id: productId,
-                    name: product.name,
-                    price: price,
-                    quantity: 1,
-                });
-                localStorage.setItem("cart", JSON.stringify(cart));
-
-                // Update cart badge
-                const badge = document.getElementById("cart-badge");
-                if (badge) {
-                    badge.textContent = cart.length;
-                }
-
-                // Redirect to cart
-                window.location.href = "cart.html";
-            }
-            window.buyNow = buyNow;
-
-            // Utility functions
-            function getTypeName(typeId) {
-                const type = Types.list().find((t) => t.id === typeId);
-                return type ? type.name : "";
-            }
-
-            function formatCurrency(value) {
-                return new Intl.NumberFormat("vi-VN").format(value);
-            }
-
-            function getSellPrice(productId) {
-                // Get product and type
-                const product = Products.list().find((p) => p.id === productId);
-                const type = Types.list().find((t) => t.id === product?.typeId);
-
-                // Calculate sell price using profit percentage
-                const profitPercent =
-                    product?.profitPercent ?? type?.profitPercent ?? 20;
-                const basePrice = 150000; // This should be replaced with actual base price
-                return {
-                    price: Math.round(basePrice * (1 + profitPercent / 100)),
-                };
-            }
-
-            document
-                .getElementById("checkoutBtn")
-                ?.addEventListener("click", () => {
-                    window.location.href = "checkout.html";
-                });
-
-            // Auth header UI
-            function updateAuthUI() {
-                const accountText = document.getElementById("accountText");
-                const loginItem = document.getElementById("loginItem");
-                const registerItem = document.getElementById("registerItem");
-                const profileItem = document.getElementById("profileItem");
-                const logoutItem = document.getElementById("logoutItem");
-                if (!accountText) return;
-                if (session.isLoggedIn()) {
-                    const user = session.getUser();
-                    accountText.textContent = `Xin chào, ${user.name}`;
-                    if (loginItem) loginItem.style.display = "none";
-                    if (registerItem) registerItem.style.display = "none";
-                    if (profileItem) profileItem.style.display = "block";
-                    if (logoutItem) logoutItem.style.display = "block";
-                } else {
-                    accountText.textContent = "Đăng nhập / Đăng ký";
-                    if (loginItem) loginItem.style.display = "block";
-                    if (registerItem) registerItem.style.display = "block";
-                    if (profileItem) profileItem.style.display = "none";
-                    if (logoutItem) logoutItem.style.display = "none";
-                }
-            }
-            updateAuthUI();
-            document
-                .getElementById("logoutLink")
-                ?.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-                        session.logout();
-                        updateAuthUI();
-                        updateCartBadge(); // Update cart badge after logout
-                    }
-                });
-
-            // Auth guard
-            function requireLogin(redirectUrl = window.location.href) {
-                if (!session.isLoggedIn()) {
-                    if (
-                        confirm(
-                            "Vui lòng đăng nhập để tiếp tục. Chuyển sang trang đăng nhập?"
-                        )
-                    ) {
-                        window.location.href = `login.html?redirect=${encodeURIComponent(
-                            redirectUrl
-                        )}`;
-                    }
-                    return false;
-                }
-                return true;
-            }
-
-            // Add to cart handler for this page (Blend) - stock-aware like arabica
-            function addBlend(button, productId) {
-                if (!requireLogin()) return;
-                if (!isInStock(productId, 1)) return;
-                const product = Products.list().find((p) => p.id === productId);
-                if (!product) return;
-                const cart = getCart();
-                const existing = cart.find((i) => i.id === productId);
-                const available = getAvailableStock(productId);
-                if (existing) {
-                    existing.quantity = Math.min(
-                        available,
-                        (existing.quantity || 1) + 1
-                    );
-                } else {
-                    cart.push({
-                        id: productId,
-                        name: product.name,
-                        price: getSellPrice(productId).price,
-                        quantity: 1,
-                    });
-                }
-                setCart(cart);
-                updateCartBadge();
-                if (button) showAddedToCart(button);
-            }
-            window.addBlend = addBlend;
-
-            // Visual feedback after adding to cart (like products.html)
-            function showAddedToCart(button) {
-                const original = button.textContent;
-                button.textContent = "Đã thêm";
-                button.disabled = true;
-                setTimeout(() => {
-                    button.textContent = original;
-                    button.disabled = false;
-                }, 2000);
-            }
-
-            // Initialize the page
+            import { initHeader } from "./scripts/header.js";
             window.CART_MODE = "navigate";
             initHeader();
-            updateStockLevels();
-            init();
-            updateCartBadge();
-            closeCart();
+
+            // Prototype parity with index.html: hide badge number via inline style
+            const badge = document.getElementById('cart-badge');
+            if (badge) badge.style.display = 'none';
+
+            document.addEventListener('click', (e) => {
+                const addBtn = e.target.closest && e.target.closest('.add');
+                if (addBtn) {
+                    // Same inline toast as index.html (no real add to cart)
+                    const card = addBtn.closest('.card');
+                    const name = addBtn.getAttribute('data-name') || card?.querySelector('.card-title')?.textContent || 'Sản phẩm';
+                    const toast = document.createElement('div');
+                    toast.style.position = 'fixed';
+                    toast.style.bottom = '20px';
+                    toast.style.right = '20px';
+                    toast.style.padding = '12px 24px';
+                    toast.style.background = '#4CAF50';
+                    toast.style.color = 'white';
+                    toast.style.borderRadius = '4px';
+                    toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                    toast.style.zIndex = '1000';
+                    toast.innerHTML = `PROTOTYPE: Đã thêm "${name}" vào giỏ hàng<br><small style="opacity:0.8">(Chức năng này chỉ là demo)</small>`;
+                    document.body.appendChild(toast);
+                    setTimeout(() => { try { toast.remove(); } catch(e){} }, 2500);
+                    return;
+                }
+            });
+
+            
+        </script>
+        <script>
+            // Sync header auth UI like index/products
+            function getCurrentUser(){ try { return JSON.parse(localStorage.getItem('currentUser')||'null'); } catch { return null; } }
+            function updateAuthUI(){
+                const user = getCurrentUser();
+                const accountText = document.getElementById('accountText');
+                const loginItem = document.getElementById('loginItem');
+                const registerItem = document.getElementById('registerItem');
+                const profileItem = document.getElementById('profileItem');
+                const logoutItem = document.getElementById('logoutItem');
+                if (user){
+                    if (accountText) accountText.textContent = user.name || 'Tài khoản';
+                    if (loginItem) loginItem.style.display = 'none';
+                    if (registerItem) registerItem.style.display = 'none';
+                    if (profileItem) profileItem.style.display = 'block';
+                    if (logoutItem) logoutItem.style.display = 'block';
+                } else {
+                    if (accountText) accountText.textContent = 'Đăng nhập / Đăng ký';
+                    if (loginItem) loginItem.style.display = 'block';
+                    if (registerItem) registerItem.style.display = 'block';
+                    if (profileItem) profileItem.style.display = 'none';
+                    if (logoutItem) logoutItem.style.display = 'none';
+                }
+            }
+            document.addEventListener('DOMContentLoaded', function(){
+                updateAuthUI();
+                const toggle = document.querySelector('.account-toggle');
+                const dropdown = document.querySelector('.account-dropdown');
+                toggle && toggle.addEventListener('click', function(e){ e.preventDefault(); dropdown && dropdown.classList.toggle('show'); });
+                document.getElementById('logoutLink') && document.getElementById('logoutLink').addEventListener('click', function(e){ e.preventDefault(); localStorage.removeItem('currentUser'); updateAuthUI(); });
+                document.addEventListener('click', function(e){ const menu = document.getElementById('accountMenu'); if(menu && !menu.contains(e.target)){ dropdown && dropdown.classList.remove('show'); } });
+            });
         </script>
     </body>
 </html>

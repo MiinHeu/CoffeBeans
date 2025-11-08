@@ -107,167 +107,53 @@
         </div>
     </main>
 
-    <script type="module">
-        import { Orders, Products } from './scripts/db.js';
-        import { session } from './scripts/utils.js';
-        
-        // Get current user from session
-        const currentUser = session.getUser();
-        const currentUserId = currentUser ? currentUser.id : null;
-        
-        if (!currentUserId) {
-            // Redirect to login if not logged in
-            window.location.href = 'login.html?redirect=order-history.html';
-        }
-        
-        // Format date
-        function formatDate(dateString) {
-            const options = { 
-                day: '2-digit', 
-                month: '2-digit', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            return new Date(dateString).toLocaleString('vi-VN', options);
-        }
+    <script>
+        // Demo mode: show last order summary from sessionStorage only
+        function currency(v){ return new Intl.NumberFormat('vi-VN').format(Number(v||0)); }
+        function formatDate(dateString){ const d = new Date(dateString||Date.now()); return d.toLocaleString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
 
-        // Get status class and text
-        function getStatusInfo(status) {
-            const statusMap = {
-                'new': { class: 'status-new', text: 'Mới' },
-                'processing': { class: 'status-processing', text: 'Đang xử lý' },
-                'shipped': { class: 'status-shipped', text: 'Đã giao hàng' },
-                'canceled': { class: 'status-canceled', text: 'Đã hủy' }
-            };
-            return statusMap[status] || { class: '', text: status };
-        }
-
-        // Format currency
-        function formatCurrency(amount) {
-            if (typeof amount !== 'number') {
-                amount = parseFloat(amount) || 0;
-            }
-            return new Intl.NumberFormat('vi-VN').format(amount);
-        }
-
-        // Render orders
-        async function renderOrders() {
+        function renderOrders(){
             const container = document.getElementById('ordersList');
-            
-            if (!currentUserId) {
+            let summary = null; try { summary = JSON.parse(sessionStorage.getItem('last_order_summary')||'null'); } catch {}
+
+            if (!summary) {
                 container.innerHTML = `
                     <div class="empty-state">
-                        <i class="fas fa-exclamation-circle"></i>
-                        <h3>Vui lòng đăng nhập</h3>
-                        <p>Bạn cần đăng nhập để xem lịch sử đơn hàng.</p>
-                        <a href="login.html?redirect=order-history.html" class="btn" style="margin-top: 16px;">Đăng nhập ngay</a>
+                        <i class="fas fa-clock-rotate-left"></i>
+                        <h3>Chưa có đơn hàng nào</h3>
+                        <p>Bạn chưa đặt đơn hàng nào. Hãy mua sắm ngay!</p>
+                        <a href="products.html" class="btn" style="margin-top: 16px;">Mua sắm ngay</a>
                     </div>`;
                 return;
             }
 
-            try {
-                const allOrders = Orders.list();
-                const userOrders = allOrders.filter(order => order.userId === currentUserId);
-                
-                if (userOrders.length === 0) {
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-clock-rotate-left"></i>
-                            <h3>Chưa có đơn hàng nào</h3>
-                            <p>Bạn chưa đặt đơn hàng nào. Hãy mua sắm ngay!</p>
-                            <a href="products.html" class="btn" style="margin-top: 16px;">Mua sắm ngay</a>
-                        </div>`;
-                    return;
-                }
-
-                // Sort by date (newest first)
-                userOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-                container.innerHTML = userOrders.map(order => {
-                    const status = getStatusInfo(order.status || 'new');
-                    const total = order.total || (order.items ? 
-                        order.items.reduce((sum, item) => sum + (parseFloat(item.price) * parseInt(item.quantity)), 0) : 0);
-                    
-                    return `
-                    <div class="order-card">
-                        <div class="order-header">
-                            <div>
-                                <strong>Mã đơn hàng:</strong> ${order.id || ''}
-                                <span class="order-status ${status.class}" style="margin-left: 10px;">${status.text}</span>
-                            </div>
-                            <div><strong>Ngày đặt:</strong> ${formatDate(order.date)}</div>
+            container.innerHTML = `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div><strong>Mã đơn hàng:</strong> ${summary.id || ''}</div>
+                        <div><strong>Ngày đặt:</strong> ${formatDate(summary.date)}</div>
+                    </div>
+                    <div class="order-body">
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                            <span>Tạm tính:</span><span>${currency(summary.subtotal||0)}đ</span>
                         </div>
-                        <div class="order-body">
-                            ${order.items && order.items.length > 0 ? 
-                                order.items.map(item => {
-                                    const product = Products.list().find(p => p.id === item.productId) || {};
-                                    const itemName = item.name || product.name || 'Sản phẩm';
-                                    const itemPrice = parseFloat(item.price) || 0;
-                                    const itemQuantity = parseInt(item.quantity) || 1;
-                                    const itemImage = item.image || product.image || 'https://via.placeholder.com/80';
-                                    
-                                    return `
-                                    <div class="order-item">
-                                        <img src="${itemImage}" alt="${itemName}" onerror="this.src='https://via.placeholder.com/80'">
-                                        <div class="order-item-details">
-                                            <div style="font-weight: 500;">${itemName}</div>
-                                            <div style="color: #666; font-size: 14px;">Số lượng: ${itemQuantity}</div>
-                                            <div style="color: #d4a76a; font-weight: 600;">${formatCurrency(itemPrice)}đ</div>
-                                        </div>
-                                        <div style="font-weight: 600;">${formatCurrency(itemPrice * itemQuantity)}đ</div>
-                                    </div>`;
-                                }).join('') : 
-                                '<p>Không có sản phẩm nào trong đơn hàng này.</p>'
-                            }
-                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                    <span>Tạm tính:</span>
-                                    <span>${formatCurrency(order.subtotal || 0)}đ</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                    <span>Phí vận chuyển:</span>
-                                    <span>${formatCurrency(order.shipping || 0)}đ</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 18px; font-weight: 600;">
-                                    <span>Tổng cộng:</span>
-                                    <span>${formatCurrency(total)}đ</span>
-                                </div>
-                            </div>
-                            ${order.note ? `
-                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
-                                <strong>Ghi chú:</strong> ${order.note}
-                            </div>` : ''}
-                            
-                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
-                                <strong>Phương thức thanh toán:</strong> ${order.paymentMethod === 'bank' ? 'Chuyển khoản ngân hàng' : 'Thanh toán khi nhận hàng'}
-                                ${order.paymentMethod === 'bank' ? '<div style="color: #d4a76a; margin-top: 8px;">(Được giảm 5% giá trị đơn hàng)</div>' : ''}
-                            </div>
-                            
-                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
-                                <strong>Địa chỉ giao hàng:</strong> ${order.shippingAddress || 'N/A'}
-                            </div>
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                            <span>Phí vận chuyển:</span><span>${currency(summary.shipping||0)}đ</span>
                         </div>
-                    </div>`;
-                }).join('');
-            } catch (error) {
-                console.error('Error loading orders:', error);
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <h3>Đã xảy ra lỗi</h3>
-                        <p>Không thể tải lịch sử đơn hàng. Vui lòng thử lại sau.</p>
-                        <button onclick="window.location.reload()" class="btn" style="margin-top: 16px;">
-                            <i class="fas fa-sync-alt"></i> Thử lại
-                        </button>
-                    </div>`;
-            }
+                        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                            <span>Giảm giá:</span><span>${summary.discount? '-' + currency(summary.discount) + 'đ' : '0đ'}</span>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:600;">
+                            <span>Tổng cộng:</span><span>${currency(summary.total||0)}đ</span>
+                        </div>
+                        <div style="margin-top:12px;">
+                            <strong>Phương thức thanh toán:</strong> ${summary.paymentMethod==='bank' ? 'Chuyển khoản ngân hàng' : 'Thanh toán khi nhận hàng'}
+                        </div>
+                    </div>
+                </div>`;
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            renderOrders();
-        });
+        document.addEventListener('DOMContentLoaded', renderOrders);
     </script>
 </body>
 </html>
