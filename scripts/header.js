@@ -1,17 +1,4 @@
 export function initHeader() {
-    if (typeof window !== "undefined" && window.PROTOTYPE_MODE) {
-        // Keep only simple menu toggle in prototype mode
-        const menuBtn = document.getElementById("menuBtn");
-        const mobileMenu = document.getElementById("mobileMenu");
-        if (menuBtn && mobileMenu) {
-            menuBtn.addEventListener("click", () => {
-                const expanded = mobileMenu.hidden;
-                mobileMenu.hidden = !expanded;
-                menuBtn.setAttribute("aria-expanded", String(expanded));
-            });
-        }
-        return;
-    }
     const menuBtn = document.getElementById("menuBtn");
     const mobileMenu = document.getElementById("mobileMenu");
     if (menuBtn && mobileMenu) {

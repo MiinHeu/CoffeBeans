@@ -12,7 +12,10 @@
         />
         <link rel="stylesheet" href="styles/user.css" />
         <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
         <style>
             .product-detail {
                 display: grid;
@@ -81,7 +84,8 @@
                 margin-top: 20px;
             }
 
-            .add-to-cart, .buy-now {
+            .add-to-cart,
+            .buy-now {
                 flex: 1;
                 border: none;
                 padding: 14px 28px;
@@ -102,7 +106,8 @@
                 color: var(--coffee-900);
             }
 
-            .add-to-cart:hover, .buy-now:hover {
+            .add-to-cart:hover,
+            .buy-now:hover {
                 opacity: 0.9;
             }
             .product-description {
@@ -158,7 +163,11 @@
             <div class="container nav">
                 <div class="brand">
                     <a href="index.html">
-                        <img src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9" alt="Logo Cà Phê Đậm Đà" class="brand-logo">
+                        <img
+                            src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9"
+                            alt="Logo Cà Phê Đậm Đà"
+                            class="brand-logo"
+                        />
                         <span class="brand-name">Cà Phê Đậm Đà</span>
                     </a>
                 </div>
@@ -183,7 +192,12 @@
                     </a>
                 </nav>
 
-                <button id="menuBtn" class="mobile-toggle" aria-expanded="false" aria-controls="mobileMenu">
+                <button
+                    id="menuBtn"
+                    class="mobile-toggle"
+                    aria-expanded="false"
+                    aria-controls="mobileMenu"
+                >
                     Menu
                 </button>
             </div>
@@ -205,27 +219,136 @@
         </nav>
 
         <!-- In-page Cart Drawer -->
-        <div id="cartDrawerOverlay" hidden style="position: fixed; inset: 64px 0 0 0; background: rgba(0,0,0,0.5); z-index: 80;"></div>
-        <aside id="cartDrawer" hidden aria-labelledby="cart-title" style="position: fixed; top: 64px; right: 0; height: calc(100vh - 64px); width: 420px; max-width: 95vw; background: #fff; color: #111; box-shadow: -10px 0 30px rgba(0,0,0,0.3); z-index: 90; display: flex; flex-direction: column; border-radius: 14px 0 0 14px; overflow: hidden;">
-            <header style="display:flex; align-items:center; justify-content: space-between; padding: 16px; border-bottom: 1px solid #eee;">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <span style="display:inline-flex; width:24px; height:24px; align-items:center; justify-content:center; color:#c62828;">🛒</span>
-                    <h3 id="cart-title" style="margin:0; font-size: 18px;">Giỏ hàng</h3>
+        <div
+            id="cartDrawerOverlay"
+            hidden
+            style="
+                position: fixed;
+                inset: 64px 0 0 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 80;
+            "
+        ></div>
+        <aside
+            id="cartDrawer"
+            hidden
+            aria-labelledby="cart-title"
+            style="
+                position: fixed;
+                top: 64px;
+                right: 0;
+                height: calc(100vh - 64px);
+                width: 420px;
+                max-width: 95vw;
+                background: #fff;
+                color: #111;
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+                z-index: 90;
+                display: flex;
+                flex-direction: column;
+                border-radius: 14px 0 0 14px;
+                overflow: hidden;
+            "
+        >
+            <header
+                style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 16px;
+                    border-bottom: 1px solid #eee;
+                "
+            >
+                <div style="display: flex; align-items: center; gap: 8px">
+                    <span
+                        style="
+                            display: inline-flex;
+                            width: 24px;
+                            height: 24px;
+                            align-items: center;
+                            justify-content: center;
+                            color: #c62828;
+                        "
+                        >🛒</span
+                    >
+                    <h3 id="cart-title" style="margin: 0; font-size: 18px">
+                        Giỏ hàng
+                    </h3>
                 </div>
-                <button id="closeCartBtn" aria-label="Đóng giỏ hàng" style="background: transparent; border: none; font-size: 20px; cursor: pointer;">×</button>
+                <button
+                    id="closeCartBtn"
+                    aria-label="Đóng giỏ hàng"
+                    style="
+                        background: transparent;
+                        border: none;
+                        font-size: 20px;
+                        cursor: pointer;
+                    "
+                >
+                    ×
+                </button>
             </header>
-            <div id="cartItems" style="flex:1; overflow: auto; padding: 12px 16px;"></div>
-            <footer style="padding: 16px; border-top: 1px solid #eee; background:#fff;">
-                <div style="display:flex; align-items:center; justify-content: space-between; margin-bottom: 12px;">
-                    <span style="color:#333;">Tổng tiền:</span>
-                    <strong id="cartSubtotal" style="font-size:16px; color: var(--coffee, #4b3429);">0đ</strong>
+            <div
+                id="cartItems"
+                style="flex: 1; overflow: auto; padding: 12px 16px"
+            ></div>
+            <footer
+                style="
+                    padding: 16px;
+                    border-top: 1px solid #eee;
+                    background: #fff;
+                "
+            >
+                <div
+                    style="
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        margin-bottom: 12px;
+                    "
+                >
+                    <span style="color: #333">Tổng tiền:</span>
+                    <strong
+                        id="cartSubtotal"
+                        style="font-size: 16px; color: var(--coffee, #4b3429)"
+                        >0đ</strong
+                    >
                 </div>
-                <div style="display:flex; gap:12px;">
-                    <button id="addMoreBtn" style="flex:1; padding: 12px 14px; background: #fff; color:#333; border: 1px solid #ddd; border-radius: 8px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
+                <div style="display: flex; gap: 12px">
+                    <button
+                        id="addMoreBtn"
+                        style="
+                            flex: 1;
+                            padding: 12px 14px;
+                            background: #fff;
+                            color: #333;
+                            border: 1px solid #ddd;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 8px;
+                        "
+                    >
                         <span>＋</span>
                         <span>Thêm món</span>
                     </button>
-                    <button id="checkoutBtn" style="flex:1; padding: 12px 14px; background: var(--gold); color: var(--coffee-900); border:none; border-radius: 8px; cursor:pointer; font-weight: 600;">Thanh toán</button>
+                    <button
+                        id="checkoutBtn"
+                        style="
+                            flex: 1;
+                            padding: 12px 14px;
+                            background: var(--gold);
+                            color: var(--coffee-900);
+                            border: none;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            font-weight: 600;
+                        "
+                    >
+                        Thanh toán
+                    </button>
                 </div>
             </footer>
         </aside>
@@ -249,11 +372,14 @@
             <div class="container foot">
                 <div>
                     <h4>Cà Phê Đậm Đà</h4>
-                    <p>Hạt cà phê rang xay chất lượng cao. Đồng hành cùng ly cà phê ngon mỗi ngày.</p>
+                    <p>
+                        Hạt cà phê rang xay chất lượng cao. Đồng hành cùng ly cà
+                        phê ngon mỗi ngày.
+                    </p>
                 </div>
                 <div>
                     <h4>Liên hệ</h4>
-                    <p>Hotline: 0901 234 567<br/>Email: hello@caphedamda.vn</p>
+                    <p>Hotline: 0901 234 567<br />Email: hello@caphedamda.vn</p>
                 </div>
                 <div>
                     <h4>Địa chỉ</h4>
@@ -266,86 +392,214 @@
         </footer>
 
         <script type="module">
-            import { Products, Types, getSellPrice, computeStock } from './scripts/db.js';
-            import { session } from './scripts/utils.js';
+            import {
+                Products,
+                Types,
+                getSellPrice,
+                computeStock,
+            } from "./scripts/db.js";
+            import { session } from "./scripts/utils.js";
             // Track current stock levels
             let productStocks = new Map();
-            
+
             // Initialize stock levels
             function updateStockLevels() {
                 const stockMap = computeStock();
                 productStocks = stockMap;
                 return stockMap;
             }
-            
+
             // Get available stock for a product
             function getAvailableStock(productId) {
                 return productStocks.get(productId) || 0;
             }
-            
+
             // Check if a product is in stock
-            function isInStock(productId, quantity = 1) { return getAvailableStock(productId) >= quantity; }
-            
-            function getCart(){ try { return JSON.parse(localStorage.getItem('cart')||'[]'); } catch { return []; } }
-            function setCart(c){ localStorage.setItem('cart', JSON.stringify(c)); }
-            function formatCurrency(value){ return new Intl.NumberFormat('vi-VN').format(value); }
-            function updateCartBadge(){ const b=document.getElementById('cart-badge'); if(b) b.textContent=getCart().length; }
-            function openCart(){ window.location.href='cart.html'; }
-            function closeCart(){ /* no-op */ }
-            function toggleCart(){ window.location.href='cart.html'; }
-            function renderCart(){ const c=getCart(); const box=document.getElementById('cartItems'); const sub=document.getElementById('cartSubtotal'); if(!box||!sub) return; if(c.length===0){ box.innerHTML='<p>Giỏ hàng trống.</p>'; sub.textContent='0đ'; return;} box.innerHTML=c.map(item=>`<div class="cart-item" data-id="${item.id}" style="padding:12px 0; border-bottom:1px solid #f2f2f2;"><div style="display:flex; align-items:start; justify-content: space-between; gap:10px;"><div style="flex:1; min-width:0;"><div style="font-weight:600;">${item.name}</div><div style="display:flex; align-items:center; gap:6px; color:#888; font-size:12px; margin-top:4px;"><span style=\"color:#999;\">✎</span><input class=\"note-input\" type=\"text\" placeholder=\"Không có ghi chú\" value=\"${item.note||''}\" style=\"flex:1; min-width:0; border:none; border-bottom:1px dashed #e0e0e0; padding:4px 0; outline:none;\" /></div><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><button class=\"qty-dec\" style=\"width:28px; height:28px; border:1px solid #ddd; background:#fff;\">-</button><input class=\"qty-input\" type=\"number\" min=\"1\" value=\"${item.quantity}\" style=\"width:48px; text-align:center; border:1px solid #ddd; height:28px;\" /><button class=\"qty-inc\" style=\"width:28px; height:28px; border:1px solid #ddd; background:#fff;\">+</button><button class=\"remove-item\" style=\"margin-left:8px; background:#fff; border:1px solid #f2d7d7; color:#c62828; cursor:pointer; height:28px; padding:0 10px; border-radius:6px;\">Xóa</button></div></div><div style=\"min-width:100px; text-align:right; font-weight:600; color:#c62828;\">${formatCurrency(item.price*item.quantity)}đ</div></div></div>`).join(''); const total=c.reduce((s,i)=>s+i.price*i.quantity,0); sub.textContent=`${formatCurrency(total)}đ`; box.querySelectorAll('.qty-dec').forEach(b=>b.addEventListener('click',onDec)); box.querySelectorAll('.qty-inc').forEach(b=>b.addEventListener('click',onInc)); box.querySelectorAll('.qty-input').forEach(i=>i.addEventListener('change',onChange)); box.querySelectorAll('.remove-item').forEach(b=>b.addEventListener('click',onRemove)); box.querySelectorAll('.note-input').forEach(inp=>inp.addEventListener('change',onChangeNote)); }
-            function onDec(e){ const id=e.target.closest('.cart-item')?.dataset.id; const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity=Math.max(1,it.quantity-1); setCart(c); updateCartBadge(); renderCart(); }
-            function onInc(e){ const id=e.target.closest('.cart-item')?.dataset.id; const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity+=1; setCart(c); updateCartBadge(); renderCart(); }
-            function onChange(e){ const id=e.target.closest('.cart-item')?.dataset.id; const v=Math.max(1, parseInt(e.target.value||'1',10)); const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.quantity=v; setCart(c); updateCartBadge(); renderCart(); }
-            function onRemove(e){ const id=e.target.closest('.cart-item')?.dataset.id; const c=getCart().filter(i=>i.id!==id); setCart(c); updateCartBadge(); renderCart(); }
-            function onChangeNote(e){ const id=e.target.closest('.cart-item')?.dataset.id; if(!id) return; const c=getCart(); const it=c.find(i=>i.id===id); if(!it) return; it.note = e.target.value.trim(); setCart(c); }
-            
+            function isInStock(productId, quantity = 1) {
+                return getAvailableStock(productId) >= quantity;
+            }
+
+            function getCart() {
+                try {
+                    return JSON.parse(localStorage.getItem("cart") || "[]");
+                } catch {
+                    return [];
+                }
+            }
+            function setCart(c) {
+                localStorage.setItem("cart", JSON.stringify(c));
+            }
+            function formatCurrency(value) {
+                return new Intl.NumberFormat("vi-VN").format(value);
+            }
+            function updateCartBadge() {
+                const b = document.getElementById("cart-badge");
+                if (b) b.textContent = getCart().length;
+            }
+            function openCart() {
+                window.location.href = "cart.html";
+            }
+            function closeCart() {
+                /* no-op */
+            }
+            function toggleCart() {
+                window.location.href = "cart.html";
+            }
+            function renderCart() {
+                const c = getCart();
+                const box = document.getElementById("cartItems");
+                const sub = document.getElementById("cartSubtotal");
+                if (!box || !sub) return;
+                if (c.length === 0) {
+                    box.innerHTML = "<p>Giỏ hàng trống.</p>";
+                    sub.textContent = "0đ";
+                    return;
+                }
+                box.innerHTML = c
+                    .map(
+                        (item) =>
+                            `<div class="cart-item" data-id="${
+                                item.id
+                            }" style="padding:12px 0; border-bottom:1px solid #f2f2f2;"><div style="display:flex; align-items:start; justify-content: space-between; gap:10px;"><div style="flex:1; min-width:0;"><div style="font-weight:600;">${
+                                item.name
+                            }</div><div style="display:flex; align-items:center; gap:6px; color:#888; font-size:12px; margin-top:4px;"><span style=\"color:#999;\">✎</span><input class=\"note-input\" type=\"text\" placeholder=\"Không có ghi chú\" value=\"${
+                                item.note || ""
+                            }\" style=\"flex:1; min-width:0; border:none; border-bottom:1px dashed #e0e0e0; padding:4px 0; outline:none;\" /></div><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><button class=\"qty-dec\" style=\"width:28px; height:28px; border:1px solid #ddd; background:#fff;\">-</button><input class=\"qty-input\" type=\"number\" min=\"1\" value=\"${
+                                item.quantity
+                            }\" style=\"width:48px; text-align:center; border:1px solid #ddd; height:28px;\" /><button class=\"qty-inc\" style=\"width:28px; height:28px; border:1px solid #ddd; background:#fff;\">+</button><button class=\"remove-item\" style=\"margin-left:8px; background:#fff; border:1px solid #f2d7d7; color:#c62828; cursor:pointer; height:28px; padding:0 10px; border-radius:6px;\">Xóa</button></div></div><div style=\"min-width:100px; text-align:right; font-weight:600; color:#c62828;\">${formatCurrency(
+                                item.price * item.quantity
+                            )}đ</div></div></div>`
+                    )
+                    .join("");
+                const total = c.reduce((s, i) => s + i.price * i.quantity, 0);
+                sub.textContent = `${formatCurrency(total)}đ`;
+                box.querySelectorAll(".qty-dec").forEach((b) =>
+                    b.addEventListener("click", onDec)
+                );
+                box.querySelectorAll(".qty-inc").forEach((b) =>
+                    b.addEventListener("click", onInc)
+                );
+                box.querySelectorAll(".qty-input").forEach((i) =>
+                    i.addEventListener("change", onChange)
+                );
+                box.querySelectorAll(".remove-item").forEach((b) =>
+                    b.addEventListener("click", onRemove)
+                );
+                box.querySelectorAll(".note-input").forEach((inp) =>
+                    inp.addEventListener("change", onChangeNote)
+                );
+            }
+            function onDec(e) {
+                const id = e.target.closest(".cart-item")?.dataset.id;
+                const c = getCart();
+                const it = c.find((i) => i.id === id);
+                if (!it) return;
+                it.quantity = Math.max(1, it.quantity - 1);
+                setCart(c);
+                updateCartBadge();
+                renderCart();
+            }
+            function onInc(e) {
+                const id = e.target.closest(".cart-item")?.dataset.id;
+                const c = getCart();
+                const it = c.find((i) => i.id === id);
+                if (!it) return;
+                it.quantity += 1;
+                setCart(c);
+                updateCartBadge();
+                renderCart();
+            }
+            function onChange(e) {
+                const id = e.target.closest(".cart-item")?.dataset.id;
+                const v = Math.max(1, parseInt(e.target.value || "1", 10));
+                const c = getCart();
+                const it = c.find((i) => i.id === id);
+                if (!it) return;
+                it.quantity = v;
+                setCart(c);
+                updateCartBadge();
+                renderCart();
+            }
+            function onRemove(e) {
+                const id = e.target.closest(".cart-item")?.dataset.id;
+                const c = getCart().filter((i) => i.id !== id);
+                setCart(c);
+                updateCartBadge();
+                renderCart();
+            }
+            function onChangeNote(e) {
+                const id = e.target.closest(".cart-item")?.dataset.id;
+                if (!id) return;
+                const c = getCart();
+                const it = c.find((i) => i.id === id);
+                if (!it) return;
+                it.note = e.target.value.trim();
+                setCart(c);
+            }
+
             // Get product ID from URL
             const params = new URLSearchParams(window.location.search);
-            const productId = params.get('id');
-            
+            const productId = params.get("id");
+
             if (!productId) {
-                window.location.href = 'products.html';
+                window.location.href = "products.html";
             }
 
             // Load product details
             function loadProductDetail() {
-                const product = Products.list().find(p => p.id === productId);
+                const product = Products.list().find((p) => p.id === productId);
                 if (!product) {
-                    window.location.href = 'products.html';
+                    window.location.href = "products.html";
                     return;
                 }
 
-                const type = Types.list().find(t => t.id === product.typeId);
-                const detail = document.getElementById('productDetail');
-                
+                const type = Types.list().find((t) => t.id === product.typeId);
+                const detail = document.getElementById("productDetail");
+
                 const available = getAvailableStock(product.id);
                 const isAvailable = available > 0;
                 detail.innerHTML = `
                     <div class="product-detail">
                         <div class="product-gallery">
-                            <img src="${product.image || 'https://via.placeholder.com/600x500?text=No+Image'}" 
-                                 alt="${product.name}" ${!isAvailable ? 'style="opacity:.8;"' : ''}>
+                            <img src="${
+                                product.image ||
+                                "https://via.placeholder.com/600x500?text=No+Image"
+                            }" 
+                                 alt="${product.name}" ${
+                    !isAvailable ? 'style="opacity:.8;"' : ""
+                }>
                         </div>
                         <div class="product-info">
                             <div>
                                 <h1 class="product-title">${product.name}</h1>
                                 <div class="product-meta">
-                                    <span class="chip">${type?.name || ''}</span>
-                                    <span class="product-price">${formatCurrency(getSellPrice(productId).price)}đ</span>
-                                    <span class="product-stock" style="${isAvailable ? 'color:#22c55e;' : 'color:#f44336;'}">${isAvailable ? `Còn ${available} sản phẩm` : 'Tạm hết hàng'}</span>
+                                    <span class="chip">${
+                                        type?.name || ""
+                                    }</span>
+                                    <span class="product-price">${formatCurrency(
+                                        getSellPrice(productId).price
+                                    )}đ</span>
+                                    <span class="product-stock" style="${
+                                        isAvailable
+                                            ? "color:#22c55e;"
+                                            : "color:#f44336;"
+                                    }">${
+                    isAvailable ? `Còn ${available} sản phẩm` : "Tạm hết hàng"
+                }</span>
                                 </div>
                             </div>
                             
                             <div class="product-description">
-                                ${product.desc || 'Không có mô tả chi tiết.'}
+                                ${product.desc || "Không có mô tả chi tiết."}
                             </div>
                             
                             <div class="product-features">
                                 <h3>Đặc điểm sản phẩm</h3>
                                 <ul class="feature-list">
-                                    <li>Loại hạt: ${type?.name || ''}</li>
-                                    <li>Khối lượng: ${getWeight(product.name)}</li>
+                                    <li>Loại hạt: ${type?.name || ""}</li>
+                                    <li>Khối lượng: ${getWeight(
+                                        product.name
+                                    )}</li>
                                     <li>Độ rang: Vừa</li>
                                     <li>Đóng gói: Túi có van thoát khí</li>
                                     <li>Bảo quản: 12 tháng kể từ ngày sản xuất</li>
@@ -361,11 +615,23 @@
                                 </div>
                                 
                                 <div class="button-group">
-                                    <button class="add-to-cart" id="addToCart" ${!isAvailable ? 'disabled style="opacity:.6;cursor:not-allowed;"' : ''}>
-                                        ${isAvailable ? 'Thêm vào giỏ hàng' : 'Hết hàng'}
+                                    <button class="add-to-cart" id="addToCart" ${
+                                        !isAvailable
+                                            ? 'disabled style="opacity:.6;cursor:not-allowed;"'
+                                            : ""
+                                    }>
+                                        ${
+                                            isAvailable
+                                                ? "Thêm vào giỏ hàng"
+                                                : "Hết hàng"
+                                        }
                                     </button>
-                                    <button class="buy-now" id="buyNow" ${!isAvailable ? 'disabled style="opacity:.6;cursor:not-allowed;"' : ''}>
-                                        ${isAvailable ? 'Mua ngay' : 'Hết hàng'}
+                                    <button class="buy-now" id="buyNow" ${
+                                        !isAvailable
+                                            ? 'disabled style="opacity:.6;cursor:not-allowed;"'
+                                            : ""
+                                    }>
+                                        ${isAvailable ? "Mua ngay" : "Hết hàng"}
                                     </button>
                                 </div>
                             </div>
@@ -380,59 +646,99 @@
             // Load related products
             function loadRelatedProducts(typeId, currentId) {
                 const related = Products.list()
-                    .filter(p => p.typeId === typeId && p.id !== currentId && !p.hidden)
+                    .filter(
+                        (p) =>
+                            p.typeId === typeId &&
+                            p.id !== currentId &&
+                            !p.hidden
+                    )
                     .slice(0, 3);
 
-                const container = document.getElementById('relatedProducts');
-                container.innerHTML = related.map(product => {
-                    const price = getSellPrice(product.id).price;
-                    const available = getAvailableStock(product.id);
-                    const isAvailable = available > 0;
-                    const stockStatus = isAvailable 
-                        ? `<span style="color:#4caf50; font-size:.9em;">Còn ${available} sản phẩm</span>`
-                        : '<span style="color:#f44336; font-size:.9em;">Tạm hết hàng</span>';
-                    return `
-                    <article class="card" style="position:relative; cursor:pointer;" onclick="window.location.href='product-detail.html?id=${product.id}'">
-                        ${!isAvailable ? '<div style="position:absolute;top:10px;left:10px;background:rgba(244,67,54,.9);color:#fff;padding:4px 8px;border-radius:4px;font-size:.8em;font-weight:700;">HẾT HÀNG</div>' : ''}
-                        <img src="${product.image || 'https://via.placeholder.com/400x300?text=No+Image'}" 
-                             alt="${product.name}" ${!isAvailable ? 'style="opacity:.7;"' : ''}>
+                const container = document.getElementById("relatedProducts");
+                container.innerHTML = related
+                    .map((product) => {
+                        const price = getSellPrice(product.id).price;
+                        const available = getAvailableStock(product.id);
+                        const isAvailable = available > 0;
+                        const stockStatus = isAvailable
+                            ? `<span style="color:#4caf50; font-size:.9em;">Còn ${available} sản phẩm</span>`
+                            : '<span style="color:#f44336; font-size:.9em;">Tạm hết hàng</span>';
+                        return `
+                    <article class="card" style="position:relative; cursor:pointer;" onclick="window.location.href='product-detail.html?id=${
+                        product.id
+                    }'">
+                        ${
+                            !isAvailable
+                                ? '<div style="position:absolute;top:10px;left:10px;background:rgba(244,67,54,.9);color:#fff;padding:4px 8px;border-radius:4px;font-size:.8em;font-weight:700;">HẾT HÀNG</div>'
+                                : ""
+                        }
+                        <img src="${
+                            product.image ||
+                            "https://via.placeholder.com/400x300?text=No+Image"
+                        }" 
+                             alt="${product.name}" ${
+                            !isAvailable ? 'style="opacity:.7;"' : ""
+                        }>
                         <div class="card-body">
-                            <span class="chip">${getTypeName(product.typeId)}</span>
+                            <span class="chip">${getTypeName(
+                                product.typeId
+                            )}</span>
                             <div class="spacer"></div>
                             <div class="prod">
                                 <div>
                                     <h4>${product.name}</h4>
                                     <div style="margin:6px 0;">${stockStatus}</div>
                                     <div>
-                                        <span class="price">${formatCurrency(price)}đ</span>
+                                        <span class="price">${formatCurrency(
+                                            price
+                                        )}đ</span>
                                     </div>
                                 </div>
                                 <div class="button-group">
                                     <button class="add" data-id="${product.id}" 
                                             data-name="${product.name}" 
                                             data-price="${price}"
-                                            onclick="addRelated(event, '${product.id}')" ${!isAvailable ? 'disabled style=\"opacity:.6;cursor:not-allowed;\"' : ''}>
-                                        ${isAvailable ? 'Thêm vào giỏ' : 'Hết hàng'}
+                                            onclick="addRelated(event, '${
+                                                product.id
+                                            }')" ${
+                            !isAvailable
+                                ? 'disabled style="opacity:.6;cursor:not-allowed;"'
+                                : ""
+                        }>
+                                        ${
+                                            isAvailable
+                                                ? "Thêm vào giỏ"
+                                                : "Hết hàng"
+                                        }
                                     </button>
-                                    <button class="buy-now" data-id="${product.id}"
-                                            onclick="buyRelated(event, '${product.id}')" ${!isAvailable ? 'disabled style=\"opacity:.6;cursor:not-allowed;\"' : ''}>
-                                        ${isAvailable ? 'Mua ngay' : 'Hết hàng'}
+                                    <button class="buy-now" data-id="${
+                                        product.id
+                                    }"
+                                            onclick="buyRelated(event, '${
+                                                product.id
+                                            }')" ${
+                            !isAvailable
+                                ? 'disabled style="opacity:.6;cursor:not-allowed;"'
+                                : ""
+                        }>
+                                        ${isAvailable ? "Mua ngay" : "Hết hàng"}
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </article>
                     `;
-                }).join('');
+                    })
+                    .join("");
             }
 
             // Setup quantity controls with stock awareness
             function setupQuantityControls(available, isAvailable) {
-                const qtyInput = document.getElementById('quantity');
-                const decBtn = document.getElementById('decreaseQuantity');
-                const incBtn = document.getElementById('increaseQuantity');
-                const addBtn = document.getElementById('addToCart');
-                const buyBtn = document.getElementById('buyNow');
+                const qtyInput = document.getElementById("quantity");
+                const decBtn = document.getElementById("decreaseQuantity");
+                const incBtn = document.getElementById("increaseQuantity");
+                const addBtn = document.getElementById("addToCart");
+                const buyBtn = document.getElementById("buyNow");
 
                 function clampAndUpdate() {
                     let v = parseInt(qtyInput.value) || 1;
@@ -444,7 +750,8 @@
                     incBtn.disabled = v >= (available || 1) || available <= 0;
                     // Disable action buttons if out of stock
                     if (available <= 0) {
-                        addBtn.disabled = true; buyBtn.disabled = true;
+                        addBtn.disabled = true;
+                        buyBtn.disabled = true;
                     }
                 }
 
@@ -452,15 +759,27 @@
                 qtyInput.max = String(available);
                 clampAndUpdate();
 
-                decBtn.addEventListener('click', () => { qtyInput.value = Math.max(1, (parseInt(qtyInput.value)||1) - 1); clampAndUpdate(); });
-                incBtn.addEventListener('click', () => { qtyInput.value = Math.min(available, (parseInt(qtyInput.value)||1) + 1); clampAndUpdate(); });
-                qtyInput.addEventListener('change', clampAndUpdate);
+                decBtn.addEventListener("click", () => {
+                    qtyInput.value = Math.max(
+                        1,
+                        (parseInt(qtyInput.value) || 1) - 1
+                    );
+                    clampAndUpdate();
+                });
+                incBtn.addEventListener("click", () => {
+                    qtyInput.value = Math.min(
+                        available,
+                        (parseInt(qtyInput.value) || 1) + 1
+                    );
+                    clampAndUpdate();
+                });
+                qtyInput.addEventListener("change", clampAndUpdate);
 
-                addBtn.addEventListener('click', () => {
+                addBtn.addEventListener("click", () => {
                     const qty = parseInt(qtyInput.value) || 1;
                     if (isInStock(productId, qty)) addToCart(qty, false);
                 });
-                buyBtn.addEventListener('click', () => {
+                buyBtn.addEventListener("click", () => {
                     const qty = parseInt(qtyInput.value) || 1;
                     if (isInStock(productId, qty)) addToCart(qty, true);
                 });
@@ -468,26 +787,43 @@
 
             // Add to cart functionality
             function addToCart(quantity, redirect = false) {
-                const product = Products.list().find(p => p.id === productId);
+                const product = Products.list().find((p) => p.id === productId);
                 if (!product) return;
                 if (!session.isLoggedIn()) {
-                    window.location.href = `login.html?redirect=${encodeURIComponent(redirect ? 'checkout.html' : window.location.href)}`;
+                    window.location.href = `login.html?redirect=${encodeURIComponent(
+                        redirect ? "checkout.html" : window.location.href
+                    )}`;
                     return;
                 }
                 const cart = getCart();
-                const existing = cart.find(i=>i.id===product.id);
+                const existing = cart.find((i) => i.id === product.id);
                 const available = getAvailableStock(product.id);
-                if(existing){ existing.quantity = Math.min(available, existing.quantity + quantity); }
-                else { if (available > 0) cart.push({ id: product.id, name: product.name, price: getSellPrice(product.id).price, quantity: Math.min(available, quantity) }); }
+                if (existing) {
+                    existing.quantity = Math.min(
+                        available,
+                        existing.quantity + quantity
+                    );
+                } else {
+                    if (available > 0)
+                        cart.push({
+                            id: product.id,
+                            name: product.name,
+                            price: getSellPrice(product.id).price,
+                            quantity: Math.min(available, quantity),
+                        });
+                }
                 setCart(cart);
                 updateCartBadge();
                 renderCart();
                 if (!redirect) {
-                    const button = document.getElementById('addToCart');
+                    const button = document.getElementById("addToCart");
                     const originalText = button.textContent;
-                    button.textContent = 'Đã thêm vào giỏ';
+                    button.textContent = "Đã thêm vào giỏ";
                     button.disabled = true;
-                    setTimeout(() => { button.textContent = originalText; button.disabled = false; }, 2000);
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.disabled = false;
+                    }, 2000);
                 } else {
                     openCart();
                 }
@@ -495,13 +831,13 @@
 
             // Utility functions
             function getTypeName(typeId) {
-                const type = Types.list().find(t => t.id === typeId);
-                return type ? type.name : '';
+                const type = Types.list().find((t) => t.id === typeId);
+                return type ? type.name : "";
             }
 
             function getWeight(productName) {
                 const match = productName.match(/\d+g/);
-                return match ? match[0] : 'N/A';
+                return match ? match[0] : "N/A";
             }
 
             // Global events for cart: header link navigates directly

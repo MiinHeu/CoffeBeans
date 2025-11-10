@@ -1,258 +1,344 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lịch sử đặt hàng - Cà Phê Đậm Đà</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles/user.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .order-card {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        .order-header {
-            padding: 15px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .order-body {
-            padding: 15px;
-        }
-        .order-item {
-            display: flex;
-            padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .order-item:last-child {
-            border-bottom: none;
-        }
-        .order-item img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-right: 15px;
-        }
-        .order-item-details {
-            flex: 1;
-        }
-        .order-status {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        .status-new { background: #e3f2fd; color: #1976d2; }
-        .status-processing { background: #fff3e0; color: #ef6c00; }
-        .status-shipped { background: #e8f5e9; color: #2e7d32; }
-        .status-canceled { background: #ffebee; color: #c62828; }
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #666;
-        }
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            color: #ddd;
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container nav">
-            <div class="brand">
-                <a href="index.html">
-                    <img src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png" alt="Logo Cà Phê Đậm Đà" class="brand-logo">
-                    <span class="brand-name">Cà Phê Đậm Đà</span>
-                </a>
-            </div>
-
-            <nav class="menu" aria-label="Chính">
-                <a href="products.html">Sản phẩm</a>
-                <a href="index.html#ve-chung-toi">Giới thiệu</a>
-                <a href="index.html#loi-ich">Lợi ích</a>
-                <a href="index.html#lien-he">Liên hệ</a>
-                <a href="cart.html" class="badge" aria-label="Giỏ hàng">
-                    Giỏ hàng
-                    <span id="cart-badge" class="badge-count">0</span>
-                </a>
-            </nav>
-        </div>
-    </header>
-
-    <main class="container" style="padding: 24px 20px;">
-        <h1 class="section-title">Lịch sử đặt hàng</h1>
-        <div id="ordersList">
-            <!-- Orders will be loaded here -->
-            <div class="empty-state">
-                <i class="fas fa-clock-rotate-left"></i>
-                <h3>Chưa có đơn hàng nào</h3>
-                <p>Bạn chưa đặt đơn hàng nào. Hãy mua sắm ngay!</p>
-                <a href="products.html" class="btn" style="margin-top: 16px;">Mua sắm ngay</a>
-            </div>
-        </div>
-    </main>
-
-    <script type="module">
-        import { Orders, Products } from './scripts/db.js';
-        import { session } from './scripts/utils.js';
-        
-        // Get current user from session
-        const currentUser = session.getUser();
-        const currentUserId = currentUser ? currentUser.id : null;
-        
-        if (!currentUserId) {
-            // Redirect to login if not logged in
-            window.location.href = 'login.html?redirect=order-history.html';
-        }
-        
-        // Format date
-        function formatDate(dateString) {
-            const options = { 
-                day: '2-digit', 
-                month: '2-digit', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            };
-            return new Date(dateString).toLocaleString('vi-VN', options);
-        }
-
-        // Get status class and text
-        function getStatusInfo(status) {
-            const statusMap = {
-                'new': { class: 'status-new', text: 'Mới' },
-                'processing': { class: 'status-processing', text: 'Đang xử lý' },
-                'shipped': { class: 'status-shipped', text: 'Đã giao hàng' },
-                'canceled': { class: 'status-canceled', text: 'Đã hủy' }
-            };
-            return statusMap[status] || { class: '', text: status };
-        }
-
-        // Format currency
-        function formatCurrency(amount) {
-            if (typeof amount !== 'number') {
-                amount = parseFloat(amount) || 0;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lịch sử đặt hàng - Cà Phê Đậm Đà</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="styles/user.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <style>
+            .order-card {
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+                overflow: hidden;
             }
-            return new Intl.NumberFormat('vi-VN').format(amount);
-        }
+            .order-header {
+                padding: 15px;
+                background: #f8f9fa;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .order-body {
+                padding: 15px;
+            }
+            .order-item {
+                display: flex;
+                padding: 10px 0;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            .order-item:last-child {
+                border-bottom: none;
+            }
+            .order-item img {
+                width: 80px;
+                height: 80px;
+                object-fit: cover;
+                border-radius: 4px;
+                margin-right: 15px;
+            }
+            .order-item-details {
+                flex: 1;
+            }
+            .order-status {
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+            .status-new {
+                background: #e3f2fd;
+                color: #1976d2;
+            }
+            .status-processing {
+                background: #fff3e0;
+                color: #ef6c00;
+            }
+            .status-shipped {
+                background: #e8f5e9;
+                color: #2e7d32;
+            }
+            .status-canceled {
+                background: #ffebee;
+                color: #c62828;
+            }
+            .empty-state {
+                text-align: center;
+                padding: 40px 20px;
+                color: #666;
+            }
+            .empty-state i {
+                font-size: 48px;
+                margin-bottom: 16px;
+                color: #ddd;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Header -->
+        <header class="header">
+            <div class="container nav">
+                <div class="brand">
+                    <a href="index.html">
+                        <img
+                            src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png"
+                            alt="Logo Cà Phê Đậm Đà"
+                            class="brand-logo"
+                        />
+                        <span class="brand-name">Cà Phê Đậm Đà</span>
+                    </a>
+                </div>
 
-        // Render orders
-        async function renderOrders() {
-            const container = document.getElementById('ordersList');
-            
+                <nav class="menu" aria-label="Chính">
+                    <a href="products.html">Sản phẩm</a>
+                    <a href="index.html#ve-chung-toi">Giới thiệu</a>
+                    <a href="index.html#loi-ich">Lợi ích</a>
+                    <a href="index.html#lien-he">Liên hệ</a>
+                    <a href="cart.html" class="badge" aria-label="Giỏ hàng">
+                        Giỏ hàng
+                        <span id="cart-badge" class="badge-count">0</span>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="container" style="padding: 24px 20px">
+            <h1 class="section-title">Lịch sử đặt hàng</h1>
+            <div id="ordersList">
+                <!-- Orders will be loaded here -->
+                <div class="empty-state">
+                    <i class="fas fa-clock-rotate-left"></i>
+                    <h3>Chưa có đơn hàng nào</h3>
+                    <p>Bạn chưa đặt đơn hàng nào. Hãy mua sắm ngay!</p>
+                    <a href="products.html" class="btn" style="margin-top: 16px"
+                        >Mua sắm ngay</a
+                    >
+                </div>
+            </div>
+        </main>
+
+        <script type="module">
+            import { Orders, Products } from "./scripts/db.js";
+            import { session } from "./scripts/utils.js";
+
+            // Get current user from session
+            const currentUser = session.getUser();
+            const currentUserId = currentUser ? currentUser.id : null;
+
             if (!currentUserId) {
-                container.innerHTML = `
+                // Redirect to login if not logged in
+                window.location.href = "login.html?redirect=order-history.html";
+            }
+
+            // Format date
+            function formatDate(dateString) {
+                const options = {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                };
+                return new Date(dateString).toLocaleString("vi-VN", options);
+            }
+
+            // Get status class and text
+            function getStatusInfo(status) {
+                const statusMap = {
+                    new: { class: "status-new", text: "Mới" },
+                    processing: {
+                        class: "status-processing",
+                        text: "Đang xử lý",
+                    },
+                    shipped: { class: "status-shipped", text: "Đã giao hàng" },
+                    canceled: { class: "status-canceled", text: "Đã hủy" },
+                };
+                return statusMap[status] || { class: "", text: status };
+            }
+
+            // Format currency
+            function formatCurrency(amount) {
+                if (typeof amount !== "number") {
+                    amount = parseFloat(amount) || 0;
+                }
+                return new Intl.NumberFormat("vi-VN").format(amount);
+            }
+
+            // Render orders
+            async function renderOrders() {
+                const container = document.getElementById("ordersList");
+
+                if (!currentUserId) {
+                    container.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-exclamation-circle"></i>
                         <h3>Vui lòng đăng nhập</h3>
                         <p>Bạn cần đăng nhập để xem lịch sử đơn hàng.</p>
                         <a href="login.html?redirect=order-history.html" class="btn" style="margin-top: 16px;">Đăng nhập ngay</a>
                     </div>`;
-                return;
-            }
+                    return;
+                }
 
-            try {
-                const allOrders = Orders.list();
-                const userOrders = allOrders.filter(order => order.userId === currentUserId);
-                
-                if (userOrders.length === 0) {
-                    container.innerHTML = `
+                try {
+                    const allOrders = Orders.list();
+                    const userOrders = allOrders.filter(
+                        (order) => order.userId === currentUserId
+                    );
+
+                    if (userOrders.length === 0) {
+                        container.innerHTML = `
                         <div class="empty-state">
                             <i class="fas fa-clock-rotate-left"></i>
                             <h3>Chưa có đơn hàng nào</h3>
                             <p>Bạn chưa đặt đơn hàng nào. Hãy mua sắm ngay!</p>
                             <a href="products.html" class="btn" style="margin-top: 16px;">Mua sắm ngay</a>
                         </div>`;
-                    return;
-                }
+                        return;
+                    }
 
-                // Sort by date (newest first)
-                userOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    // Sort by date (newest first)
+                    userOrders.sort(
+                        (a, b) => new Date(b.date) - new Date(a.date)
+                    );
 
-                container.innerHTML = userOrders.map(order => {
-                    const status = getStatusInfo(order.status || 'new');
-                    const total = order.total || (order.items ? 
-                        order.items.reduce((sum, item) => sum + (parseFloat(item.price) * parseInt(item.quantity)), 0) : 0);
-                    
-                    return `
+                    container.innerHTML = userOrders
+                        .map((order) => {
+                            const status = getStatusInfo(order.status || "new");
+                            const total =
+                                order.total ||
+                                (order.items
+                                    ? order.items.reduce(
+                                          (sum, item) =>
+                                              sum +
+                                              parseFloat(item.price) *
+                                                  parseInt(item.quantity),
+                                          0
+                                      )
+                                    : 0);
+
+                            return `
                     <div class="order-card">
                         <div class="order-header">
                             <div>
-                                <strong>Mã đơn hàng:</strong> ${order.id || ''}
-                                <span class="order-status ${status.class}" style="margin-left: 10px;">${status.text}</span>
+                                <strong>Mã đơn hàng:</strong> ${order.id || ""}
+                                <span class="order-status ${
+                                    status.class
+                                }" style="margin-left: 10px;">${
+                                status.text
+                            }</span>
                             </div>
-                            <div><strong>Ngày đặt:</strong> ${formatDate(order.date)}</div>
+                            <div><strong>Ngày đặt:</strong> ${formatDate(
+                                order.date
+                            )}</div>
                         </div>
                         <div class="order-body">
-                            ${order.items && order.items.length > 0 ? 
-                                order.items.map(item => {
-                                    const product = Products.list().find(p => p.id === item.productId) || {};
-                                    const itemName = item.name || product.name || 'Sản phẩm';
-                                    const itemPrice = parseFloat(item.price) || 0;
-                                    const itemQuantity = parseInt(item.quantity) || 1;
-                                    const itemImage = item.image || product.image || 'https://via.placeholder.com/80';
-                                    
-                                    return `
+                            ${
+                                order.items && order.items.length > 0
+                                    ? order.items
+                                          .map((item) => {
+                                              const product =
+                                                  Products.list().find(
+                                                      (p) =>
+                                                          p.id ===
+                                                          item.productId
+                                                  ) || {};
+                                              const itemName =
+                                                  item.name ||
+                                                  product.name ||
+                                                  "Sản phẩm";
+                                              const itemPrice =
+                                                  parseFloat(item.price) || 0;
+                                              const itemQuantity =
+                                                  parseInt(item.quantity) || 1;
+                                              const itemImage =
+                                                  item.image ||
+                                                  product.image ||
+                                                  "https://via.placeholder.com/80";
+
+                                              return `
                                     <div class="order-item">
                                         <img src="${itemImage}" alt="${itemName}" onerror="this.src='https://via.placeholder.com/80'">
                                         <div class="order-item-details">
                                             <div style="font-weight: 500;">${itemName}</div>
                                             <div style="color: #666; font-size: 14px;">Số lượng: ${itemQuantity}</div>
-                                            <div style="color: #d4a76a; font-weight: 600;">${formatCurrency(itemPrice)}đ</div>
+                                            <div style="color: #d4a76a; font-weight: 600;">${formatCurrency(
+                                                itemPrice
+                                            )}đ</div>
                                         </div>
-                                        <div style="font-weight: 600;">${formatCurrency(itemPrice * itemQuantity)}đ</div>
+                                        <div style="font-weight: 600;">${formatCurrency(
+                                            itemPrice * itemQuantity
+                                        )}đ</div>
                                     </div>`;
-                                }).join('') : 
-                                '<p>Không có sản phẩm nào trong đơn hàng này.</p>'
+                                          })
+                                          .join("")
+                                    : "<p>Không có sản phẩm nào trong đơn hàng này.</p>"
                             }
                             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                                     <span>Tạm tính:</span>
-                                    <span>${formatCurrency(order.subtotal || 0)}đ</span>
+                                    <span>${formatCurrency(
+                                        order.subtotal || 0
+                                    )}đ</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                                     <span>Phí vận chuyển:</span>
-                                    <span>${formatCurrency(order.shipping || 0)}đ</span>
+                                    <span>${formatCurrency(
+                                        order.shipping || 0
+                                    )}đ</span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 18px; font-weight: 600;">
                                     <span>Tổng cộng:</span>
                                     <span>${formatCurrency(total)}đ</span>
                                 </div>
                             </div>
-                            ${order.note ? `
+                            ${
+                                order.note
+                                    ? `
                             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
                                 <strong>Ghi chú:</strong> ${order.note}
-                            </div>` : ''}
+                            </div>`
+                                    : ""
+                            }
                             
                             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
-                                <strong>Phương thức thanh toán:</strong> ${order.paymentMethod === 'bank' ? 'Chuyển khoản ngân hàng' : 'Thanh toán khi nhận hàng'}
-                                ${order.paymentMethod === 'bank' ? '<div style="color: #d4a76a; margin-top: 8px;">(Được giảm 5% giá trị đơn hàng)</div>' : ''}
+                                <strong>Phương thức thanh toán:</strong> ${
+                                    order.paymentMethod === "bank"
+                                        ? "Chuyển khoản ngân hàng"
+                                        : "Thanh toán khi nhận hàng"
+                                }
+                                ${
+                                    order.paymentMethod === "bank"
+                                        ? '<div style="color: #d4a76a; margin-top: 8px;">(Được giảm 5% giá trị đơn hàng)</div>'
+                                        : ""
+                                }
                             </div>
                             
                             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
-                                <strong>Địa chỉ giao hàng:</strong> ${order.shippingAddress || 'N/A'}
+                                <strong>Địa chỉ giao hàng:</strong> ${
+                                    order.shippingAddress || "N/A"
+                                }
                             </div>
                         </div>
                     </div>`;
-                }).join('');
-            } catch (error) {
-                console.error('Error loading orders:', error);
-                container.innerHTML = `
+                        })
+                        .join("");
+                } catch (error) {
+                    console.error("Error loading orders:", error);
+                    container.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-exclamation-triangle"></i>
                         <h3>Đã xảy ra lỗi</h3>
@@ -261,13 +347,13 @@
                             <i class="fas fa-sync-alt"></i> Thử lại
                         </button>
                     </div>`;
+                }
             }
-        }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            renderOrders();
-        });
-    </script>
-</body>
+            // Initialize
+            document.addEventListener("DOMContentLoaded", () => {
+                renderOrders();
+            });
+        </script>
+    </body>
 </html>

@@ -106,15 +106,9 @@ function saveDB(db) {
 }
 
 export function dbGet() {
-    // In prototype mode, prevent reading dynamic data except what login may need
-    if (typeof window !== "undefined" && window.PROTOTYPE_MODE) {
-        return JSON.parse(JSON.stringify(DefaultDB));
-    }
     return loadDB();
 }
 export function dbSet(next) {
-    // No persistence in prototype mode
-    if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return;
     saveDB(next);
 }
 
@@ -126,10 +120,7 @@ export function uid(prefix = "id") {
 // Collections APIs
 export const AdminAuth = {
     login(email, password) {
-        const db =
-            typeof window !== "undefined" && window.PROTOTYPE_MODE
-                ? DefaultDB
-                : loadDB();
+        const db = loadDB();
         const admin = db.auth.admins.find(
             (a) => a.email === email && a.password === password
         );
@@ -139,22 +130,14 @@ export const AdminAuth = {
 
 export const Users = {
     list() {
-        // Allow static users list for login/register simulation only
-        const db =
-            typeof window !== "undefined" && window.PROTOTYPE_MODE
-                ? DefaultDB
-                : loadDB();
-        return db.users;
+        return loadDB().users;
     },
     setAll(list) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return;
         const db = loadDB();
         db.users = list;
         saveDB(db);
     },
     resetPassword(id, newPass = "123456") {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE)
-            return false;
         const db = loadDB();
         const u = db.users.find((x) => x.id === id);
         if (u) {
@@ -164,8 +147,6 @@ export const Users = {
         return !!u;
     },
     toggleLock(id) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE)
-            return false;
         const db = loadDB();
         const u = db.users.find((x) => x.id === id);
         if (u) {
@@ -178,15 +159,9 @@ export const Users = {
 
 export const Types = {
     list() {
-        // Provide static list only; no mutation allowed in prototype mode
-        const db =
-            typeof window !== "undefined" && window.PROTOTYPE_MODE
-                ? DefaultDB
-                : loadDB();
-        return db.productTypes;
+        return loadDB().productTypes;
     },
     create(input) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return null;
         const db = loadDB();
         const item = {
             id: uid("t"),
@@ -199,7 +174,6 @@ export const Types = {
         return item;
     },
     update(id, patch) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return null;
         const db = loadDB();
         const it = db.productTypes.find((x) => x.id === id);
         if (it) {
@@ -209,7 +183,6 @@ export const Types = {
         return it;
     },
     remove(id) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return;
         const db = loadDB();
         db.productTypes = db.productTypes.filter((x) => x.id !== id);
         saveDB(db);
@@ -218,15 +191,9 @@ export const Types = {
 
 export const Products = {
     list() {
-        // Provide static list only; no mutation allowed in prototype mode
-        const db =
-            typeof window !== "undefined" && window.PROTOTYPE_MODE
-                ? DefaultDB
-                : loadDB();
-        return db.products;
+        return loadDB().products;
     },
     create(input) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return null;
         const db = loadDB();
         const item = {
             id: uid("p"),
@@ -253,7 +220,6 @@ export const Products = {
         return item;
     },
     update(id, patch) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return null;
         const db = loadDB();
         const it = db.products.find((x) => x.id === id);
         if (it) {
@@ -267,7 +233,6 @@ export const Products = {
         return it;
     },
     remove(id) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return;
         const db = loadDB();
         db.products = db.products.filter((x) => x.id !== id);
         saveDB(db);
@@ -276,12 +241,9 @@ export const Products = {
 
 export const Receipts = {
     list() {
-        // No receipts logic in prototype mode (static empty list)
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return [];
         return loadDB().receipts;
     },
     create({ date, items }) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return null;
         const db = loadDB();
         const item = {
             id: uid("r"),
@@ -294,7 +256,6 @@ export const Receipts = {
         return item;
     },
     update(id, patch) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return null;
         const db = loadDB();
         const it = db.receipts.find((x) => x.id === id);
         if (it && it.status === "draft") {
@@ -304,7 +265,6 @@ export const Receipts = {
         return it;
     },
     complete(id) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return null;
         const db = loadDB();
         const it = db.receipts.find((x) => x.id === id);
         if (it) {
@@ -317,12 +277,9 @@ export const Receipts = {
 
 export const Orders = {
     list() {
-        // No orders logic in prototype mode (static empty list)
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return [];
         return loadDB().orders;
     },
     create(order) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return null;
         const db = loadDB();
         const item = {
             id: order.id || uid("o"),
@@ -352,7 +309,6 @@ export const Orders = {
         return item;
     },
     update(id, patch) {
-        if (typeof window !== "undefined" && window.PROTOTYPE_MODE) return null;
         const db = loadDB();
         const it = db.orders.find((x) => x.id === id);
         if (!it) return null;
@@ -388,11 +344,6 @@ export const Orders = {
 
 // Derived helpers
 export function computeStock() {
-    if (typeof window !== "undefined" && window.PROTOTYPE_MODE) {
-        // Static zero stock map in prototype mode
-        const products = DefaultDB.products;
-        return new Map(products.map((p) => [p.id, 0]));
-    }
     const { receipts, orders, products } = loadDB();
     const map = new Map(products.map((p) => [p.id, 0]));
     // Only count receipts that are completed (status = 'done')
@@ -422,10 +373,7 @@ export function computeStock() {
 }
 
 export function getSellPrice(productId) {
-    const db =
-        typeof window !== "undefined" && window.PROTOTYPE_MODE
-            ? DefaultDB
-            : loadDB();
+    const db = loadDB();
     const product = db.products.find((p) => p.id === productId);
 
     // If product has a direct price set, use that
