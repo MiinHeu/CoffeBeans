@@ -11,842 +11,216 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="styles/user.css" />
-        <!-- Font Awesome -->
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        />
+        <link rel="stylesheet" href="styles/header.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <style>
-            .product-detail {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 40px;
-                margin: 40px 0;
-            }
-            .product-gallery {
-                position: relative;
-            }
-            .product-gallery img {
-                width: 100%;
-                height: 500px;
-                object-fit: cover;
-                border-radius: 16px;
-            }
-            .product-info {
-                display: grid;
-                gap: 20px;
-            }
-            .product-title {
-                font-family: "Playfair Display", serif;
-                font-size: 32px;
-                margin: 0;
-                color: var(--coffee-900);
-            }
-            .product-meta {
-                display: flex;
-                gap: 12px;
-                align-items: center;
-            }
-            .product-price {
-                font-size: 24px;
-                font-weight: 600;
-                color: var(--coffee);
-            }
-            .product-stock {
-                color: #22c55e;
-                font-weight: 500;
-            }
-            .quantity-selector {
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                margin: 20px 0;
-            }
-            .quantity-selector button {
-                width: 36px;
-                height: 36px;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                background: white;
-                font-size: 18px;
-                cursor: pointer;
-            }
-            .quantity-selector input {
-                width: 60px;
-                height: 36px;
-                text-align: center;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-            }
-            .button-group {
-                display: flex;
-                gap: 12px;
-                margin-top: 20px;
-            }
-
-            .add-to-cart,
-            .buy-now {
-                flex: 1;
-                border: none;
-                padding: 14px 28px;
-                border-radius: 12px;
-                font-size: 16px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: opacity 0.2s;
-            }
-
-            .add-to-cart {
-                background: var(--coffee);
-                color: white;
-            }
-
-            .buy-now {
-                background: var(--gold);
-                color: var(--coffee-900);
-            }
-
-            .add-to-cart:hover,
-            .buy-now:hover {
-                opacity: 0.9;
-            }
-            .product-description {
-                margin-top: 20px;
-                line-height: 1.6;
-            }
-            .product-features {
-                margin-top: 20px;
-            }
-            .feature-list {
-                display: grid;
-                gap: 12px;
-                margin: 0;
-                padding: 0;
-            }
-            .feature-list li {
-                list-style: none;
-                display: flex;
-                gap: 8px;
-                align-items: baseline;
-            }
-            .feature-list li::before {
-                content: "•";
-                color: var(--gold);
-            }
-            .related-products {
-                margin-top: 60px;
-            }
-            .related-grid {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 20px;
-                margin-top: 20px;
-            }
-            @media (max-width: 960px) {
-                .product-detail {
-                    grid-template-columns: 1fr;
-                }
-                .related-grid {
-                    grid-template-columns: repeat(2, 1fr);
-                }
-            }
-            @media (max-width: 640px) {
-                .related-grid {
-                    grid-template-columns: 1fr;
-                }
-            }
+            /* Product detail specific tweaks */
+            .product-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin: 40px 0; }
+            .product-gallery img { width: 100%; height: 500px; object-fit: cover; border-radius: 16px; }
+            .product-title { font-family: "Playfair Display", serif; font-size: 32px; margin: 0; color: var(--coffee-900); }
+            .product-price { font-size: 24px; font-weight: 600; color: var(--coffee); }
+            .quantity-selector { display:flex; gap:12px; align-items:center; }
+            .related-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; }
+            .add-to-cart { background: var(--coffee); color: #fff; border-radius: 10px; padding: 10px 18px; border: none; cursor: pointer; }
+            .buy-now { background: #d6b692; color: var(--coffee-900); border-radius: 10px; padding: 10px 18px; border: none; cursor: pointer; }
+            .quantity-selector button { width: 34px; height:34px; border-radius:6px; border:1px solid #ddd; background:#fff; cursor:pointer; }
+            .quantity-selector input { width:72px; padding:6px; border-radius:6px; border:1px solid #ddd; }
+            .related-grid .card { border:1px solid rgba(0,0,0,0.04); border-radius:10px; padding:8px; background:#fff; }
+            /* New styles for enriched product detail */
+            .product-info .meta { display:flex; gap:12px; align-items:center; margin:12px 0 18px 0; }
+            .chip { background: rgba(222, 184, 135, 0.12); color: var(--coffee-900); padding:6px 10px; border-radius:8px; font-weight:600; font-size:13px; }
+            .product-description { margin:12px 0 18px; line-height:1.6; color: #333; }
+            .section { background:#fff; border-radius:10px; padding:12px 14px; margin-top:12px; box-shadow: 0 6px 18px rgba(0,0,0,0.04); }
+            .section .section-title { font-size:16px; margin:0 0 8px 0; font-weight:600; color:var(--coffee-900); }
+            .tasting-list { padding-left:18px; margin:0; }
+            .tasting-list li { margin-bottom:6px; }
+            .meta-row { display:flex; gap:10px; align-items:center; color:#666; font-size:14px; }
+            .price-block { margin-left:auto; text-align:right; }
+            @media (max-width:900px){ .product-detail{grid-template-columns:1fr; } .related-grid{grid-template-columns:1fr 1fr;} .product-gallery img { height:360px; } }
         </style>
     </head>
     <body>
-        <!-- Header -->
+        <!-- Header (same structure & behavior as index.html) -->
         <header class="header">
             <div class="container nav">
                 <div class="brand">
                     <a href="index.html">
-                        <img
-                            src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9"
-                            alt="Logo Cà Phê Đậm Đà"
-                            class="brand-logo"
-                        />
+                        <img src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9" alt="Logo" class="brand-logo"/>
                         <span class="brand-name">Cà Phê Đậm Đà</span>
                     </a>
                 </div>
 
                 <nav class="menu" aria-label="Chính">
-                    <a href="index.html">Trang chủ</a>
                     <div class="dropdown">
                         <a href="products.html">Sản phẩm</a>
                         <div class="dropdown-content">
-                            <a href="products.html?category=t1">Arabica</a>
-                            <a href="products.html?category=t2">Robusta</a>
-                            <a href="products.html?category=t3">Blend</a>
+                            <a href="arabica.html">Arabica</a>
+                            <a href="arabica.html">Robusta</a>
+                            <a href="arabica.html">Blend</a>
                         </div>
                     </div>
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
                     <a href="index.html#lien-he">Liên hệ</a>
 
-                    <!-- Giỏ hàng -->
+                    <div class="account-menu" id="accountMenu">
+                        <div class="account-toggle" role="button" tabindex="0" aria-expanded="false">
+                            <i class="fa fa-user"></i>
+                            <span id="accountText">Đăng nhập / Đăng ký</span>
+                            <i class="fa fa-caret-down"></i>
+                        </div>
+                        <ul class="account-dropdown" id="accountDropdown" aria-hidden="true"></ul>
+                    </div>
+
                     <a href="cart.html" class="badge" aria-label="Giỏ hàng">
-                        Giỏ hàng
-                        <span id="cart-badge" class="badge-count">0</span>
+                        Giỏ hàng <span id="cart-badge" class="badge-count">0</span>
                     </a>
                 </nav>
 
-                <button
-                    id="menuBtn"
-                    class="mobile-toggle"
-                    aria-expanded="false"
-                    aria-controls="mobileMenu"
-                >
-                    Menu
-                </button>
+                <button id="menuBtn" class="mobile-toggle" aria-expanded="false" aria-controls="mobileMenu">Menu</button>
             </div>
         </header>
 
         <!-- Mobile menu -->
-        <nav id="mobileMenu" hidden class="mobile-menu">
-            <a href="index.html">Trang chủ</a>
-            <div class="mobile-dropdown">
-                <a href="products.html">Sản phẩm</a>
-                <div class="mobile-dropdown-content">
-                    <a href="products.html?category=t1">Arabica</a>
-                    <a href="products.html?category=t2">Robusta</a>
-                    <a href="products.html?category=t3">Blend</a>
-                </div>
-            </div>
-            <a href="index.html#ve-chung-toi">Giới thiệu</a>
-            <a href="index.html#lien-he">Liên hệ</a>
+        <nav id="mobileMenu" hidden style="position:fixed;inset:64px 16px auto;z-index:60;background:var(--coffee-900);color:#fff;border-radius:14px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);">
+            <a href="#san-pham">Sản phẩm</a><br />
+            <a href="#ve-chung-toi">Giới thiệu</a><br />
+            <a href="#loi-ich">Lợi ích</a><br />
+            <a href="#lien-he">Liên hệ</a>
         </nav>
 
-        <!-- In-page Cart Drawer -->
-        <div
-            id="cartDrawerOverlay"
-            hidden
-            style="
-                position: fixed;
-                inset: 64px 0 0 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 80;
-            "
-        ></div>
-        <aside
-            id="cartDrawer"
-            hidden
-            aria-labelledby="cart-title"
-            style="
-                position: fixed;
-                top: 64px;
-                right: 0;
-                height: calc(100vh - 64px);
-                width: 420px;
-                max-width: 95vw;
-                background: #fff;
-                color: #111;
-                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
-                z-index: 90;
-                display: flex;
-                flex-direction: column;
-                border-radius: 14px 0 0 14px;
-                overflow: hidden;
-            "
-        >
-            <header
-                style="
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    padding: 16px;
-                    border-bottom: 1px solid #eee;
-                "
-            >
-                <div style="display: flex; align-items: center; gap: 8px">
-                    <span
-                        style="
-                            display: inline-flex;
-                            width: 24px;
-                            height: 24px;
-                            align-items: center;
-                            justify-content: center;
-                            color: #c62828;
-                        "
-                        >🛒</span
-                    >
-                    <h3 id="cart-title" style="margin: 0; font-size: 18px">
-                        Giỏ hàng
-                    </h3>
-                </div>
-                <button
-                    id="closeCartBtn"
-                    aria-label="Đóng giỏ hàng"
-                    style="
-                        background: transparent;
-                        border: none;
-                        font-size: 20px;
-                        cursor: pointer;
-                    "
-                >
-                    ×
-                </button>
-            </header>
-            <div
-                id="cartItems"
-                style="flex: 1; overflow: auto; padding: 12px 16px"
-            ></div>
-            <footer
-                style="
-                    padding: 16px;
-                    border-top: 1px solid #eee;
-                    background: #fff;
-                "
-            >
-                <div
-                    style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        margin-bottom: 12px;
-                    "
-                >
-                    <span style="color: #333">Tổng tiền:</span>
-                    <strong
-                        id="cartSubtotal"
-                        style="font-size: 16px; color: var(--coffee, #4b3429)"
-                        >0đ</strong
-                    >
-                </div>
-                <div style="display: flex; gap: 12px">
-                    <button
-                        id="addMoreBtn"
-                        style="
-                            flex: 1;
-                            padding: 12px 14px;
-                            background: #fff;
-                            color: #333;
-                            border: 1px solid #ddd;
-                            border-radius: 8px;
-                            cursor: pointer;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            gap: 8px;
-                        "
-                    >
-                        <span>＋</span>
-                        <span>Thêm món</span>
-                    </button>
-                    <button
-                        id="checkoutBtn"
-                        style="
-                            flex: 1;
-                            padding: 12px 14px;
-                            background: var(--gold);
-                            color: var(--coffee-900);
-                            border: none;
-                            border-radius: 8px;
-                            cursor: pointer;
-                            font-weight: 600;
-                        "
-                    >
-                        Thanh toán
-                    </button>
-                </div>
-            </footer>
-        </aside>
-        <!-- Main content -->
-        <main class="container">
-            <div id="productDetail">
-                <!-- Product detail will be inserted here by JavaScript -->
-            </div>
+        <!-- Auth modal removed (kept header/account as simple links) -->
 
-            <!-- Related products -->
-            <section class="related-products">
-                <h2 class="section-title">Sản phẩm liên quan</h2>
-                <div class="related-grid" id="relatedProducts">
-                    <!-- Related products will be inserted here by JavaScript -->
-                </div>
-            </section>
+        <!-- Main product detail container -->
+        <main class="container">
+            <div id="productDetail"></div>
         </main>
 
-        <!-- Footer -->
         <footer id="lien-he">
             <div class="container foot">
-                <div>
-                    <h4>Cà Phê Đậm Đà</h4>
-                    <p>
-                        Hạt cà phê rang xay chất lượng cao. Đồng hành cùng ly cà
-                        phê ngon mỗi ngày.
-                    </p>
-                </div>
-                <div>
-                    <h4>Liên hệ</h4>
-                    <p>Hotline: 0901 234 567<br />Email: hello@caphedamda.vn</p>
-                </div>
-                <div>
-                    <h4>Địa chỉ</h4>
-                    <p>123 Phin Street, Quận Caffeine, TP.HCM</p>
-                </div>
+                <div><h4>Cà Phê Đậm Đà</h4><p>Hạt cà phê rang xay chất lượng cao. Đồng hành cùng ly cà phê ngon mỗi ngày.</p></div>
+                <div><h4>Liên hệ</h4><p>Hotline: 0901 234 567<br/>Email: hello@caphedamda.vn</p></div>
+                <div><h4>Địa chỉ</h4><p>123 Phin Street, Quận Caffeine, TP.HCM</p></div>
             </div>
-            <div class="container copyright">
-                © 2025 Cà Phê Đậm Đà. All rights reserved.
-            </div>
+            <div class="container copyright">2025 Cà Phê Đậm Đà. All rights reserved.</div>
         </footer>
 
         <script type="module">
-            import {
-                Products,
-                Types,
-                getSellPrice,
-                computeStock,
-            } from "./scripts/db.js";
-            import { session } from "./scripts/utils.js";
-            // Track current stock levels
-            let productStocks = new Map();
+            import { initHeader, updateCartBadge } from './scripts/header.js';
+            // Mark prototype mode so header.js can simplify behavior when needed
+            window.PROTOTYPE_MODE = true;
+            // Initialize header behaviors (menu, cart link behavior)
+            document.addEventListener('DOMContentLoaded', () => {
+                initHeader();
+                // render product and update badge from localStorage
+                try { renderProduct(); } catch(e){}
+                try { updateCartBadge(); } catch(e){}
+            });
 
-            // Initialize stock levels
-            function updateStockLevels() {
-                const stockMap = computeStock();
-                productStocks = stockMap;
-                return stockMap;
-            }
+            // NOTE: Login/register modal & handlers removed from this page to simplify UX.
+            // Header interactions (menu/cart) are handled by scripts/header.js which we import above.
 
-            // Get available stock for a product
-            function getAvailableStock(productId) {
-                return productStocks.get(productId) || 0;
-            }
+            // Product detail (static single product) — enriched content
+            const product = {
+                id: 'p1',
+                type: 'Arabica',
+                name: 'Arabica Premium 250g',
+                price: 135000,
+                stock: 8,
+                image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=900&auto=format&fit=crop',
+                desc: 'Hạt Arabica chọn lọc, rang vừa đủ để giữ được độ ngọt tự nhiên và hậu vị bền lâu. Sản phẩm mang đến trải nghiệm pha phin truyền thống lẫn pha tay hiện đại.',
+                origin: 'Đà Lạt, Tây Nguyên (Vietnam)',
+                roast: 'Rang: Trung-cao (Medium-Dark) — cân bằng giữa hương caramel và nốt chocolate nhẹ',
+                aroma: 'Hương thơm ấm, gợi nhớ mùi bánh mì nướng và hoa khô khi mới xay.',
+                tasting: [ 'Hương hoa nhè nhẹ', 'Vị caramel ngọt dịu', 'Hậu vị chocolate đắng ngọt, mượt mà' ],
+                brewing: 'Gợi ý: Pour-over (V60) 15–18g / 250ml, nhiệt độ 92–95°C, thời gian chiết xuất 2:30–3:00. Với phin: 12–14g cho 120–150ml nước, thời gian 3–4 phút.',
+                storage: 'Bảo quản nơi khô ráo, đậy kín sau khi mở để giữ trọn hương vị.'
+            };
+            function formatCurrency(v){ return new Intl.NumberFormat('vi-VN').format(v); }
+            function createToast(html, timeout=2000){ const t=document.createElement('div'); t.innerHTML=html; t.style.position='fixed'; t.style.bottom='20px'; t.style.right='20px'; t.style.padding='12px 16px'; t.style.background='#4caf50'; t.style.color='#fff'; t.style.borderRadius='6px'; t.style.boxShadow='0 6px 20px rgba(0,0,0,0.12)'; t.style.zIndex=1200; document.body.appendChild(t); setTimeout(()=>{ try{ t.remove(); }catch(e){} }, timeout); }
 
-            // Check if a product is in stock
-            function isInStock(productId, quantity = 1) {
-                return getAvailableStock(productId) >= quantity;
-            }
-
-            function getCart() {
-                try {
-                    return JSON.parse(localStorage.getItem("cart") || "[]");
-                } catch {
-                    return [];
-                }
-            }
-            function setCart(c) {
-                localStorage.setItem("cart", JSON.stringify(c));
-            }
-            function formatCurrency(value) {
-                return new Intl.NumberFormat("vi-VN").format(value);
-            }
-            function updateCartBadge() {
-                const b = document.getElementById("cart-badge");
-                if (b) b.textContent = getCart().length;
-            }
-            function openCart() {
-                window.location.href = "cart.html";
-            }
-            function closeCart() {
-                /* no-op */
-            }
-            function toggleCart() {
-                window.location.href = "cart.html";
-            }
-            function renderCart() {
-                const c = getCart();
-                const box = document.getElementById("cartItems");
-                const sub = document.getElementById("cartSubtotal");
-                if (!box || !sub) return;
-                if (c.length === 0) {
-                    box.innerHTML = "<p>Giỏ hàng trống.</p>";
-                    sub.textContent = "0đ";
-                    return;
-                }
-                box.innerHTML = c
-                    .map(
-                        (item) =>
-                            `<div class="cart-item" data-id="${
-                                item.id
-                            }" style="padding:12px 0; border-bottom:1px solid #f2f2f2;"><div style="display:flex; align-items:start; justify-content: space-between; gap:10px;"><div style="flex:1; min-width:0;"><div style="font-weight:600;">${
-                                item.name
-                            }</div><div style="display:flex; align-items:center; gap:6px; color:#888; font-size:12px; margin-top:4px;"><span style=\"color:#999;\">✎</span><input class=\"note-input\" type=\"text\" placeholder=\"Không có ghi chú\" value=\"${
-                                item.note || ""
-                            }\" style=\"flex:1; min-width:0; border:none; border-bottom:1px dashed #e0e0e0; padding:4px 0; outline:none;\" /></div><div style="display:flex; align-items:center; gap:8px; margin-top:8px;"><button class=\"qty-dec\" style=\"width:28px; height:28px; border:1px solid #ddd; background:#fff;\">-</button><input class=\"qty-input\" type=\"number\" min=\"1\" value=\"${
-                                item.quantity
-                            }\" style=\"width:48px; text-align:center; border:1px solid #ddd; height:28px;\" /><button class=\"qty-inc\" style=\"width:28px; height:28px; border:1px solid #ddd; background:#fff;\">+</button><button class=\"remove-item\" style=\"margin-left:8px; background:#fff; border:1px solid #f2d7d7; color:#c62828; cursor:pointer; height:28px; padding:0 10px; border-radius:6px;\">Xóa</button></div></div><div style=\"min-width:100px; text-align:right; font-weight:600; color:#c62828;\">${formatCurrency(
-                                item.price * item.quantity
-                            )}đ</div></div></div>`
-                    )
-                    .join("");
-                const total = c.reduce((s, i) => s + i.price * i.quantity, 0);
-                sub.textContent = `${formatCurrency(total)}đ`;
-                box.querySelectorAll(".qty-dec").forEach((b) =>
-                    b.addEventListener("click", onDec)
-                );
-                box.querySelectorAll(".qty-inc").forEach((b) =>
-                    b.addEventListener("click", onInc)
-                );
-                box.querySelectorAll(".qty-input").forEach((i) =>
-                    i.addEventListener("change", onChange)
-                );
-                box.querySelectorAll(".remove-item").forEach((b) =>
-                    b.addEventListener("click", onRemove)
-                );
-                box.querySelectorAll(".note-input").forEach((inp) =>
-                    inp.addEventListener("change", onChangeNote)
-                );
-            }
-            function onDec(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const c = getCart();
-                const it = c.find((i) => i.id === id);
-                if (!it) return;
-                it.quantity = Math.max(1, it.quantity - 1);
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-            function onInc(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const c = getCart();
-                const it = c.find((i) => i.id === id);
-                if (!it) return;
-                it.quantity += 1;
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-            function onChange(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const v = Math.max(1, parseInt(e.target.value || "1", 10));
-                const c = getCart();
-                const it = c.find((i) => i.id === id);
-                if (!it) return;
-                it.quantity = v;
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-            function onRemove(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const c = getCart().filter((i) => i.id !== id);
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-            function onChangeNote(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                if (!id) return;
-                const c = getCart();
-                const it = c.find((i) => i.id === id);
-                if (!it) return;
-                it.note = e.target.value.trim();
-                setCart(c);
-            }
-
-            // Get product ID from URL
-            const params = new URLSearchParams(window.location.search);
-            const productId = params.get("id");
-
-            if (!productId) {
-                window.location.href = "products.html";
-            }
-
-            // Load product details
-            function loadProductDetail() {
-                const product = Products.list().find((p) => p.id === productId);
-                if (!product) {
-                    window.location.href = "products.html";
-                    return;
-                }
-
-                const type = Types.list().find((t) => t.id === product.typeId);
-                const detail = document.getElementById("productDetail");
-
-                const available = getAvailableStock(product.id);
-                const isAvailable = available > 0;
+            function renderProduct(){
+                const detail = document.getElementById('productDetail');
                 detail.innerHTML = `
                     <div class="product-detail">
-                        <div class="product-gallery">
-                            <img src="${
-                                product.image ||
-                                "https://via.placeholder.com/600x500?text=No+Image"
-                            }" 
-                                 alt="${product.name}" ${
-                    !isAvailable ? 'style="opacity:.8;"' : ""
-                }>
-                        </div>
+                        <div class="product-gallery"><img src="${product.image}" alt="${product.name}"/></div>
                         <div class="product-info">
-                            <div>
-                                <h1 class="product-title">${product.name}</h1>
-                                <div class="product-meta">
-                                    <span class="chip">${
-                                        type?.name || ""
-                                    }</span>
-                                    <span class="product-price">${formatCurrency(
-                                        getSellPrice(productId).price
-                                    )}đ</span>
-                                    <span class="product-stock" style="${
-                                        isAvailable
-                                            ? "color:#22c55e;"
-                                            : "color:#f44336;"
-                                    }">${
-                    isAvailable ? `Còn ${available} sản phẩm` : "Tạm hết hàng"
-                }</span>
-                                </div>
+                            <h1 class="product-title">${product.name}</h1>
+                            <div class="meta">
+                                <span class="chip">${product.type}</span>
+                                <div class="meta-row">${product.origin} · ${product.roast}</div>
+                                <div class="price-block"><div class="product-price">${formatCurrency(product.price)}đ</div></div>
                             </div>
-                            
-                            <div class="product-description">
-                                ${product.desc || "Không có mô tả chi tiết."}
+                            <div class="product-description">${product.desc} <em style="color:#666;display:block;margin-top:8px;">${product.aroma}</em></div>
+
+                            <div class="section">
+                                <div class="section-title">Hương vị & Ghi chú nếm</div>
+                                <ul class="tasting-list">${product.tasting.map(t=>`<li>• ${t}</li>`).join('')}</ul>
                             </div>
-                            
-                            <div class="product-features">
-                                <h3>Đặc điểm sản phẩm</h3>
-                                <ul class="feature-list">
-                                    <li>Loại hạt: ${type?.name || ""}</li>
-                                    <li>Khối lượng: ${getWeight(
-                                        product.name
-                                    )}</li>
-                                    <li>Độ rang: Vừa</li>
-                                    <li>Đóng gói: Túi có van thoát khí</li>
-                                    <li>Bảo quản: 12 tháng kể từ ngày sản xuất</li>
-                                </ul>
+
+                            <div class="section">
+                                <div class="section-title">Gợi ý pha</div>
+                                <div style="color:#444;">${product.brewing}</div>
                             </div>
-                            
-                            <div>
-                                <div class="quantity-selector">
-                                    <span>Số lượng:</span>
-                                    <button type="button" id="decreaseQuantity">-</button>
-                                    <input type="number" id="quantity" value="1" min="1" max="${available}">
-                                    <button type="button" id="increaseQuantity">+</button>
-                                </div>
-                                
-                                <div class="button-group">
-                                    <button class="add-to-cart" id="addToCart" ${
-                                        !isAvailable
-                                            ? 'disabled style="opacity:.6;cursor:not-allowed;"'
-                                            : ""
-                                    }>
-                                        ${
-                                            isAvailable
-                                                ? "Thêm vào giỏ hàng"
-                                                : "Hết hàng"
-                                        }
-                                    </button>
-                                    <button class="buy-now" id="buyNow" ${
-                                        !isAvailable
-                                            ? 'disabled style="opacity:.6;cursor:not-allowed;"'
-                                            : ""
-                                    }>
-                                        ${isAvailable ? "Mua ngay" : "Hết hàng"}
-                                    </button>
-                                </div>
+
+                            <div class="section">
+                                <div class="section-title">Bảo quản</div>
+                                <div style="color:#444;">${product.storage}</div>
+                            </div>
+
+                            <div style="margin-top:14px;display:flex;gap:12px;align-items:center;">
+                                <div class="button-group"><button id="addToCart" class="add-to-cart">Thêm vào giỏ hàng</button></div>
                             </div>
                         </div>
                     </div>
+                    <section class="related-products"><h2 class="section-title">Sản phẩm liên quan</h2><div class="related-grid" id="relatedProducts"></div></section>
                 `;
-
-                setupQuantityControls(available, isAvailable);
-                loadRelatedProducts(product.typeId, product.id);
+                const relatedImgs = ['https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=400&auto=format&fit=crop','https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=400&auto=format&fit=crop','https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?q=80&w=400&auto=format&fit=crop'];
+                const relatedContainer = document.getElementById('relatedProducts'); relatedContainer.innerHTML = relatedImgs.map((src,idx)=>`<article class="card" style="cursor:pointer;" onclick="window.location.href='product-detail.html'"><img src="${src}" alt="related"><div class="card-body"><span class="chip">${product.type}</span><div class="spacer"></div><div class="prod"><div><h4>${product.name}</h4><div><span class="price">${formatCurrency(product.price)}đ</span></div></div></div></div></article>`).join('');
+                setupActions();
             }
+            function setupActions(){ const add=document.getElementById('addToCart'); if(add){ add.addEventListener('click',()=>{ createToast(`PROTOTYPE: Đã thêm ${product.name} (chỉ demo)`); }); } }
 
-            // Load related products
-            function loadRelatedProducts(typeId, currentId) {
-                const related = Products.list()
-                    .filter(
-                        (p) =>
-                            p.typeId === typeId &&
-                            p.id !== currentId &&
-                            !p.hidden
-                    )
-                    .slice(0, 3);
-
-                const container = document.getElementById("relatedProducts");
-                container.innerHTML = related
-                    .map((product) => {
-                        const price = getSellPrice(product.id).price;
-                        const available = getAvailableStock(product.id);
-                        const isAvailable = available > 0;
-                        const stockStatus = isAvailable
-                            ? `<span style="color:#4caf50; font-size:.9em;">Còn ${available} sản phẩm</span>`
-                            : '<span style="color:#f44336; font-size:.9em;">Tạm hết hàng</span>';
-                        return `
-                    <article class="card" style="position:relative; cursor:pointer;" onclick="window.location.href='product-detail.html?id=${
-                        product.id
-                    }'">
-                        ${
-                            !isAvailable
-                                ? '<div style="position:absolute;top:10px;left:10px;background:rgba(244,67,54,.9);color:#fff;padding:4px 8px;border-radius:4px;font-size:.8em;font-weight:700;">HẾT HÀNG</div>'
-                                : ""
-                        }
-                        <img src="${
-                            product.image ||
-                            "https://via.placeholder.com/400x300?text=No+Image"
-                        }" 
-                             alt="${product.name}" ${
-                            !isAvailable ? 'style="opacity:.7;"' : ""
-                        }>
-                        <div class="card-body">
-                            <span class="chip">${getTypeName(
-                                product.typeId
-                            )}</span>
-                            <div class="spacer"></div>
-                            <div class="prod">
-                                <div>
-                                    <h4>${product.name}</h4>
-                                    <div style="margin:6px 0;">${stockStatus}</div>
-                                    <div>
-                                        <span class="price">${formatCurrency(
-                                            price
-                                        )}đ</span>
-                                    </div>
-                                </div>
-                                <div class="button-group">
-                                    <button class="add" data-id="${product.id}" 
-                                            data-name="${product.name}" 
-                                            data-price="${price}"
-                                            onclick="addRelated(event, '${
-                                                product.id
-                                            }')" ${
-                            !isAvailable
-                                ? 'disabled style="opacity:.6;cursor:not-allowed;"'
-                                : ""
-                        }>
-                                        ${
-                                            isAvailable
-                                                ? "Thêm vào giỏ"
-                                                : "Hết hàng"
-                                        }
-                                    </button>
-                                    <button class="buy-now" data-id="${
-                                        product.id
-                                    }"
-                                            onclick="buyRelated(event, '${
-                                                product.id
-                                            }')" ${
-                            !isAvailable
-                                ? 'disabled style="opacity:.6;cursor:not-allowed;"'
-                                : ""
-                        }>
-                                        ${isAvailable ? "Mua ngay" : "Hết hàng"}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                    `;
-                    })
-                    .join("");
-            }
-
-            // Setup quantity controls with stock awareness
-            function setupQuantityControls(available, isAvailable) {
-                const qtyInput = document.getElementById("quantity");
-                const decBtn = document.getElementById("decreaseQuantity");
-                const incBtn = document.getElementById("increaseQuantity");
-                const addBtn = document.getElementById("addToCart");
-                const buyBtn = document.getElementById("buyNow");
-
-                function clampAndUpdate() {
-                    let v = parseInt(qtyInput.value) || 1;
-                    if (available <= 0) v = 0; // force 0 conceptually when hết hàng
-                    v = Math.max(1, Math.min(available || 1, v));
-                    qtyInput.value = v;
-                    // Disable +/- according to stock
-                    decBtn.disabled = v <= 1 || available <= 0;
-                    incBtn.disabled = v >= (available || 1) || available <= 0;
-                    // Disable action buttons if out of stock
-                    if (available <= 0) {
-                        addBtn.disabled = true;
-                        buyBtn.disabled = true;
-                    }
-                }
-
-                // Initialize max bound and UI
-                qtyInput.max = String(available);
-                clampAndUpdate();
-
-                decBtn.addEventListener("click", () => {
-                    qtyInput.value = Math.max(
-                        1,
-                        (parseInt(qtyInput.value) || 1) - 1
-                    );
-                    clampAndUpdate();
-                });
-                incBtn.addEventListener("click", () => {
-                    qtyInput.value = Math.min(
-                        available,
-                        (parseInt(qtyInput.value) || 1) + 1
-                    );
-                    clampAndUpdate();
-                });
-                qtyInput.addEventListener("change", clampAndUpdate);
-
-                addBtn.addEventListener("click", () => {
-                    const qty = parseInt(qtyInput.value) || 1;
-                    if (isInStock(productId, qty)) addToCart(qty, false);
-                });
-                buyBtn.addEventListener("click", () => {
-                    const qty = parseInt(qtyInput.value) || 1;
-                    if (isInStock(productId, qty)) addToCart(qty, true);
-                });
-            }
-
-            // Add to cart functionality
-            function addToCart(quantity, redirect = false) {
-                const product = Products.list().find((p) => p.id === productId);
-                if (!product) return;
-                if (!session.isLoggedIn()) {
-                    window.location.href = `login.html?redirect=${encodeURIComponent(
-                        redirect ? "checkout.html" : window.location.href
-                    )}`;
-                    return;
-                }
-                const cart = getCart();
-                const existing = cart.find((i) => i.id === product.id);
-                const available = getAvailableStock(product.id);
-                if (existing) {
-                    existing.quantity = Math.min(
-                        available,
-                        existing.quantity + quantity
-                    );
+            // No additional boot required - header init will call renderProduct on DOMContentLoaded.
+        </script>
+        <script>
+            // Header auth UI parity (like products.html)
+            function getCurrentUser(){ try { return JSON.parse(localStorage.getItem('currentUser')||'null'); } catch { return null; } }
+            function updateAuthUI(){
+                const user = getCurrentUser();
+                const accountText = document.getElementById('accountText');
+                const loginItem = document.getElementById('loginItem');
+                const registerItem = document.getElementById('registerItem');
+                const profileItem = document.getElementById('profileItem');
+                const logoutItem = document.getElementById('logoutItem');
+                if (user){
+                    if (accountText) accountText.textContent = user.name || 'Tài khoản';
+                    if (loginItem) loginItem.style.display = 'none';
+                    if (registerItem) registerItem.style.display = 'none';
+                    if (profileItem) profileItem.style.display = 'block';
+                    if (logoutItem) logoutItem.style.display = 'block';
                 } else {
-                    if (available > 0)
-                        cart.push({
-                            id: product.id,
-                            name: product.name,
-                            price: getSellPrice(product.id).price,
-                            quantity: Math.min(available, quantity),
-                        });
-                }
-                setCart(cart);
-                updateCartBadge();
-                renderCart();
-                if (!redirect) {
-                    const button = document.getElementById("addToCart");
-                    const originalText = button.textContent;
-                    button.textContent = "Đã thêm vào giỏ";
-                    button.disabled = true;
-                    setTimeout(() => {
-                        button.textContent = originalText;
-                        button.disabled = false;
-                    }, 2000);
-                } else {
-                    openCart();
+                    if (accountText) accountText.textContent = 'Đăng nhập / Đăng ký';
+                    if (loginItem) loginItem.style.display = 'block';
+                    if (registerItem) registerItem.style.display = 'block';
+                    if (profileItem) profileItem.style.display = 'none';
+                    if (logoutItem) logoutItem.style.display = 'none';
                 }
             }
+            document.addEventListener('DOMContentLoaded', function(){
+                updateAuthUI();
+                const toggle = document.querySelector('.account-toggle');
+                const dropdown = document.getElementById('accountDropdown');
+                toggle && toggle.addEventListener('click', function(e){ e.preventDefault(); if (dropdown){ dropdown.classList.toggle('show'); this.setAttribute('aria-expanded', dropdown.classList.contains('show')?'true':'false'); }});
+                const logout = document.getElementById('logoutItem');
+                if (logout){
+                    const link = document.getElementById('logoutLink') || logout.querySelector('a');
+                    link && link.addEventListener('click', function(e){ e.preventDefault(); localStorage.removeItem('currentUser'); updateAuthUI(); });
+                }
+                document.addEventListener('click', function(e){ const menu = document.getElementById('accountMenu'); if(menu && !menu.contains(e.target)){ dropdown && dropdown.classList.remove('show'); const t=document.querySelector('.account-toggle'); t && t.setAttribute('aria-expanded','false'); }});
 
-            // Utility functions
-            function getTypeName(typeId) {
-                const type = Types.list().find((t) => t.id === typeId);
-                return type ? type.name : "";
-            }
-
-            function getWeight(productName) {
-                const match = productName.match(/\d+g/);
-                return match ? match[0] : "N/A";
-            }
-
-            // Global events for cart: header link navigates directly
-
-            // Initialize
-            updateStockLevels();
-            loadProductDetail();
-            updateCartBadge();
-            closeCart();
+                // Hide cart badge on detail page in prototype
+                const badge = document.getElementById('cart-badge'); if (badge) badge.style.display = 'none';
+            });
         </script>
     </body>
 </html>

@@ -15,6 +15,111 @@
             rel="stylesheet"
         />
         <link rel="stylesheet" href="styles/user.css" />
+        <style>
+            /* Login Modal Styles */
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                z-index: 1000;
+                align-items: center;
+                justify-content: center;
+            }
+            .modal-content {
+                background: #18181b;
+                border: 1px solid #3a3a44;
+                border-radius: 20px;
+                width: 90%;
+                max-width: 400px;
+                padding: 30px;
+                position: relative;
+                color: #f5f5f5;
+            }
+            .close-btn {
+                position: absolute;
+                top: 15px;
+                right: 20px;
+                font-size: 24px;
+                cursor: pointer;
+                color: #a1a1aa;
+            }
+            .form-group {
+                margin-bottom: 20px;
+            }
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                color: #e5e5e5;
+                font-weight: 500;
+                font-size: 14px;
+            }
+            .form-group input {
+                width: 100%;
+                padding: 12px 16px;
+                background: #0f0f12;
+                border: 1px solid #3a3a44;
+                border-radius: 12px;
+                color: #fafafa;
+                font-size: 16px;
+                transition: all 0.3s ease;
+                box-sizing: border-box;
+            }
+            .form-group input:focus {
+                outline: none;
+                border-color: #d1a06f;
+                box-shadow: 0 0 0 3px rgba(209, 160, 111, 0.1);
+            }
+            .error {
+                color: #ef4444;
+                font-size: 12px;
+                margin-top: 5px;
+                display: none;
+            }
+            .btn-login {
+                width: 100%;
+                background: linear-gradient(135deg, #d1a06f 0%, #b8945f 100%);
+                color: #2a1c16;
+                border: none;
+                border-radius: 12px;
+                padding: 14px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-top: 10px;
+            }
+            .btn-login:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(209, 160, 111, 0.3);
+            }
+            .toggle-form {
+                text-align: center;
+                margin-top: 15px;
+                color: #a1a1aa;
+                font-size: 14px;
+            }
+            .toggle-form a {
+                color: #d1a06f;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            .toggle-form a:hover {
+                text-decoration: underline;
+            }
+            .success-msg {
+                background: #10b981;
+                color: white;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                text-align: center;
+                display: none;
+            }
+        </style>
     </head>
     <body>
         <!-- Header -->
@@ -52,8 +157,8 @@
                         <a href="products.html">Sản phẩm</a>
                         <div class="dropdown-content">
                             <a href="arabica.html">Arabica</a>
-                            <a href="robusta.html">Robusta</a>
-                            <a href="blend.html">Blend</a>
+                            <a href="arabica.html">Robusta</a>
+                            <a href="arabica.html">Blend</a>
                         </div>
                     </div>
                     <a href="#ve-chung-toi">Giới thiệu</a>
@@ -61,35 +166,13 @@
                     <a href="#lien-he">Liên hệ</a>
                     <!-- Tài khoản -->
                     <div class="account-menu" id="accountMenu">
-                        <div class="account-toggle">
+                        <div class="account-toggle" role="button" tabindex="0" aria-expanded="false">
                             <i class="fa fa-user"></i>
                             <span id="accountText">Đăng nhập / Đăng ký</span>
-                            <span class="caret">▼</span>
+                            <i class="fa fa-caret-down"></i>
                         </div>
-                        <ul class="account-dropdown">
-                            <li id="loginItem">
-                                <a href="login.html"
-                                    ><i class="fa fa-sign-in-alt"></i> Đăng
-                                    nhập</a
-                                >
-                            </li>
-                            <li id="registerItem">
-                                <a href="register.html"
-                                    ><i class="fa fa-user-plus"></i> Đăng ký</a
-                                >
-                            </li>
-                            <li id="profileItem" style="display: none">
-                                <a href="profile.html"
-                                    ><i class="fa fa-user-circle"></i> Thông tin
-                                    cá nhân</a
-                                >
-                            </li>
-                            <li id="logoutItem" style="display: none">
-                                <a href="#" id="logoutLink"
-                                    ><i class="fa fa-sign-out-alt"></i> Đăng
-                                    xuất</a
-                                >
-                            </li>
+                        <ul class="account-dropdown" id="accountDropdown" aria-hidden="true">
+                            <!-- Các mục menu sẽ được thêm động bằng JavaScript -->
                         </ul>
                     </div>
 
@@ -144,7 +227,7 @@
                 <div class="grid grid-3">
                     <article class="card">
                         <img
-                            src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?q=80&w=1200&auto=format&fit=crop"
+                            src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1200&auto=format&fit=crop"
                             alt="Hạt Arabica"
                         />
                         <div class="card-body">
@@ -152,14 +235,12 @@
                             <div class="spacer"></div>
                             <div class="prod">
                                 <img
-                                    src="https://images.unsplash.com/photo-1509043759401-136742328bb3?q=80&w=300&auto=format&fit=crop"
+                                    src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=300&auto=format&fit=crop"
                                     alt="Arabica Premium"
                                 />
                                 <div>
                                     <h4>
-                                        <a href="product-detail.html?id=p1"
-                                            >Arabica Premium 250g</a
-                                        >
+                                        <a href="product-detail.html">Arabica Premium 250g</a>
                                     </h4>
                                     <div>
                                         <span class="price">135.000đ</span>
@@ -178,7 +259,7 @@
                     </article>
                     <article class="card">
                         <img
-                            src="https://images.unsplash.com/photo-1526081347589-6f4f6f61f4d9?q=80&w=1200&auto=format&fit=crop"
+                            src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop"
                             alt="Hạt Robusta"
                         />
                         <div class="card-body">
@@ -186,14 +267,12 @@
                             <div class="spacer"></div>
                             <div class="prod">
                                 <img
-                                    src="https://images.unsplash.com/photo-1519337265831-281ec6cc8514?q=80&w=300&auto=format&fit=crop"
+                                    src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=300&auto=format&fit=crop"
                                     alt="Robusta Bold"
                                 />
                                 <div>
                                     <h4>
-                                        <a href="product-detail.html?id=p2"
-                                            >Robusta Bold 500g</a
-                                        >
+                                        <a href="product-detail.html">Robusta Bold 500g</a>
                                     </h4>
                                     <div>
                                         <span class="price">129.000đ</span>
@@ -212,7 +291,7 @@
                     </article>
                     <article class="card">
                         <img
-                            src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
+                            src="https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?q=80&w=1200&auto=format&fit=crop"
                             alt="Blend"
                         />
                         <div class="card-body">
@@ -220,127 +299,7 @@
                             <div class="spacer"></div>
                             <div class="prod">
                                 <img
-                                    src="https://images.unsplash.com/photo-1551524164-7d2f9ff12cbb?q=80&w=300&auto=format&fit=crop"
-                                    alt="Signature Blend"
-                                />
-                                <div>
-                                    <h4>Signature Blend 1kg</h4>
-                                    <div>
-                                        <span class="price">265.000đ</span>
-                                        <span class="strike">299.000đ</span>
-                                    </div>
-                                </div>
-                                <button
-                                    class="add"
-                                    data-name="Signature Blend 1kg"
-                                    data-price="265000"
-                                >
-                                    Thêm
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <img
-                            src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
-                            alt="Blend"
-                        />
-                        <div class="card-body">
-                            <span class="chip">Signature Blend</span>
-                            <div class="spacer"></div>
-                            <div class="prod">
-                                <img
-                                    src="https://images.unsplash.com/photo-1551524164-7d2f9ff12cbb?q=80&w=300&auto=format&fit=crop"
-                                    alt="Signature Blend"
-                                />
-                                <div>
-                                    <h4>Signature Blend 1kg</h4>
-                                    <div>
-                                        <span class="price">265.000đ</span>
-                                        <span class="strike">299.000đ</span>
-                                    </div>
-                                </div>
-                                <button
-                                    class="add"
-                                    data-name="Signature Blend 1kg"
-                                    data-price="265000"
-                                >
-                                    Thêm
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <img
-                            src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
-                            alt="Blend"
-                        />
-                        <div class="card-body">
-                            <span class="chip">Signature Blend</span>
-                            <div class="spacer"></div>
-                            <div class="prod">
-                                <img
-                                    src="https://images.unsplash.com/photo-1551524164-7d2f9ff12cbb?q=80&w=300&auto=format&fit=crop"
-                                    alt="Signature Blend"
-                                />
-                                <div>
-                                    <h4>Signature Blend 1kg</h4>
-                                    <div>
-                                        <span class="price">265.000đ</span>
-                                        <span class="strike">299.000đ</span>
-                                    </div>
-                                </div>
-                                <button
-                                    class="add"
-                                    data-name="Signature Blend 1kg"
-                                    data-price="265000"
-                                >
-                                    Thêm
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <img
-                            src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
-                            alt="Blend"
-                        />
-                        <div class="card-body">
-                            <span class="chip">Signature Blend</span>
-                            <div class="spacer"></div>
-                            <div class="prod">
-                                <img
-                                    src="https://images.unsplash.com/photo-1551524164-7d2f9ff12cbb?q=80&w=300&auto=format&fit=crop"
-                                    alt="Signature Blend"
-                                />
-                                <div>
-                                    <h4>Signature Blend 1kg</h4>
-                                    <div>
-                                        <span class="price">265.000đ</span>
-                                        <span class="strike">299.000đ</span>
-                                    </div>
-                                </div>
-                                <button
-                                    class="add"
-                                    data-name="Signature Blend 1kg"
-                                    data-price="265000"
-                                >
-                                    Thêm
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-                    <article class="card">
-                        <img
-                            src="https://images.unsplash.com/photo-1507133750040-4a8f57021524?q=80&w=1200&auto=format&fit=crop"
-                            alt="Blend"
-                        />
-                        <div class="card-body">
-                            <span class="chip">Signature Blend</span>
-                            <div class="spacer"></div>
-                            <div class="prod">
-                                <img
-                                    src="https://images.unsplash.com/photo-1551524164-7d2f9ff12cbb?q=80&w=300&auto=format&fit=crop"
+                                    src="https://images.unsplash.com/photo-1442550528053-c431ecb55509?q=80&w=300&auto=format&fit=crop"
                                     alt="Signature Blend"
                                 />
                                 <div>
@@ -442,7 +401,7 @@
                 </div>
             </div>
             <div class="container copyright">
-                © 2025 Cà Phê Đậm Đà. All rights reserved.
+                2025 Cà Phê Đậm Đà. All rights reserved.
             </div>
         </footer>
 
@@ -467,322 +426,658 @@
             <a href="#lien-he">Liên hệ</a>
         </nav>
 
-        <script src="scripts/user.js" defer></script>
-        <script type="module">
-            import {
-                Products,
-                Types,
-                getSellPrice,
-                computeStock,
-            } from "./scripts/db.js";
-            import {
-                initHeader,
-                getCartSafe as getCart,
-                setCartSafe as setCart,
-                updateCartBadge,
-                openCart,
-                closeCart,
-                toggleCart,
-            } from "./scripts/header.js";
-            import { session } from "./scripts/utils.js";
+        <!-- Login/Register Modal -->
+        <div id="authModal" class="modal" role="dialog" aria-hidden="true" aria-modal="true">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form">
+                    <h3>Đăng nhập</h3>
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Mật khẩu</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="btn">Đăng nhập</button>
+                    <p class="form-footer">
+                        Chưa có tài khoản? 
+                        <a href="#" id="switchToRegister">Đăng ký ngay</a>
+                    </p>
+                </form>
 
-            // Inventory helpers
-            let productStocks = new Map();
-            function updateStockLevels() {
-                productStocks = computeStock();
-            }
-            function getAvailableStock(productId) {
-                return productStocks.get(productId) || 0;
-            }
-            function isInStock(productId, qty = 1) {
-                return getAvailableStock(productId) >= qty;
-            }
+                <!-- Register Form -->
+                <form id="registerForm" class="auth-form" style="display: none;">
+                    <h3>Đăng ký tài khoản</h3>
+                    <div class="form-group">
+                        <label for="regName">Họ và tên</label>
+                        <input type="text" id="regName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email</label>
+                        <input type="email" id="regEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPhone">Số điện thoại</label>
+                        <input type="tel" id="regPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regAddress">Địa chỉ</label>
+                        <input type="text" id="regAddress" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Mật khẩu</label>
+                        <input type="password" id="regPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="regConfirmPassword">Xác nhận mật khẩu</label>
+                        <input type="password" id="regConfirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn">Đăng ký</button>
+                    <p class="form-footer">
+                        Đã có tài khoản? 
+                        <a href="#" id="switchToLogin">Đăng nhập ngay</a>
+                    </p>
+                </form>
+            </div>
+        </div>
 
-            // Initialize
-            function init() {
-                updateStockLevels();
-                loadFeaturedProducts();
-                setupEventListeners();
-                updateCartBadge();
-            }
-
-            // Load featured products
-            function loadFeaturedProducts() {
-                const products = Products.list()
-                    .filter((p) => !p.hidden)
-                    .slice(0, 6); // Lấy 6 sản phẩm đầu tiên từ LocalStorage
-
-                const grid = document.querySelector("#san-pham .grid");
-                grid.innerHTML = products
-                    .map((product) => {
-                        const available = getAvailableStock(product.id);
-                        const isAvailable = available > 0;
-                        const priceStr = formatCurrency(
-                            getSellPrice(product.id).price
-                        );
-                        return `
-                    <article class="card" onclick="window.location.href='product-detail.html?id=${
-                        product.id
-                    }'" style="cursor: pointer; position: relative;">
-                        ${
-                            !isAvailable
-                                ? '<div style="position:absolute;top:10px;left:10px;background:rgba(244,67,54,.9);color:#fff;padding:4px 8px;border-radius:4px;font-size:.8em;font-weight:700;">HẾT HÀNG</div>'
-                                : ""
-                        }
-                        <img src="${
-                            product.image ||
-                            "https://via.placeholder.com/400x300?text=No+Image"
-                        }" 
-                             alt="${product.name}" ${
-                            !isAvailable ? 'style="opacity:.7;"' : ""
-                        } />
-                        <div class="card-body">
-                            <span class="chip">${getTypeName(
-                                product.typeId
-                            )}</span>
-                            <div class="spacer"></div>
-                            <div class="prod">
-                                <div>
-                                    <h4>${product.name}</h4>
-                                    <div>
-                                        <span class="price">${priceStr}đ</span>
-                                    </div>
-                                    <div style="margin-top:6px; font-size:.9em; ${
-                                        isAvailable
-                                            ? "color:#4caf50;"
-                                            : "color:#f44336;"
-                                    }">${
-                            isAvailable
-                                ? `Còn ${available} sản phẩm`
-                                : "Tạm hết hàng"
-                        }</div>
-                                </div>
-                                <div class="button-group">
-                                    <button class="add" 
-                                            data-id="${product.id}" 
-                                            data-name="${product.name}" 
-                                            data-price="${
-                                                getSellPrice(product.id).price
-                                            }"
-                                            onclick="event.stopPropagation(); addToCart(this);" ${
-                                                !isAvailable
-                                                    ? 'disabled style="opacity:.6;cursor:not-allowed;"'
-                                                    : ""
-                                            }>
-                                        ${
-                                            isAvailable
-                                                ? "Thêm vào giỏ"
-                                                : "Hết hàng"
-                                        }
-                                    </button>
-                                    <button class="buy-now" 
-                                            data-id="${product.id}"
-                                            onclick="buyNow(event, '${
-                                                product.id
-                                            }')" ${
-                            !isAvailable
-                                ? 'disabled style="opacity:.6;cursor:not-allowed;"'
-                                : ""
-                        }>
-                                        ${isAvailable ? "Mua ngay" : "Hết hàng"}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </article>`;
-                    })
-                    .join("");
+        <style>
+            /* Modal Styles */
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                justify-content: center;
+                align-items: center;
             }
 
-            // Utility functions
-            function getTypeName(typeId) {
-                const type = Types.list().find((t) => t.id === typeId);
-                return type ? type.name : "";
+            .modal-content {
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                width: 100%;
+                max-width: 400px;
+                position: relative;
+                color: #333;
             }
 
-            function formatCurrency(value) {
-                return new Intl.NumberFormat("vi-VN").format(value);
+            .close-btn {
+                position: absolute;
+                top: 15px;
+                right: 20px;
+                font-size: 24px;
+                cursor: pointer;
+                color: #666;
             }
 
-            function addToCart(buttonOrData) {
-                if (!requireLogin()) return;
-                const productId = buttonOrData.dataset
-                    ? buttonOrData.dataset.id
-                    : buttonOrData.id;
-                const product = Products.list().find((p) => p.id === productId);
-                if (!product) return;
+            .auth-form {
+                margin-top: 20px;
+            }
 
-                const available = getAvailableStock(productId);
-                const currentQty =
-                    getCart().find((i) => i.id === productId)?.quantity || 0;
-                if (available <= currentQty) return;
+            .auth-form h3 {
+                margin-top: 0;
+                color: #2c3e50;
+                text-align: center;
+                margin-bottom: 20px;
+            }
 
-                const cart = getCart();
-                const existing = cart.find((i) => i.id === productId);
-                if (existing) {
-                    existing.quantity = Math.min(
-                        available,
-                        existing.quantity + 1
-                    );
-                } else {
-                    cart.push({
-                        id: productId,
-                        name: product.name,
-                        price: getSellPrice(productId).price,
-                        quantity: 1,
-                    });
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: 500;
+                color: #2c3e50;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 12px;
+                background: #e67e22;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            .btn:hover {
+                background: #d35400;
+            }
+
+            .form-footer {
+                text-align: center;
+                margin-top: 15px;
+                font-size: 14px;
+                color: #666;
+            }
+
+            .form-footer a {
+                color: #e67e22;
+                text-decoration: none;
+            }
+
+            .form-footer a:hover {
+                text-decoration: underline;
+            }
+
+            /* Account dropdown and modal UX improvements */
+            .account-menu { position: relative; }
+            .account-toggle { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; }
+            .account-toggle:focus { outline: none; box-shadow: 0 0 0 3px rgba(230,126,34,0.12); }
+            .account-dropdown {
+                position: absolute;
+                right: 0;
+                top: calc(100% + 8px);
+                background: #fff;
+                border-radius: 10px;
+                box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+                min-width: 220px;
+                padding: 6px 0;
+                display: none;
+                opacity: 0;
+                transform: translateY(-6px);
+                transition: opacity 180ms ease, transform 180ms ease;
+                z-index: 1200;
+            }
+            .account-dropdown.show { display: block; opacity: 1; transform: translateY(0); }
+            .account-dropdown li { list-style: none; }
+            .menu-link {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                color: #2c3e50;
+                text-decoration: none;
+                font-weight: 500;
+            }
+            .menu-link:hover { background: #f3f4f6; }
+
+            /* Modal animations & improved appearance */
+            .modal { transition: opacity 160ms ease; }
+            .modal.show { display: flex; opacity: 1; }
+            .modal .modal-content { transition: transform 180ms ease, opacity 180ms ease; transform: translateY(-8px); opacity: 0; }
+            .modal.show .modal-content { transform: translateY(0); opacity: 1; }
+
+            @media (max-width: 480px) {
+                .modal-content { padding: 20px; border-radius: 12px; }
+            }
+        </style>
+
+        <script>
+            // Initialize database from db.js if not exists
+            function initializeDatabase() {
+                // Check if database exists in localStorage
+                if (!localStorage.getItem('caphe_db_v1')) {
+                    // Import the database from db.js
+                    const defaultDB = {
+                        users: [
+                            {
+                                id: 1,
+                                name: 'Admin',
+                                email: 'admin@example.com',
+                                password: 'admin123',
+                                phone: '0123456789',
+                                address: '123 Đường ABC, Quận 1, TP.HCM',
+                                role: 'admin'
+                            },
+                            {
+                                id: 2,
+                                name: 'Khách hàng 1',
+                                email: 'user@example.com',
+                                password: 'user123',
+                                phone: '0987654321',
+                                address: '456 Đường XYZ, Quận 3, TP.HCM',
+                                role: 'user'
+                            }
+                        ]
+                    };
+                    localStorage.setItem('caphe_db_v1', JSON.stringify(defaultDB));
                 }
-                setCart(cart);
-
-                updateCartBadge();
-                if (buttonOrData.dataset) showAddedToCart(buttonOrData);
             }
-            window.addToCart = addToCart;
 
-            function buyNow(event, productId) {
-                event.stopPropagation();
-                const product = Products.list().find((p) => p.id === productId);
-                if (!product) return;
-                if (!requireLogin("cart.html")) return;
-                const available = getAvailableStock(productId);
-                const currentQty =
-                    getCart().find((i) => i.id === productId)?.quantity || 0;
-                if (available <= currentQty) return;
-                addToCart({ id: productId });
-                window.location.href = "cart.html";
-            }
-            window.buyNow = buyNow;
+            // Check authentication status on page load
+            document.addEventListener('DOMContentLoaded', function() {
+                // Initialize database
+                initializeDatabase();
+                
+                // Update UI and setup event listeners
+                updateAuthUI();
+                setupEventListeners();
+                // Clear cart badge for prototype
+                const badge = document.getElementById('cart-badge');
+                if (badge) badge.style.display = 'none';
+            });
 
-            function showAddedToCart(button) {
-                const originalText = button.textContent;
-                button.textContent = "Đã thêm";
-                button.disabled = true;
-                setTimeout(() => {
-                    button.textContent = originalText;
-                    button.disabled = false;
-                }, 2000);
+            // Cập nhật giao diện dựa trên trạng thái đăng nhập
+            function updateAuthUI() {
+                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                const accountText = document.getElementById('accountText');
+                const accountDropdown = document.getElementById('accountDropdown');
+                const accountToggle = document.querySelector('.account-toggle');
+
+                // Xóa tất cả các mục menu cũ
+                accountDropdown.innerHTML = '';
+
+                if (currentUser) {
+                    // Đã đăng nhập - Hiển thị thông tin người dùng
+                    const displayName = currentUser.name || 'Tài khoản';
+                    accountText.textContent = displayName;
+                    
+                    // Tạo menu khi đã đăng nhập
+                    // Build logged-in menu items using data-action for delegated handling
+                    const profileItem = document.createElement('li');
+                    profileItem.innerHTML = `
+                        <a href="profile.html" data-action="profile" class="menu-link">
+                            <i class="fa fa-user-circle"></i> Thông tin cá nhân
+                        </a>
+                    `;
+
+                    const logoutItem = document.createElement('li');
+                    logoutItem.innerHTML = `
+                        <a href="#" data-action="logout" class="menu-link">
+                            <i class="fa fa-sign-out-alt"></i> Đăng xuất
+                        </a>
+                    `;
+
+                    // Thêm các mục vào menu
+                    accountDropdown.appendChild(profileItem);
+                    accountDropdown.appendChild(logoutItem);
+                } else {
+                    // Chưa đăng nhập - Hiển thị menu đăng nhập/đăng ký
+                    accountText.textContent = 'Đăng nhập / Đăng ký';
+                    
+                    // Tạo menu khi chưa đăng nhập
+                    // Build not-logged-in menu items using data-action for delegated handling
+                    const loginItem = document.createElement('li');
+                    loginItem.innerHTML = `
+                        <a href="#" data-action="show-login" class="menu-link">
+                            <i class="fa fa-sign-in-alt"></i> Đăng nhập
+                        </a>
+                    `;
+
+                    const registerItem = document.createElement('li');
+                    registerItem.innerHTML = `
+                        <a href="#" data-action="show-register" class="menu-link">
+                            <i class="fa fa-user-plus"></i> Đăng ký
+                        </a>
+                    `;
+
+                    // Thêm các mục vào menu
+                    accountDropdown.appendChild(loginItem);
+                    accountDropdown.appendChild(registerItem);
+                }
+                
+                // Note: dropdown toggle is handled in setupEventListeners so we don't duplicate handlers here
             }
 
             // Setup event listeners
             function setupEventListeners() {
-                document
-                    .getElementById("menuBtn")
-                    ?.addEventListener("click", () => {
-                        const menu = document.getElementById("mobileMenu");
-                        const expanded = menu.hidden;
-                        menu.hidden = !expanded;
-                        menuBtn.setAttribute("aria-expanded", expanded);
+                // Centralized event handling using delegation
+                const accountToggle = document.querySelector('.account-toggle');
+                const modal = document.getElementById('authModal');
+                const closeBtn = document.querySelector('.close-btn');
+                const loginForm = document.getElementById('loginForm');
+                const registerForm = document.getElementById('registerForm');
+
+                // Toggle account dropdown when clicking the account toggle element
+                if (accountToggle) {
+                    accountToggle.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const dropdown = document.getElementById('accountDropdown');
+                        if (dropdown) {
+                            const isShown = dropdown.classList.toggle('show');
+                            accountToggle.setAttribute('aria-expanded', isShown ? 'true' : 'false');
+                            dropdown.setAttribute('aria-hidden', isShown ? 'false' : 'true');
+                        }
                     });
-
-                // Toggle cart from header
-                // Header cart link now navigates to cart.html by default
-
-                // ESC to close
-                document.addEventListener("keydown", (ev) => {
-                    if (ev.key === "Escape") closeCart();
-                });
-            }
-
-            // Header/cart mode similar to robusta: always navigate to cart.html
-            window.CART_MODE = "navigate";
-            initHeader();
-            closeCart();
-
-            // Initialize when DOM is ready
-            init();
-
-            // Update auth UI
-            function updateAuthUI() {
-                const accountText = document.getElementById("accountText");
-                const loginItem = document.getElementById("loginItem");
-                const registerItem = document.getElementById("registerItem");
-                const profileItem = document.getElementById("profileItem");
-                const logoutItem = document.getElementById("logoutItem");
-
-                if (session.isLoggedIn()) {
-                    const user = session.getUser();
-                    accountText.textContent = `Xin chào, ${user.name}`;
-                    loginItem.style.display = "none";
-                    registerItem.style.display = "none";
-                    profileItem.style.display = "block";
-                    logoutItem.style.display = "block";
-                } else {
-                    accountText.textContent = "Đăng nhập / Đăng ký";
-                    loginItem.style.display = "block";
-                    registerItem.style.display = "block";
-                    profileItem.style.display = "none";
-                    logoutItem.style.display = "none";
+                    // allow keyboard toggle with Enter or Space
+                    accountToggle.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            accountToggle.click();
+                        }
+                    });
                 }
-            }
 
-            // Initialize auth UI
-            updateAuthUI();
+                // Delegated click handler for auth actions and menu items
+                document.addEventListener('click', function(e) {
+                    // 1) Chặn mọi liên kết tới khu vực admin (an toàn trên bản demo)
+                    const anchor = e.target.closest && e.target.closest('a[href]');
+                    if (anchor) {
+                        const href = (anchor.getAttribute('href') || '').trim();
+                        if (/\badmin\b|\/admin\b|admin\.html/i.test(href)) {
+                            e.preventDefault();
+                            alert('Khu vực quản trị không khả dụng trên bản demo.');
+                            return;
+                        }
+                    }
+                    // If click on an element that has data-action attribute or its ancestor
+                    const actionEl = e.target.closest && e.target.closest('[data-action]');
+                    if (actionEl) {
+                        const action = actionEl.getAttribute('data-action');
+                        // Close the account dropdown whenever a menu action is taken
+                        const dropdown = document.getElementById('accountDropdown');
+                        if (dropdown) { dropdown.classList.remove('show'); dropdown.setAttribute('aria-hidden','true'); accountToggle && accountToggle.setAttribute('aria-expanded','false'); }
 
-            // Logout handler
-            document
-                .getElementById("logoutLink")
-                ?.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-                        session.logout();
+                        if (action === 'show-login') {
+                            e.preventDefault();
+                            openModal('login');
+                            return;
+                        }
+
+                        if (action === 'show-register') {
+                            e.preventDefault();
+                            openModal('register');
+                            return;
+                        }
+
+                        if (action === 'logout') {
+                            e.preventDefault();
+                            if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
+                                localStorage.removeItem('currentUser');
+                                updateAuthUI();
+                                // No forced redirect; reflect UI change
+                            }
+                            return;
+                        }
+
+                        if (action === 'profile') {
+                            // allow default navigation to profile.html but if not logged in, show login
+                            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+                            if (!currentUser) {
+                                e.preventDefault();
+                                sessionStorage.setItem('redirectToProfile', 'true');
+                                openModal('login');
+                            }
+                            return;
+                        }
+                    }
+
+                    // Handle clicks on product "Thêm" buttons
+                    const addBtn = e.target.closest && e.target.closest('.add');
+                    if (addBtn) {
+                        // For prototype: Just show notification without actually adding to cart
+                        const card = addBtn.closest('.card');
+                        const name = addBtn.getAttribute('data-name') || card?.querySelector('.card-title')?.textContent || 'Sản phẩm';
+
+                        // Show prototype notification
+                        const toast = document.createElement('div');
+                        toast.style.position = 'fixed';
+                        toast.style.bottom = '20px';
+                        toast.style.right = '20px';
+                        toast.style.padding = '12px 24px';
+                        toast.style.background = '#4CAF50';
+                        toast.style.color = 'white';
+                        toast.style.borderRadius = '4px';
+                        toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                        toast.style.zIndex = '1000';
+                        toast.innerHTML = `PROTOTYPE: Đã thêm "${name}" vào giỏ hàng<br><small style="opacity:0.8">(Chức năng này chỉ là demo)</small>`;
+                        document.body.appendChild(toast);
+                        setTimeout(() => { try { toast.remove(); } catch(e){} }, 2500);
+                        return;
+                    }
+
+                    // Close dropdown when clicking outside the account menu
+                    const dropdown = document.getElementById('accountDropdown');
+                    const menu = document.getElementById('accountMenu');
+                    if (dropdown && menu && !menu.contains(e.target)) {
+                        dropdown.classList.remove('show');
+                        accountToggle && accountToggle.setAttribute('aria-expanded','false');
+                    }
+                });
+
+                // Modal open/close helpers (focus management + ESC/outside click)
+                function escHandler(e) {
+                    if (e.key === 'Escape') closeModal();
+                }
+
+                function outsideClickHandler(e) {
+                    if (!e.target.closest('.modal-content')) {
+                        closeModal();
+                    }
+                }
+
+                function openModal(mode) {
+                    if (!modal) return;
+                    modal.classList.add('show');
+                    modal.style.display = 'flex';
+                    modal.setAttribute('aria-hidden', 'false');
+                    if (mode === 'register') {
+                        if (registerForm) registerForm.style.display = 'block';
+                        if (loginForm) loginForm.style.display = 'none';
+                        const first = document.getElementById('regName');
+                        if (first) first.focus();
+                    } else {
+                        if (loginForm) loginForm.style.display = 'block';
+                        if (registerForm) registerForm.style.display = 'none';
+                        const first = document.getElementById('loginEmail');
+                        if (first) first.focus();
+                    }
+                    document.addEventListener('keydown', escHandler);
+                    modal.addEventListener('click', outsideClickHandler);
+                }
+
+                function closeModal() {
+                    if (!modal) return;
+                    modal.classList.remove('show');
+                    modal.style.display = 'none';
+                    modal.setAttribute('aria-hidden', 'true');
+                    document.removeEventListener('keydown', escHandler);
+                    modal.removeEventListener('click', outsideClickHandler);
+                }
+
+                // Close modal when clicking the close button
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function() {
+                        closeModal();
+                    });
+                }
+
+                // Switch links inside modal still use IDs; keep them as-is
+                const switchToRegister = document.getElementById('switchToRegister');
+                const switchToLogin = document.getElementById('switchToLogin');
+                if (switchToRegister) {
+                    switchToRegister.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (loginForm && registerForm) {
+                            loginForm.style.display = 'none';
+                            registerForm.style.display = 'block';
+                        }
+                    });
+                }
+                if (switchToLogin) {
+                    switchToLogin.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (loginForm && registerForm) {
+                            registerForm.style.display = 'none';
+                            loginForm.style.display = 'block';
+                        }
+                    });
+                }
+
+                // Handle login
+                if (loginForm) {
+                    loginForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        const email = document.getElementById('loginEmail').value;
+                        const password = document.getElementById('loginPassword').value;
+                        
+                        // Simple validation
+                        if (!email || !password) {
+                            alert('Vui lòng nhập đầy đủ email và mật khẩu');
+                            return;
+                        }
+
+                        try {
+                            // Lấy dữ liệu từ localStorage
+                            const db = JSON.parse(localStorage.getItem('caphe_db_v1') || '{}');
+                            const users = Array.isArray(db.users) ? db.users : [];
+                            
+                            console.log('Tất cả người dùng trong cơ sở dữ liệu:', users);
+                            
+                            // Tìm kiếm người dùng với email và mật khẩu khớp
+                            const user = users.find(u => {
+                                const emailMatch = u.email.toLowerCase() === email.toLowerCase();
+                                const passwordMatch = u.password === password;
+                                console.log(`Kiểm tra: ${u.email} (${emailMatch}) với mật khẩu (${passwordMatch})`);
+                                return emailMatch && passwordMatch;
+                            });
+                            
+                            if (user) {
+                                // Tạo đối tượng người dùng sạch (không chứa mật khẩu)
+                                const userSession = {
+                                    id: user.id,
+                                    name: user.name,
+                                    email: user.email,
+                                    phone: user.phone || '',
+                                    address: user.address || '',
+                                    role: user.role || 'user',
+                                    lastLogin: new Date().toISOString()
+                                };
+                                
+                                // Lưu thông tin đăng nhập
+                                localStorage.setItem('currentUser', JSON.stringify(userSession));
+                                
+                                // Cập nhật thời gian đăng nhập cuối cùng
+                                const userIndex = users.findIndex(u => u.id === user.id);
+                                if (userIndex !== -1) {
+                                    users[userIndex].lastLogin = new Date().toISOString();
+                                    db.users = users;
+                                    localStorage.setItem('caphe_db_v1', JSON.stringify(db));
+                                }
+                                
+                                // Đóng modal và cập nhật giao diện
+                                closeModal();
+                                updateAuthUI();
+                                
+                                // Hiển thị thông báo thành công
+                                alert(`Chào mừng trở lại, ${user.name}!`);
+                                
+                                // Check if we need to redirect to profile
+                                const redirectToProfile = sessionStorage.getItem('redirectToProfile');
+                                if (redirectToProfile) {
+                                    sessionStorage.removeItem('redirectToProfile');
+                                    window.location.href = 'profile.html';
+                                }
+                            } else {
+                                throw new Error('Email hoặc mật khẩu không đúng');
+                            }
+                        } catch (error) {
+                            console.error('Login error:', error);
+                            alert(error.message || 'Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.');
+                        }
+                    });
+                }
+
+                // Handle registration
+                if (registerForm) {
+                    registerForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        
+                        const name = document.getElementById('regName').value;
+                        const email = document.getElementById('regEmail').value;
+                        const phone = document.getElementById('regPhone').value;
+                        const address = document.getElementById('regAddress').value;
+                        const password = document.getElementById('regPassword').value;
+                        const confirmPassword = document.getElementById('regConfirmPassword').value;
+                        
+                        // Simple validation
+                        if (!name || !email || !phone || !address || !password || !confirmPassword) {
+                            alert('Vui lòng điền đầy đủ thông tin');
+                            return;
+                        }
+                        
+                        if (password !== confirmPassword) {
+                            alert('Mật khẩu xác nhận không khớp');
+                            return;
+                        }
+                        
+                        if (password.length < 6) {
+                            alert('Mật khẩu phải có ít nhất 6 ký tự');
+                            return;
+                        }
+
+                        // Get users from localStorage
+                        const db = JSON.parse(localStorage.getItem('caphe_db_v1') || '{}');
+                        const users = db.users || [];
+                        
+                        // Check if email already exists (case-insensitive)
+                        const emailLower = email.trim().toLowerCase();
+                        if (users.some(u => (u.email || '').toLowerCase() === emailLower)) {
+                            alert('Email đã được đăng ký');
+                            return;
+                        }
+                        
+                        // Tạo ID mới (tăng dần từ 1)
+                        const newId = users.length > 0 ? Math.max(...users.map(u => parseInt(u.id) || 0)) + 1 : 1;
+                        
+                        // Tạo đối tượng người dùng mới
+                        const newUser = {
+                            id: newId.toString(),
+                            name: name.trim(),
+                            email: email.trim().toLowerCase(),
+                            phone: phone.trim(),
+                            address: address.trim(),
+                            password: password,
+                            role: 'user',
+                            createdAt: new Date().toISOString()
+                        };
+                        
+                        // Lưu vào cơ sở dữ liệu
+                        users.push(newUser);
+                        db.users = users;
+                        localStorage.setItem('caphe_db_v1', JSON.stringify(db));
+                        
+                        // Tạo đối tượng người dùng sạch (không chứa mật khẩu) để lưu vào session
+                        const userSession = {
+                            id: newUser.id,
+                            name: newUser.name,
+                            email: newUser.email,
+                            phone: newUser.phone,
+                            address: newUser.address,
+                            role: newUser.role
+                        };
+                        
+                        // Tự động đăng nhập
+                        localStorage.setItem('currentUser', JSON.stringify(userSession));
+                        
+                        // Close modal and update UI
+                        closeModal();
                         updateAuthUI();
-                        updateCartBadge(); // Update cart badge after logout
+                        
                         // Show success message
-                        const successMsg = document.createElement("div");
-                        successMsg.style.cssText = `
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        background: #10b981;
-                        color: white;
-                        padding: 12px 20px;
-                        border-radius: 8px;
-                        z-index: 1000;
-                        font-size: 14px;
-                    `;
-                        successMsg.textContent = "Đã đăng xuất thành công!";
-                        document.body.appendChild(successMsg);
-                        setTimeout(() => successMsg.remove(), 3000);
-                    }
-                });
-
-            // No in-page cart drawer
-
-            // Auth guard (like robusta)
-            function requireLogin(redirectUrl = window.location.href) {
-                if (!session.isLoggedIn()) {
-                    if (
-                        confirm(
-                            "Vui lòng đăng nhập để tiếp tục. Chuyển sang trang đăng nhập?"
-                        )
-                    ) {
-                        window.location.href = `login.html?redirect=${encodeURIComponent(
-                            redirectUrl
-                        )}`;
-                    }
-                    return false;
+                        alert('Đăng ký và đăng nhập thành công!');
+                    });
                 }
-                return true;
+
+                // logout/profile handled via delegated click handler (data-action)
             }
-
-            // Handle search form submission
-            function handleSearch(event) {
-                event.preventDefault();
-                const searchQuery = document
-                    .getElementById("searchInput")
-                    .value.trim();
-                if (searchQuery) {
-                    // Redirect to products page with search query
-                    window.location.href = `products.html?search=${encodeURIComponent(
-                        searchQuery
-                    )}`;
-                }
-            }
-            window.handleSearch = handleSearch;
-
-            // renderCart removed (handled in cart.html)
-
-            // item handlers removed (cart.html owns them)
         </script>
+
+        <script
+            src="https://kit.fontawesome.com/a076d05399.js"
+            crossorigin="anonymous"
+        ></script>
     </body>
 </html>

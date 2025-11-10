@@ -123,8 +123,8 @@
                         <a href="#" class="active">Sản phẩm</a>
                         <div class="dropdown-content">
                             <a href="arabica.html">Arabica</a>
-                            <a href="robusta.html">Robusta</a>
-                            <a href="blend.html">Blend</a>
+                            <a href="arabica.html">Robusta</a>
+                            <a href="arabica.html">Blend</a>
                         </div>
                     </div>
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
@@ -145,7 +145,7 @@
                                 >
                             </li>
                             <li id="registerItem">
-                                <a href="register.html"
+                                <a href="index.html"
                                     ><i class="fa fa-user-plus"></i> Đăng ký</a
                                 >
                             </li>
@@ -189,8 +189,8 @@
                 <a href="#" class="active">Sản phẩm</a>
                 <div class="mobile-dropdown-content">
                     <a href="arabica.html">Arabica</a>
-                    <a href="robusta.html">Robusta</a>
-                    <a href="blend.html">Blend</a>
+                    <a href="arabica.html">Robusta</a>
+                    <a href="arabica.html">Blend</a>
                 </div>
             </div>
             <a href="index.html#ve-chung-toi">Giới thiệu</a>
@@ -390,7 +390,75 @@
 
             <!-- Products grid -->
             <section class="product-grid" id="productGrid">
-                <!-- Products will be inserted here by JavaScript -->
+                <article class="card">
+                    <img
+                        src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1200&auto=format&fit=crop"
+                        alt="Arabica"
+                    />
+                    <div class="card-body">
+                        <span class="chip">Arabica</span>
+                        <div class="spacer"></div>
+                        <div class="prod">
+                            <img
+                                src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=300&auto=format&fit=crop"
+                                alt="Arabica Premium"
+                            />
+                            <div>
+                                <h4>Arabica Premium 250g</h4>
+                                <div><span class="price">135.000đ</span></div>
+                            </div>
+                            <div class="button-group">
+                                <button class="add" data-name="Arabica Premium 250g">Thêm vào giỏ</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="card">
+                    <img
+                        src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop"
+                        alt="Robusta"
+                    />
+                    <div class="card-body">
+                        <span class="chip">Robusta</span>
+                        <div class="spacer"></div>
+                        <div class="prod">
+                            <img
+                                src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=300&auto=format&fit=crop"
+                                alt="Robusta Bold"
+                            />
+                            <div>
+                                <h4>Robusta Bold 500g</h4>
+                                <div><span class="price">129.000đ</span></div>
+                            </div>
+                            <div class="button-group">
+                                <button class="add" data-name="Robusta Bold 500g">Thêm vào giỏ</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                <article class="card">
+                    <img
+                        src="https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?q=80&w=1200&auto=format&fit=crop"
+                        alt="Blend"
+                    />
+                    <div class="card-body">
+                        <span class="chip">Signature Blend</span>
+                        <div class="spacer"></div>
+                        <div class="prod">
+                            <img
+                                src="https://images.unsplash.com/photo-1442550528053-c431ecb55509?q=80&w=300&auto=format&fit=crop"
+                                alt="Signature Blend"
+                            />
+                            <div>
+                                <h4>Signature Blend 1kg</h4>
+                                <div><span class="price">265.000đ</span></div>
+                            </div>
+                            <div class="button-group">
+                                <button class="add" data-name="Signature Blend 1kg">Thêm vào giỏ</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
             </section>
 
             <!-- Pagination -->
@@ -1126,9 +1194,70 @@
             // Initialize the page
             window.CART_MODE = "navigate";
             initHeader();
-            init();
-            updateCartBadge();
-            closeCart();
+        </script>
+        <script>
+            function getCurrentUser(){ try { return JSON.parse(localStorage.getItem('currentUser')||'null'); } catch { return null; } }
+            function updateAuthUI(){
+                const user = getCurrentUser();
+                const accountText = document.getElementById('accountText');
+                const loginItem = document.getElementById('loginItem');
+                const registerItem = document.getElementById('registerItem');
+                const profileItem = document.getElementById('profileItem');
+                const logoutItem = document.getElementById('logoutItem');
+                if (user){
+                    if (accountText) accountText.textContent = user.name || 'Tài khoản';
+                    if (loginItem) loginItem.style.display = 'none';
+                    if (registerItem) registerItem.style.display = 'none';
+                    if (profileItem) profileItem.style.display = 'block';
+                    if (logoutItem) logoutItem.style.display = 'block';
+                } else {
+                    if (accountText) accountText.textContent = 'Đăng nhập / Đăng ký';
+                    if (loginItem) loginItem.style.display = 'block';
+                    if (registerItem) registerItem.style.display = 'block';
+                    if (profileItem) profileItem.style.display = 'none';
+                    if (logoutItem) logoutItem.style.display = 'none';
+                }
+            }
+            document.addEventListener('DOMContentLoaded', function(){
+                updateAuthUI();
+                const toggle = document.querySelector('.account-toggle');
+                const dropdown = document.querySelector('.account-dropdown');
+                toggle && toggle.addEventListener('click', function(e){ e.preventDefault(); dropdown && dropdown.classList.toggle('show'); });
+                document.getElementById('logoutLink') && document.getElementById('logoutLink').addEventListener('click', function(e){ e.preventDefault(); localStorage.removeItem('currentUser'); updateAuthUI(); });
+                document.addEventListener('click', function(e){ const menu = document.getElementById('accountMenu'); if(menu && !menu.contains(e.target)){ dropdown && dropdown.classList.remove('show'); } });
+            });
+        </script>
+        <script>
+            // Prototype parity with index.html: hide badge number and show inline toast on add
+            document.addEventListener('DOMContentLoaded', function() {
+                const badge = document.getElementById('cart-badge');
+                if (badge) badge.style.display = 'none';
+
+                document.addEventListener('click', function(e) {
+                    const addBtn = e.target.closest && e.target.closest('.add');
+                    if (addBtn) {
+                        // For prototype: Just show notification without actually adding to cart
+                        const card = addBtn.closest('.card');
+                        const name = addBtn.getAttribute('data-name') || card?.querySelector('.card-title')?.textContent || 'Sản phẩm';
+
+                        // Show prototype notification (exactly as index.html)
+                        const toast = document.createElement('div');
+                        toast.style.position = 'fixed';
+                        toast.style.bottom = '20px';
+                        toast.style.right = '20px';
+                        toast.style.padding = '12px 24px';
+                        toast.style.background = '#4CAF50';
+                        toast.style.color = 'white';
+                        toast.style.borderRadius = '4px';
+                        toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                        toast.style.zIndex = '1000';
+                        toast.innerHTML = `PROTOTYPE: Đã thêm "${name}" vào giỏ hàng<br><small style="opacity:0.8">(Chức năng này chỉ là demo)</small>`;
+                        document.body.appendChild(toast);
+                        setTimeout(() => { try { toast.remove(); } catch(e){} }, 2500);
+                        return;
+                    }
+                });
+            });
         </script>
     </body>
 </html>
