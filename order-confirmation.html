@@ -3,7 +3,11 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<<<<<<< HEAD
         <title>Xác nhận đơn hàng - Cà Phê Đậm Đà</title>
+=======
+        <title>Đặt hàng thành công - Cà Phê Đậm Đà</title>
+>>>>>>> 1af686ec77b3b8aa9491cdf5ff55a4e619669b74
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
@@ -17,16 +21,27 @@
         />
         <style>
             .confirmation-container {
+<<<<<<< HEAD
                 max-width: 700px;
                 margin: 40px auto;
             }
             .success-header {
                 text-align: center;
                 margin-bottom: 40px;
+=======
+                max-width: 600px;
+                margin: 40px auto;
+                padding: 30px;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                text-align: center;
+>>>>>>> 1af686ec77b3b8aa9491cdf5ff55a4e619669b74
             }
             .success-icon {
                 font-size: 64px;
                 color: #4caf50;
+<<<<<<< HEAD
                 margin-bottom: 16px;
             }
             .success-title {
@@ -205,6 +220,45 @@
                     padding: 8px;
                     font-size: 12px;
                 }
+=======
+                margin-bottom: 20px;
+            }
+            .order-details {
+                margin: 30px 0;
+                text-align: left;
+                border-top: 1px solid #eee;
+                padding-top: 20px;
+            }
+            .order-detail {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+                padding-bottom: 10px;
+                border-bottom: 1px dashed #f0f0f0;
+            }
+            .order-detail:last-child {
+                border-bottom: none;
+            }
+            .btn {
+                display: inline-block;
+                padding: 12px 24px;
+                background: var(--coffee);
+                color: white;
+                text-decoration: none;
+                border-radius: 8px;
+                font-weight: 600;
+                margin: 10px 5px;
+                transition: all 0.3s ease;
+            }
+            .btn-outline {
+                background: white;
+                border: 1px solid var(--coffee);
+                color: var(--coffee);
+            }
+            .btn:hover {
+                opacity: 0.9;
+                transform: translateY(-2px);
+>>>>>>> 1af686ec77b3b8aa9491cdf5ff55a4e619669b74
             }
         </style>
     </head>
@@ -215,13 +269,18 @@
                 <div class="brand">
                     <a href="index.html">
                         <img
+<<<<<<< HEAD
                             src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9"
+=======
+                            src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png"
+>>>>>>> 1af686ec77b3b8aa9491cdf5ff55a4e619669b74
                             alt="Logo Cà Phê Đậm Đà"
                             class="brand-logo"
                         />
                         <span class="brand-name">Cà Phê Đậm Đà</span>
                     </a>
                 </div>
+<<<<<<< HEAD
 
                 <nav class="menu" aria-label="Chính">
                     <a href="index.html">Trang chủ</a>
@@ -257,6 +316,74 @@
                 <a href="profile.html" style="color:#e67e22;text-decoration:none;font-weight:600;">Xem hồ sơ</a>
             </div>
         </div>
+=======
+                <nav class="menu" aria-label="Chính">
+                    <a href="products.html">Sản phẩm</a>
+                    <a href="index.html#ve-chung-toi">Giới thiệu</a>
+                    <a href="index.html#loi-ich">Lợi ích</a>
+                    <a href="index.html#lien-he">Liên hệ</a>
+                    <a href="order-history.html" style="margin-right: 10px">
+                        <i class="fas fa-history"></i> Đơn hàng
+                    </a>
+                    <a href="cart.html" class="badge" aria-label="Giỏ hàng">
+                        Giỏ hàng
+                        <span id="cart-badge" class="badge-count">0</span>
+                    </a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="container" style="padding: 24px 20px">
+            <div class="confirmation-container">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h1>Đặt hàng thành công!</h1>
+                <p>
+                    Cảm ơn bạn đã đặt hàng tại Cà Phê Đậm Đà. Chúng tôi sẽ liên
+                    hệ với bạn trong thời gian sớm nhất.
+                </p>
+
+                <div class="order-details">
+                    <h3>Thông tin đơn hàng</h3>
+                    <div class="order-detail">
+                        <span>Mã đơn hàng:</span>
+                        <strong id="orderId">#123456</strong>
+                    </div>
+                    <div class="order-detail">
+                        <span>Ngày đặt hàng:</span>
+                        <span id="orderDate">10/10/2023</span>
+                    </div>
+                    <div class="order-detail">
+                        <span>Phương thức thanh toán:</span>
+                        <span>Thanh toán khi nhận hàng</span>
+                    </div>
+                    <div class="order-detail">
+                        <span>Tổng tiền:</span>
+                        <strong id="orderTotal">0đ</strong>
+                    </div>
+                </div>
+
+                <div style="margin: 30px 0">
+                    <p>
+                        Bạn có thể theo dõi đơn hàng trong mục
+                        <a
+                            href="order-history.html"
+                            style="color: var(--coffee); font-weight: 600"
+                            >Lịch sử đơn hàng</a
+                        >
+                    </p>
+                </div>
+
+                <div>
+                    <a href="products.html" class="btn">Tiếp tục mua sắm</a>
+                    <a href="order-history.html" class="btn btn-outline"
+                        >Xem đơn hàng</a
+                    >
+                </div>
+            </div>
+        </main>
+>>>>>>> 1af686ec77b3b8aa9491cdf5ff55a4e619669b74
 
         <nav id="mobileMenu" hidden class="mobile-menu"></nav>
 
