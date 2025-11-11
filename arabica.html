@@ -137,6 +137,37 @@
                 color: var(--muted);
                 font-size: 1.1em;
             }
+            /* Account dropdown and modal UX improvements */
+            .account-menu { position: relative; }
+            .account-toggle { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; }
+            .account-toggle:focus { outline: none; box-shadow: 0 0 0 3px rgba(230,126,34,0.12); }
+            .account-dropdown {
+                position: absolute;
+                right: 0;
+                top: calc(100% + 8px);
+                background: #fff;
+                border-radius: 10px;
+                box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+                min-width: 220px;
+                padding: 6px 0;
+                display: none;
+                opacity: 0;
+                transform: translateY(-6px);
+                transition: opacity 180ms ease, transform 180ms ease;
+                z-index: 1200;
+            }
+            .account-dropdown.show { display: block; opacity: 1; transform: translateY(0); }
+            .account-dropdown li { list-style: none; }
+            .menu-link {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                color: #2c3e50;
+                text-decoration: none;
+                font-weight: 500;
+            }
+            .menu-link:hover { background: #f3f4f6; }
             
         </style>
     </head>
@@ -147,16 +178,22 @@
                 <div class="brand">
                     <a href="index.html">
                         <img
-                            src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9"
+                            src="images/z7212168131815_b1dbb356d9d87f59224f644256cd97e3.jpg"
                             alt="Logo Cà Phê Đậm Đà"
                             class="brand-logo"
+                            style="height: 50px; width: auto;"
                         />
                         <span class="brand-name">Cà Phê Đậm Đà</span>
                     </a>
                 </div>
 
-                <!-- Thanh tìm kiếm -->
-                <form class="search-bar" role="search" id="searchForm">
+                <!-- Ô tìm kiếm -->
+                <form
+                    class="search-bar"
+                    role="search"
+                    id="searchForm"
+                    onsubmit="handleSearch(event)"
+                >
                     <button class="search-btn" type="submit">🔍</button>
                     <input
                         type="text"
@@ -167,51 +204,17 @@
                 </form>
 
                 <nav class="menu" aria-label="Chính">
-                    <a href="index.html">Trang chủ</a>
                     <div class="dropdown">
-                        <a href="products.html" class="active">Sản phẩm</a>
+                        <a href="products.html">Sản phẩm</a>
                         <div class="dropdown-content">
-                            <a href="arabica.html" class="active">Arabica</a>
+                            <a href="arabica.html">Arabica</a>
                             <a href="arabica.html">Robusta</a>
                             <a href="arabica.html">Blend</a>
                         </div>
                     </div>
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
+                    <a href="index.html#loi-ich">Lợi ích</a>
                     <a href="index.html#lien-he">Liên hệ</a>
-
-                    <!-- Tài khoản -->
-                    <div class="account-menu" id="accountMenu">
-                        <div class="account-toggle">
-                            <i class="fa fa-user"></i>
-                            <span id="accountText">Đăng nhập / Đăng ký</span>
-                            <span class="caret">▼</span>
-                        </div>
-                        <ul class="account-dropdown">
-                            <li id="loginItem">
-                                <a href="login.html"
-                                    ><i class="fa fa-sign-in-alt"></i> Đăng
-                                    nhập</a
-                                >
-                            </li>
-                            <li id="registerItem">
-                                <a href="index.html"
-                                    ><i class="fa fa-user-plus"></i> Đăng ký</a
-                                >
-                            </li>
-                            <li id="profileItem" style="display: none">
-                                <a href="profile.html"
-                                    ><i class="fa fa-user-circle"></i> Thông tin
-                                    cá nhân</a
-                                >
-                            </li>
-                            <li id="logoutItem" style="display: none">
-                                <a href="#" id="logoutLink"
-                                    ><i class="fa fa-sign-out-alt"></i> Đăng
-                                    xuất</a
-                                >
-                            </li>
-                        </ul>
-                    </div>
 
                     <!-- Giỏ hàng -->
                     <a href="cart.html" class="badge" aria-label="Giỏ hàng">
@@ -264,20 +267,16 @@
                 <!-- Products grid (static like index.html) -->
                 <section class="product-grid" id="productGrid">
                     <article class="card">
-                        <img
-                            src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1200&auto=format&fit=crop"
-                            alt="Arabica"
-                        />
+                        <img src="images/arabica-premium.svg" alt="Arabica" />
                         <div class="card-body">
                             <span class="chip">Arabica</span>
                             <div class="spacer"></div>
                             <div class="prod">
-                                <img
-                                    src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=300&auto=format&fit=crop"
-                                    alt="Arabica Premium"
-                                />
+                                <a href="product-detail.html" class="product-link">
+                                    <img src="images/arabica-premium.svg" alt="Arabica Premium" />
+                                </a>
                                 <div>
-                                    <h4>Arabica Premium 250g</h4>
+                                    <h4><a href="product-detail.html">Arabica Premium 250g</a></h4>
                                     <div><span class="price">135.000đ</span></div>
                                 </div>
                                 <div class="button-group">
@@ -287,20 +286,16 @@
                         </div>
                     </article>
                     <article class="card">
-                        <img
-                            src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop"
-                            alt="Robusta"
-                        />
+                        <img src="images/robusta-bold.svg" alt="Robusta" />
                         <div class="card-body">
                             <span class="chip">Robusta</span>
                             <div class="spacer"></div>
                             <div class="prod">
-                                <img
-                                    src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=300&auto=format&fit=crop"
-                                    alt="Robusta Bold"
-                                />
+                                <a href="product-detail.html" class="product-link">
+                                    <img src="images/robusta-bold.svg" alt="Robusta Bold" />
+                                </a>
                                 <div>
-                                    <h4>Robusta Bold 500g</h4>
+                                    <h4><a href="product-detail.html">Robusta Bold 500g</a></h4>
                                     <div><span class="price">129.000đ</span></div>
                                 </div>
                                 <div class="button-group">
@@ -310,20 +305,16 @@
                         </div>
                     </article>
                     <article class="card">
-                        <img
-                            src="https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?q=80&w=1200&auto=format&fit=crop"
-                            alt="Blend"
-                        />
+                        <img src="images/signature-blend.svg" alt="Blend" />
                         <div class="card-body">
                             <span class="chip">Signature Blend</span>
                             <div class="spacer"></div>
                             <div class="prod">
-                                <img
-                                    src="https://images.unsplash.com/photo-1442550528053-c431ecb55509?q=80&w=300&auto=format&fit=crop"
-                                    alt="Signature Blend"
-                                />
+                                <a href="product-detail.html" class="product-link">
+                                    <img src="images/signature-blend.svg" alt="Signature Blend" />
+                                </a>
                                 <div>
-                                    <h4>Signature Blend 1kg</h4>
+                                    <h4><a href="product-detail.html">Signature Blend 1kg</a></h4>
                                     <div><span class="price">265.000đ</span></div>
                                 </div>
                                 <div class="button-group">

@@ -128,9 +128,10 @@
                 <div class="brand">
                     <a href="#">
                         <img
-                            src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9"
+                            src="images/z7212168131815_b1dbb356d9d87f59224f644256cd97e3.jpg"
                             alt="Logo Cà Phê Đậm Đà"
                             class="brand-logo"
+                            style="height: 50px; width: auto;"
                         />
                         <span class="brand-name">Cà Phê Đậm Đà</span>
                     </a>
@@ -164,17 +165,13 @@
                     <a href="#ve-chung-toi">Giới thiệu</a>
                     <a href="#loi-ich">Lợi ích</a>
                     <a href="#lien-he">Liên hệ</a>
-                    <!-- Tài khoản -->
-                    <div class="account-menu" id="accountMenu">
-                        <div class="account-toggle" role="button" tabindex="0" aria-expanded="false">
-                            <i class="fa fa-user"></i>
-                            <span id="accountText">Đăng nhập / Đăng ký</span>
-                            <i class="fa fa-caret-down"></i>
-                        </div>
-                        <ul class="account-dropdown" id="accountDropdown" aria-hidden="true">
-                            <!-- Các mục menu sẽ được thêm động bằng JavaScript -->
-                        </ul>
-                    </div>
+                    <!-- Đăng nhập / Đăng ký (prototype) -->
+                    <span class="auth-links" style="display:inline-flex;align-items:center;gap:8px;">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <a href="#" id="showLogin">Đăng nhập</a>
+                        <span style="opacity:.5;">/</span>
+                        <a href="#" id="showRegister">Đăng ký</a>
+                    </span>
 
                     <!-- Giỏ hàng -->
                     <a href="cart.html" class="badge" aria-label="Giỏ hàng">
@@ -236,18 +233,12 @@
                 <p class="section-sub">Chọn loại hạt phù hợp khẩu vị của bạn</p>
                 <div class="grid grid-3">
                     <article class="card">
-                        <img
-                            src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1200&auto=format&fit=crop"
-                            alt="Hạt Arabica"
-                        />
+                        <img src="images/arabica-premium.svg" alt="Hạt Arabica" />
                         <div class="card-body">
                             <span class="chip">Arabica</span>
                             <div class="spacer"></div>
                             <div class="prod">
-                                <img
-                                    src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=300&auto=format&fit=crop"
-                                    alt="Arabica Premium"
-                                />
+                                <img src="images/arabica-premium.svg" alt="Arabica Premium" />
                                 <div>
                                     <h4>
                                         <a href="product-detail.html">Arabica Premium 250g</a>
@@ -268,18 +259,12 @@
                         </div>
                     </article>
                     <article class="card">
-                        <img
-                            src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop"
-                            alt="Hạt Robusta"
-                        />
+                        <img src="images/robusta-bold.svg" alt="Hạt Robusta" />
                         <div class="card-body">
                             <span class="chip">Robusta</span>
                             <div class="spacer"></div>
                             <div class="prod">
-                                <img
-                                    src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=300&auto=format&fit=crop"
-                                    alt="Robusta Bold"
-                                />
+                                <img src="images/robusta-bold.svg" alt="Robusta Bold" />
                                 <div>
                                     <h4>
                                         <a href="product-detail.html">Robusta Bold 500g</a>
@@ -300,20 +285,16 @@
                         </div>
                     </article>
                     <article class="card">
-                        <img
-                            src="https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?q=80&w=1200&auto=format&fit=crop"
-                            alt="Blend"
-                        />
+                        <img src="images/signature-blend.svg" alt="Blend" />
                         <div class="card-body">
                             <span class="chip">Signature Blend</span>
                             <div class="spacer"></div>
                             <div class="prod">
-                                <img
-                                    src="https://images.unsplash.com/photo-1442550528053-c431ecb55509?q=80&w=300&auto=format&fit=crop"
-                                    alt="Signature Blend"
-                                />
+                                <a href="product-detail.html" class="product-link">
+                                    <img src="images/signature-blend.svg" alt="Signature Blend" />
+                                </a>
                                 <div>
-                                    <h4>Signature Blend 1kg</h4>
+                                    <h4><a href="product-detail.html">Signature Blend 1kg</a></h4>
                                     <div>
                                         <span class="price">265.000đ</span>
                                         <span class="strike">299.000đ</span>
@@ -505,19 +486,21 @@
                 width: 100%;
                 height: 100%;
                 background-color: rgba(0, 0, 0, 0.5);
-                z-index: 1000;
+                z-index: 2000;
                 justify-content: center;
                 align-items: center;
             }
 
             .modal-content {
-                background: white;
+                background: #2a1c16; /* coffee tone */
                 padding: 30px;
-                border-radius: 10px;
+                border-radius: 16px;
+                border: 1px solid #4b3429;
                 width: 100%;
-                max-width: 400px;
+                max-width: 420px;
                 position: relative;
-                color: #333;
+                color: #f8f6f2;
+                box-shadow: 0 20px 50px rgba(0,0,0,0.4);
             }
 
             .close-btn {
@@ -526,7 +509,7 @@
                 right: 20px;
                 font-size: 24px;
                 cursor: pointer;
-                color: #666;
+                color: #e0d5cc;
             }
 
             .auth-form {
@@ -535,7 +518,7 @@
 
             .auth-form h3 {
                 margin-top: 0;
-                color: #2c3e50;
+                color: #f8f6f2;
                 text-align: center;
                 margin-bottom: 20px;
             }
@@ -547,43 +530,47 @@
             .form-group label {
                 display: block;
                 margin-bottom: 5px;
-                font-weight: 500;
-                color: #2c3e50;
+                font-weight: 600;
+                color: #e8dfd7;
             }
 
             .form-group input {
                 width: 100%;
                 padding: 10px;
-                border: 1px solid #ddd;
-                border-radius: 5px;
+                border: 1px solid #5b4539;
+                background: #201610;
+                color: #fff;
+                border-radius: 10px;
                 font-size: 14px;
+                outline: none;
+                transition: border-color .2s, box-shadow .2s;
             }
+            .form-group input:focus { border-color: #e6b980; box-shadow: 0 0 0 3px rgba(230,185,128,.15); }
 
             .btn {
                 width: 100%;
                 padding: 12px;
-                background: #e67e22;
-                color: white;
+                background: linear-gradient(135deg,#d1a06f,#b8945f);
+                color: #2a1c16;
                 border: none;
-                border-radius: 5px;
+                border-radius: 10px;
                 font-size: 16px;
                 cursor: pointer;
                 margin-top: 10px;
+                font-weight: 700;
             }
 
-            .btn:hover {
-                background: #d35400;
-            }
+            .btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
 
             .form-footer {
                 text-align: center;
                 margin-top: 15px;
                 font-size: 14px;
-                color: #666;
+                color: #d7cfc8;
             }
 
             .form-footer a {
-                color: #e67e22;
+                color: #e6b980;
                 text-decoration: none;
             }
 
@@ -635,237 +622,52 @@
         </style>
 
         <script>
-            // No-op: Authentication and DB have been removed
-            function initializeDatabase() {}
-
-            // Check authentication status on page load
+            // Prototype-only auth modal: minimal JS (open/close + redirect)
             document.addEventListener('DOMContentLoaded', function() {
-                // Auth removed: just setup UI and listeners
-                updateAuthUI();
-                setupEventListeners();
-                // Clear cart badge for prototype
-                const badge = document.getElementById('cart-badge');
-                if (badge) badge.style.display = 'none';
-            });
-
-            // Giao diện tài khoản luôn ở trạng thái UI (không kiểm tra đăng nhập)
-            function updateAuthUI() {
-                const accountText = document.getElementById('accountText');
-                const accountDropdown = document.getElementById('accountDropdown');
-                if (accountText) accountText.textContent = 'Đăng nhập / Đăng ký';
-                if (accountDropdown) {
-                    accountDropdown.innerHTML = '';
-                    const loginItem = document.createElement('li');
-                    loginItem.innerHTML = `
-                        <a href="#" data-action="show-login" class="menu-link">
-                            <i class="fa fa-sign-in-alt"></i> Đăng nhập
-                        </a>
-                    `;
-                    const registerItem = document.createElement('li');
-                    registerItem.innerHTML = `
-                        <a href="#" data-action="show-register" class="menu-link">
-                            <i class="fa fa-user-plus"></i> Đăng ký
-                        </a>
-                    `;
-                    accountDropdown.appendChild(loginItem);
-                    accountDropdown.appendChild(registerItem);
-                }
-            }
-
-            // Setup event listeners
-            function setupEventListeners() {
-                // Centralized event handling using delegation
-                const accountToggle = document.querySelector('.account-toggle');
                 const modal = document.getElementById('authModal');
                 const closeBtn = document.querySelector('.close-btn');
                 const loginForm = document.getElementById('loginForm');
                 const registerForm = document.getElementById('registerForm');
-
-                // Toggle account dropdown when clicking the account toggle element
-                if (accountToggle) {
-                    accountToggle.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const dropdown = document.getElementById('accountDropdown');
-                        if (dropdown) {
-                            const isShown = dropdown.classList.toggle('show');
-                            accountToggle.setAttribute('aria-expanded', isShown ? 'true' : 'false');
-                            dropdown.setAttribute('aria-hidden', isShown ? 'false' : 'true');
-                        }
-                    });
-                    // allow keyboard toggle with Enter or Space
-                    accountToggle.addEventListener('keydown', function(e) {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                            e.preventDefault();
-                            accountToggle.click();
-                        }
-                    });
-                }
-
-                // Delegated click handler for auth actions and menu items
-                document.addEventListener('click', function(e) {
-                    // 1) Chặn mọi liên kết tới khu vực admin (an toàn trên bản demo)
-                    const anchor = e.target.closest && e.target.closest('a[href]');
-                    if (anchor) {
-                        const href = (anchor.getAttribute('href') || '').trim();
-                        if (/\badmin\b|\/admin\b|admin\.html/i.test(href)) {
-                            e.preventDefault();
-                            alert('Khu vực quản trị không khả dụng trên bản demo.');
-                            return;
-                        }
-                    }
-                    // If click on an element that has data-action attribute or its ancestor
-                    const actionEl = e.target.closest && e.target.closest('[data-action]');
-                    if (actionEl) {
-                        const action = actionEl.getAttribute('data-action');
-                        // Close the account dropdown whenever a menu action is taken
-                        const dropdown = document.getElementById('accountDropdown');
-                        if (dropdown) { dropdown.classList.remove('show'); dropdown.setAttribute('aria-hidden','true'); accountToggle && accountToggle.setAttribute('aria-expanded','false'); }
-
-                        if (action === 'show-login') {
-                            e.preventDefault();
-                            openModal('login');
-                            return;
-                        }
-
-                        if (action === 'show-register') {
-                            e.preventDefault();
-                            openModal('register');
-                            return;
-                        }
-
-                        if (action === 'logout') {
-                            e.preventDefault();
-                            return;
-                        }
-
-                        if (action === 'profile') {
-                            // Cho phép đi tới profile mà không ràng buộc đăng nhập
-                            return;
-                        }
-                    }
-
-                    // Handle clicks on product "Thêm" buttons
-                    const addBtn = e.target.closest && e.target.closest('.add');
-                    if (addBtn) {
-                        e.preventDefault();
-                        
-                        // For prototype: Just show notification without actually adding to cart
-                        const card = addBtn.closest('.card');
-                        const name = addBtn.getAttribute('data-name') || card?.querySelector('.card-title')?.textContent || 'Sản phẩm';
-
-                        // Show prototype notification
-                        const toast = document.createElement('div');
-                        toast.style.position = 'fixed';
-                        toast.style.bottom = '20px';
-                        toast.style.right = '20px';
-                        toast.style.padding = '12px 24px';
-                        toast.style.background = '#4CAF50';
-                        toast.style.color = 'white';
-                        toast.style.borderRadius = '4px';
-                        toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-                        toast.style.zIndex = '1000';
-                        toast.innerHTML = `Đã thêm "${name}" vào giỏ hàng (prototype)`;
-                        document.body.appendChild(toast);
-                        setTimeout(() => { try { toast.remove(); } catch(e){} }, 2500);
-                        return;
-                    }
-
-                    // Close dropdown when clicking outside the account menu
-                    const dropdown = document.getElementById('accountDropdown');
-                    const menu = document.getElementById('accountMenu');
-                    if (dropdown && menu && !menu.contains(e.target)) {
-                        dropdown.classList.remove('show');
-                        accountToggle && accountToggle.setAttribute('aria-expanded','false');
-                    }
-                });
-
-                // Modal open/close helpers (focus management + ESC/outside click)
-                function escHandler(e) {
-                    if (e.key === 'Escape') closeModal();
-                }
-
-                function outsideClickHandler(e) {
-                    if (!e.target.closest('.modal-content')) {
-                        closeModal();
-                    }
-                }
+                const showLogin = document.getElementById('showLogin');
+                const showRegister = document.getElementById('showRegister');
+                const switchToRegister = document.getElementById('switchToRegister');
+                const switchToLogin = document.getElementById('switchToLogin');
 
                 function openModal(mode) {
                     if (!modal) return;
                     modal.classList.add('show');
                     modal.style.display = 'flex';
-                    modal.setAttribute('aria-hidden', 'false');
+                    modal.setAttribute('aria-hidden','false');
                     if (mode === 'register') {
                         if (registerForm) registerForm.style.display = 'block';
                         if (loginForm) loginForm.style.display = 'none';
-                        const first = document.getElementById('regName');
-                        if (first) first.focus();
                     } else {
                         if (loginForm) loginForm.style.display = 'block';
                         if (registerForm) registerForm.style.display = 'none';
-                        const first = document.getElementById('loginEmail');
-                        if (first) first.focus();
                     }
-                    document.addEventListener('keydown', escHandler);
-                    modal.addEventListener('click', outsideClickHandler);
                 }
-
                 function closeModal() {
                     if (!modal) return;
                     modal.classList.remove('show');
                     modal.style.display = 'none';
-                    modal.setAttribute('aria-hidden', 'true');
-                    document.removeEventListener('keydown', escHandler);
-                    modal.removeEventListener('click', outsideClickHandler);
+                    modal.setAttribute('aria-hidden','true');
                 }
 
-                // Close modal when clicking the close button
-                if (closeBtn) {
-                    closeBtn.addEventListener('click', function() {
-                        closeModal();
-                    });
-                }
+                showLogin && showLogin.addEventListener('click', e => { e.preventDefault(); openModal('login'); });
+                showRegister && showRegister.addEventListener('click', e => { e.preventDefault(); openModal('register'); });
+                closeBtn && closeBtn.addEventListener('click', closeModal);
+                window.addEventListener('click', e => { if (e.target === modal) closeModal(); });
 
-                // Switch links inside modal still use IDs; keep them as-is
-                const switchToRegister = document.getElementById('switchToRegister');
-                const switchToLogin = document.getElementById('switchToLogin');
-                if (switchToRegister) {
-                    switchToRegister.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        if (loginForm && registerForm) {
-                            loginForm.style.display = 'none';
-                            registerForm.style.display = 'block';
-                        }
-                    });
-                }
-                if (switchToLogin) {
-                    switchToLogin.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        if (loginForm && registerForm) {
-                            registerForm.style.display = 'none';
-                            loginForm.style.display = 'block';
-                        }
-                    });
-                }
+                switchToRegister && switchToRegister.addEventListener('click', e => { e.preventDefault(); openModal('register'); });
+                switchToLogin && switchToLogin.addEventListener('click', e => { e.preventDefault(); openModal('login'); });
 
-                // Handle login
-                if (loginForm) {
-                    loginForm.addEventListener('submit', function(e) {
-                        e.preventDefault();
-                        // no-op: keep only the form UI
-                    });
-                }
+                loginForm && loginForm.addEventListener('submit', e => { e.preventDefault(); window.location.href = 'index.html'; });
+                registerForm && registerForm.addEventListener('submit', e => { e.preventDefault(); window.location.href = 'index.html'; });
 
-                // Handle registration
-                if (registerForm) {
-                    registerForm.addEventListener('submit', function(e) {
-                        e.preventDefault();
-                        // no-op: keep only the form UI
-                    });
-                }
-
-                // logout/profile handled via delegated click handler (data-action); no auth state
-            }
+                // Hide badge in prototype
+                const badge = document.getElementById('cart-badge');
+                if (badge) badge.style.display = 'none';
+            });
         </script>
 
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>

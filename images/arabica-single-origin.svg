@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <rect width="100%" height="100%" fill="#7a5a42" />
+  <!-- beans cluster -->
+  <g transform="translate(320,220)" fill="#3e2a1f">
+    <ellipse cx="120" cy="80" rx="60" ry="36"/>
+    <ellipse cx="200" cy="140" rx="70" ry="42"/>
+    <ellipse cx="320" cy="100" rx="52" ry="34"/>
+    <ellipse cx="420" cy="170" rx="60" ry="38"/>
+  </g>
+  <!-- cup -->
+  <g transform="translate(480,360)">
+    <ellipse cx="120" cy="120" rx="120" ry="30" fill="#5b3a28" />
+    <path d="M40 20 q0 -40 40 -56 h160 q40 16 40 56 v24 q0 40 -40 40 h-160 q-40 0 -40 -64 z" fill="#fff"/>
+    <ellipse cx="200" cy="20" rx="90" ry="20" fill="#6b3f2b" />
+  </g>
+</svg>

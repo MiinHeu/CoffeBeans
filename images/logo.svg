@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Simple coffee-themed logo (SVG) -->
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="64" viewBox="0 0 240 64" aria-labelledby="title desc" role="img">
+  <title id="title">Cà Phê Đậm Đà</title>
+  <desc id="desc">Logo showing a coffee cup with steam and a coffee bean.</desc>
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1">
+      <stop offset="0" stop-color="#6F4E37" />
+      <stop offset="1" stop-color="#3b2b20" />
+    </linearGradient>
+  </defs>
+  <!-- cup -->
+  <g transform="translate(8,6)">
+    <path d="M12 36c-6 0-10-4-10-9V18h48v9c0 5-4 9-10 9H12z" fill="#f5f1ee" stroke="#d7c5b8" stroke-width="1" />
+    <path d="M50 18h6a6 6 0 0 1 0 12h-6" fill="none" stroke="#d7c5b8" stroke-width="2"/>
+    <ellipse cx="26" cy="36" rx="18" ry="4" fill="url(#g1)" opacity="0.9" />
+    <!-- steam -->
+    <path d="M34 6c2 2 2 6 0 8" stroke="#b08364" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <path d="M40 4c2 2 2 6 0 8" stroke="#b08364" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- bean icon -->
+  <g transform="translate(92,18)">
+    <ellipse cx="8" cy="8" rx="10" ry="6" fill="#5a3d2a" />
+    <path d="M0 8c6-6 12-6 16 0" stroke="#8b5a3a" stroke-width="1" fill="none" stroke-linecap="round"/>
+  </g>
+  <!-- text -->
+  <g transform="translate(116,14)" fill="#3b2b20" font-family="'Playfair Display', serif">
+    <text x="0" y="12" font-size="20" font-weight="700">Cà Phê</text>
+    <text x="0" y="34" font-size="14" font-weight="400">Đậm Đà</text>
+  </g>
+</svg>

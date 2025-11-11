@@ -12,11 +12,143 @@
         />
         <link rel="stylesheet" href="styles/user.css" />
         <link rel="stylesheet" href="styles/header.css" />
-        <!-- Font Awesome -->
-        <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+        <style>
+            /* Login Modal Styles */
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                z-index: 1000;
+                align-items: center;
+                justify-content: center;
+            }
+            .modal-content {
+                background: #18181b;
+                border: 1px solid #3a3a44;
+                border-radius: 20px;
+                width: 90%;
+                max-width: 400px;
+                padding: 30px;
+                position: relative;
+                color: #f5f5f5;
+            }
+            .close-btn {
+                position: absolute;
+                top: 15px;
+                right: 20px;
+                font-size: 24px;
+                cursor: pointer;
+                color: #a1a1aa;
+            }
+            .form-group {
+                margin-bottom: 20px;
+            }
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                color: #e5e5e5;
+                font-weight: 500;
+                font-size: 14px;
+            }
+            .form-group input {
+                width: 100%;
+                padding: 12px 16px;
+                background: #0f0f12;
+                border: 1px solid #3a3a44;
+                border-radius: 12px;
+                color: #fafafa;
+                font-size: 16px;
+                transition: all 0.3s ease;
+                box-sizing: border-box;
+            }
+            .form-group input:focus {
+                outline: none;
+                border-color: #d1a06f;
+                box-shadow: 0 0 0 3px rgba(209, 160, 111, 0.1);
+            }
+            .error {
+                color: #ef4444;
+                font-size: 12px;
+                margin-top: 5px;
+                display: none;
+            }
+            .btn-login {
+                width: 100%;
+                background: linear-gradient(135deg, #d1a06f 0%, #b8945f 100%);
+                color: #2a1c16;
+                border: none;
+                border-radius: 12px;
+                padding: 14px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-top: 10px;
+            }
+            .btn-login:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(209, 160, 111, 0.3);
+            }
+            .toggle-form {
+                text-align: center;
+                margin-top: 15px;
+                color: #a1a1aa;
+                font-size: 14px;
+            }
+            .toggle-form a {
+                color: #d1a06f;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            .toggle-form a:hover {
+                text-decoration: underline;
+            }
+            .success-msg {
+                background: #10b981;
+                color: white;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                text-align: center;
+                display: none;
+            }
+            /* Account dropdown and modal UX improvements */
+            .account-menu { position: relative; }
+            .account-toggle { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; }
+            .account-toggle:focus { outline: none; box-shadow: 0 0 0 3px rgba(230,126,34,0.12); }
+            .account-dropdown {
+                position: absolute;
+                right: 0;
+                top: calc(100% + 8px);
+                background: #fff;
+                border-radius: 10px;
+                box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+                min-width: 220px;
+                padding: 6px 0;
+                display: none;
+                opacity: 0;
+                transform: translateY(-6px);
+                transition: opacity 180ms ease, transform 180ms ease;
+                z-index: 1200;
+            }
+            .account-dropdown.show { display: block; opacity: 1; transform: translateY(0); }
+            .account-dropdown li { list-style: none; }
+            .menu-link {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                color: #2c3e50;
+                text-decoration: none;
+                font-weight: 500;
+            }
+            .menu-link:hover { background: #f3f4f6; }
+        </style>
         <style>
             .filter-panel {
                 background: #fff;
@@ -98,16 +230,22 @@
                 <div class="brand">
                     <a href="index.html">
                         <img
-                            src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9"
+                            src="images/z7212168131815_b1dbb356d9d87f59224f644256cd97e3.jpg"
                             alt="Logo Cà Phê Đậm Đà"
                             class="brand-logo"
+                            style="height: 50px; width: auto;"
                         />
                         <span class="brand-name">Cà Phê Đậm Đà</span>
                     </a>
                 </div>
 
-                <!-- Thanh tìm kiếm -->
-                <form class="search-bar" role="search" id="searchForm">
+                <!-- Ô tìm kiếm -->
+                <form
+                    class="search-bar"
+                    role="search"
+                    id="searchForm"
+                    onsubmit="handleSearch(event)"
+                >
                     <button class="search-btn" type="submit">🔍</button>
                     <input
                         type="text"
@@ -118,9 +256,8 @@
                 </form>
 
                 <nav class="menu" aria-label="Chính">
-                    <a href="index.html">Trang chủ</a>
                     <div class="dropdown">
-                        <a href="#" class="active">Sản phẩm</a>
+                        <a href="products.html">Sản phẩm</a>
                         <div class="dropdown-content">
                             <a href="arabica.html">Arabica</a>
                             <a href="arabica.html">Robusta</a>
@@ -128,41 +265,8 @@
                         </div>
                     </div>
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
+                    <a href="index.html#loi-ich">Lợi ích</a>
                     <a href="index.html#lien-he">Liên hệ</a>
-
-                    <!-- Tài khoản -->
-                    <div class="account-menu" id="accountMenu">
-                        <div class="account-toggle">
-                            <i class="fa fa-user"></i>
-                            <span id="accountText">Đăng nhập / Đăng ký</span>
-                            <span class="caret">▼</span>
-                        </div>
-                        <ul class="account-dropdown">
-                            <li id="loginItem">
-                                <a href="login.html"
-                                    ><i class="fa fa-sign-in-alt"></i> Đăng
-                                    nhập</a
-                                >
-                            </li>
-                            <li id="registerItem">
-                                <a href="index.html"
-                                    ><i class="fa fa-user-plus"></i> Đăng ký</a
-                                >
-                            </li>
-                            <li id="profileItem" style="display: none">
-                                <a href="profile.html"
-                                    ><i class="fa fa-user-circle"></i> Thông tin
-                                    cá nhân</a
-                                >
-                            </li>
-                            <li id="logoutItem" style="display: none">
-                                <a href="#" id="logoutLink"
-                                    ><i class="fa fa-sign-out-alt"></i> Đăng
-                                    xuất</a
-                                >
-                            </li>
-                        </ul>
-                    </div>
 
                     <!-- Giỏ hàng -->
                     <a href="cart.html" class="badge" aria-label="Giỏ hàng">
@@ -398,82 +502,190 @@
                 </form>
             </section>
 
-            <!-- Products grid -->
+            <!-- Products grid (static set of 10 products) -->
             <section class="product-grid" id="productGrid">
+                <!-- 1 -->
                 <article class="card">
-                    <img
-                        src="https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=1200&auto=format&fit=crop"
-                        alt="Arabica"
-                    />
+                    <img src="images/arabica-premium.svg" alt="Arabica" />
                     <div class="card-body">
                         <span class="chip">Arabica</span>
                         <div class="spacer"></div>
                         <div class="prod">
-                            <img
-                                src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=300&auto=format&fit=crop"
-                                alt="Arabica Premium"
-                            />
+                            <a href="product-detail.html" class="product-link"><img src="images/arabica-premium.svg" alt="Arabica Premium" /></a>
                             <div>
-                                <h4>Arabica Premium 250g</h4>
+                                <h4><a href="product-detail.html">Arabica Premium 250g</a></h4>
                                 <div><span class="price">135.000đ</span></div>
                             </div>
-                            <div class="button-group">
-                                <button class="add" data-name="Arabica Premium 250g">Thêm vào giỏ</button>
-                            </div>
+                            <div class="button-group"><button class="add" data-name="Arabica Premium 250g">Thêm vào giỏ</button></div>
                         </div>
                     </div>
                 </article>
+
+                <!-- 2 -->
                 <article class="card">
-                    <img
-                        src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop"
-                        alt="Robusta"
-                    />
+                    <img src="images/robusta-bold.svg" alt="Robusta" />
                     <div class="card-body">
                         <span class="chip">Robusta</span>
                         <div class="spacer"></div>
                         <div class="prod">
-                            <img
-                                src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=300&auto=format&fit=crop"
-                                alt="Robusta Bold"
-                            />
+                            <a href="product-detail.html" class="product-link"><img src="images/robusta-bold.svg" alt="Robusta Bold" /></a>
                             <div>
-                                <h4>Robusta Bold 500g</h4>
+                                <h4><a href="product-detail.html">Robusta Bold 500g</a></h4>
                                 <div><span class="price">129.000đ</span></div>
                             </div>
-                            <div class="button-group">
-                                <button class="add" data-name="Robusta Bold 500g">Thêm vào giỏ</button>
-                            </div>
+                            <div class="button-group"><button class="add" data-name="Robusta Bold 500g">Thêm vào giỏ</button></div>
                         </div>
                     </div>
                 </article>
+
+                <!-- 3 -->
                 <article class="card">
-                    <img
-                        src="https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?q=80&w=1200&auto=format&fit=crop"
-                        alt="Blend"
-                    />
+                    <img src="images/signature-blend.svg" alt="Blend" />
                     <div class="card-body">
-                        <span class="chip">Signature Blend</span>
+                        <span class="chip">Blend</span>
                         <div class="spacer"></div>
                         <div class="prod">
-                            <img
-                                src="https://images.unsplash.com/photo-1442550528053-c431ecb55509?q=80&w=300&auto=format&fit=crop"
-                                alt="Signature Blend"
-                            />
+                            <a href="product-detail.html" class="product-link"><img src="images/signature-blend.svg" alt="Signature Blend" /></a>
                             <div>
-                                <h4>Signature Blend 1kg</h4>
+                                <h4><a href="product-detail.html">Signature Blend 1kg</a></h4>
                                 <div><span class="price">265.000đ</span></div>
                             </div>
-                            <div class="button-group">
-                                <button class="add" data-name="Signature Blend 1kg">Thêm vào giỏ</button>
+                            <div class="button-group"><button class="add" data-name="Signature Blend 1kg">Thêm vào giỏ</button></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 4 -->
+                <article class="card">
+                    <img src="images/arabica-single-origin.svg" alt="Arabica Single Origin" />
+                    <div class="card-body">
+                        <span class="chip">Arabica</span>
+                        <div class="spacer"></div>
+                        <div class="prod">
+                            <a href="product-detail.html" class="product-link"><img src="images/arabica-single-origin.svg" alt="Arabica Single Origin" /></a>
+                            <div>
+                                <h4><a href="product-detail.html">Arabica Single Origin 500g</a></h4>
+                                <div><span class="price">240.000đ</span></div>
                             </div>
+                            <div class="button-group"><button class="add" data-name="Arabica Single Origin 500g">Thêm vào giỏ</button></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 5 -->
+                <article class="card">
+                    <img src="images/robusta-espresso.svg" alt="Robusta Espresso" />
+                    <div class="card-body">
+                        <span class="chip">Robusta</span>
+                        <div class="spacer"></div>
+                        <div class="prod">
+                            <a href="product-detail.html" class="product-link"><img src="images/robusta-espresso.svg" alt="Robusta Espresso" /></a>
+                            <div>
+                                <h4><a href="product-detail.html">Robusta Espresso 250g</a></h4>
+                                <div><span class="price">110.000đ</span></div>
+                            </div>
+                            <div class="button-group"><button class="add" data-name="Robusta Espresso 250g">Thêm vào giỏ</button></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 6 -->
+                <article class="card">
+                    <img src="images/blend-morning.svg" alt="Blend Morning Roast" />
+                    <div class="card-body">
+                        <span class="chip">Blend</span>
+                        <div class="spacer"></div>
+                        <div class="prod">
+                            <a href="product-detail.html" class="product-link"><img src="images/blend-morning.svg" alt="Blend Morning Roast" /></a>
+                            <div>
+                                <h4><a href="product-detail.html">Blend Morning Roast 250g</a></h4>
+                                <div><span class="price">98.000đ</span></div>
+                            </div>
+                            <div class="button-group"><button class="add" data-name="Blend Morning Roast 250g">Thêm vào giỏ</button></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 7 -->
+                <article class="card">
+                    <img src="images/arabica-decaf.svg" alt="Arabica Decaf" />
+                    <div class="card-body">
+                        <span class="chip">Arabica</span>
+                        <div class="spacer"></div>
+                        <div class="prod">
+                            <a href="product-detail.html" class="product-link"><img src="images/arabica-decaf.svg" alt="Arabica Decaf" /></a>
+                            <div>
+                                <h4><a href="product-detail.html">Arabica Decaf 250g</a></h4>
+                                <div><span class="price">150.000đ</span></div>
+                            </div>
+                            <div class="button-group"><button class="add" data-name="Arabica Decaf 250g">Thêm vào giỏ</button></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 8 -->
+                <article class="card">
+                    <img src="images/robusta-1kg.svg" alt="Robusta 1kg" />
+                    <div class="card-body">
+                        <span class="chip">Robusta</span>
+                        <div class="spacer"></div>
+                        <div class="prod">
+                            <a href="product-detail.html" class="product-link"><img src="images/robusta-1kg.svg" alt="Robusta 1kg" /></a>
+                            <div>
+                                <h4><a href="product-detail.html">Robusta Robby 1kg</a></h4>
+                                <div><span class="price">230.000đ</span></div>
+                            </div>
+                            <div class="button-group"><button class="add" data-name="Robusta Robby 1kg">Thêm vào giỏ</button></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 9 -->
+                <article class="card">
+                    <img src="images/blend-dark.svg" alt="Blend Dark Roast" />
+                    <div class="card-body">
+                        <span class="chip">Blend</span>
+                        <div class="spacer"></div>
+                        <div class="prod">
+                            <a href="product-detail.html" class="product-link"><img src="images/blend-dark.svg" alt="Blend Dark Roast" /></a>
+                            <div>
+                                <h4><a href="product-detail.html">Blend Dark Roast 500g</a></h4>
+                                <div><span class="price">180.000đ</span></div>
+                            </div>
+                            <div class="button-group"><button class="add" data-name="Blend Dark Roast 500g">Thêm vào giỏ</button></div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 10 -->
+                <article class="card">
+                    <img src="images/arabica-estate.svg" alt="Arabica Estate 1kg" />
+                    <div class="card-body">
+                        <span class="chip">Arabica</span>
+                        <div class="spacer"></div>
+                        <div class="prod">
+                            <a href="product-detail.html" class="product-link"><img src="images/arabica-estate.svg" alt="Arabica Estate" /></a>
+                            <div>
+                                <h4><a href="product-detail.html">Arabica Estate 1kg</a></h4>
+                                <div><span class="price">420.000đ</span></div>
+                            </div>
+                            <div class="button-group"><button class="add" data-name="Arabica Estate 1kg">Thêm vào giỏ</button></div>
                         </div>
                     </div>
                 </article>
             </section>
 
-            <!-- Pagination -->
-            <div id="pagination" class="pagination"></div>
+            <!-- Static (non-functional) pagination UI -->
+            <nav aria-label="Phân trang" style="text-align:center;margin-top:24px;">
+                <a href="#" style="margin:0 6px;padding:8px 12px;border-radius:6px;border:1px solid #ddd;color:#666;text-decoration:none;">«</a>
+                <a href="#" style="margin:0 6px;padding:8px 12px;border-radius:6px;border:1px solid var(--coffee);background:var(--coffee);color:#fff;text-decoration:none;font-weight:600;">1</a>
+                <a href="#" style="margin:0 6px;padding:8px 12px;border-radius:6px;border:1px solid #ddd;color:#666;text-decoration:none;">2</a>
+                <a href="#" style="margin:0 6px;padding:8px 12px;border-radius:6px;border:1px solid #ddd;color:#666;text-decoration:none;">3</a>
+                <a href="#" style="margin:0 6px;padding:8px 12px;border-radius:6px;border:1px solid #ddd;color:#666;text-decoration:none;">»</a>
+            </nav>
         </main>
+
+        
 
         <!-- Footer -->
         <footer id="lien-he">
@@ -500,743 +712,11 @@
         </footer>
 
         <script type="module">
-            import {
-                Products,
-                Types,
-                getSellPrice,
-                computeStock,
-            } from "./scripts/db.js";
-            import {
-                initHeader,
-                getCartSafe as getCart,
-                setCartSafe as setCart,
-                updateCartBadge,
-                openCart,
-                closeCart,
-                toggleCart,
-            } from "./scripts/header.js";
-            import { session } from "./scripts/utils.js";
-
-            function formatCurrency(v) {
-                return new Intl.NumberFormat("vi-VN").format(v);
-            }
-            // Track current stock levels
-            let productStocks = new Map();
-
-            // Initialize stock levels
-            function updateStockLevels() {
-                const stockMap = computeStock();
-                productStocks = stockMap;
-                return stockMap;
-            }
-
-            // Get available stock for a product
-            function getAvailableStock(productId) {
-                return productStocks.get(productId) || 0;
-            }
-
-            // Check if a product is in stock
-            function isInStock(productId, quantity = 1) {
-                return getAvailableStock(productId) >= quantity;
-            }
-
-            // Initialize stock levels when the page loads
-            updateStockLevels();
-
-            // Force update stock after a short delay to ensure data is loaded
-            setTimeout(() => {
-                updateStockLevels();
-                renderProducts();
-            }, 500);
-
-            // Update stock levels periodically to reflect changes
-            setInterval(() => {
-                updateStockLevels();
-                renderProducts();
-            }, 3000);
-
-            // Listen for stock update events (e.g., after order placement)
-            window.addEventListener("stockUpdated", () => {
-                updateStockLevels();
-                renderProducts();
-                console.log("Stock updated in products page");
-            });
-
-            function renderCart() {
-                const c = getCart();
-                const box = document.getElementById("cartItems");
-                const sub = document.getElementById("cartSubtotal");
-                if (!box || !sub) return;
-
-                if (c.length === 0) {
-                    box.innerHTML = "<p>Giỏ hàng trống.</p>";
-                    sub.textContent = "0đ";
-                    return;
-                }
-
-                // Check stock for all items in cart
-                let hasOutOfStockItems = false;
-                const cartWithStock = c.map((item) => {
-                    const available = getAvailableStock(item.id);
-                    const isAvailable = available >= item.quantity;
-                    if (!isAvailable) hasOutOfStockItems = true;
-                    return { ...item, available, isAvailable };
-                });
-
-                box.innerHTML = cartWithStock
-                    .map(
-                        (item) => `
-                    <div class="cart-item" data-id="${
-                        item.id
-                    }" style="padding:12px 0; border-bottom:1px solid #f2f2f2;">
-                        <div style="display:flex; align-items:start; justify-content: space-between; gap:10px;">
-                            <div style="flex:1; min-width:0;">
-                                <div style="font-weight:600;${
-                                    !item.isAvailable ? " color:#f44336;" : ""
-                                }">
-                                    ${item.name}
-                                    ${
-                                        !item.isAvailable
-                                            ? '<span style="color:#f44336; font-size:12px; margin-left:8px;">(Hết hàng)</span>'
-                                            : ""
-                                    }
-                                </div>
-                                <div style="font-size:12px; color:#666; margin:4px 0;">
-                                    Còn lại: ${item.available} sản phẩm
-                                </div>
-                                <div style="display:flex; align-items:center; gap:6px; color:#888; font-size:12px; margin-top:4px;">
-                                    <span style="color:#999;">✎</span>
-                                    <input class="note-input" type="text" placeholder="Không có ghi chú" value="${
-                                        item.note || ""
-                                    }" style="flex:1; min-width:0; border:none; border-bottom:1px dashed #e0e0e0; padding:4px 0; outline:none;" />
-                                </div>
-                                <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
-                                    <button class="qty-dec" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;${
-                                        !item.isAvailable ? " opacity:0.5;" : ""
-                                    }" ${
-                            !item.isAvailable ? "disabled" : ""
-                        }>-</button>
-                                    <input class="qty-input" type="number" min="1" max="${
-                                        item.available
-                                    }" value="${
-                            item.quantity
-                        }" style="width:48px; text-align:center; border:1px solid #ddd; height:28px;" ${
-                            !item.isAvailable ? "disabled" : ""
-                        } />
-                                    <button class="qty-inc" style="width:28px; height:28px; border:1px solid #ddd; background:#fff;${
-                                        !item.isAvailable ? " opacity:0.5;" : ""
-                                    }" ${
-                            !item.isAvailable ? "disabled" : ""
-                        }>+</button>
-                                    <button class="remove-item" style="margin-left:8px; background:#fff; border:1px solid #f2d7d7; color:#c62828; cursor:pointer; height:28px; padding:0 10px; border-radius:6px;">Xóa</button>
-                                </div>
-                            </div>
-                            <div style="min-width:100px; text-align:right; font-weight:600; color:${
-                                item.isAvailable ? "#c62828" : "#999"
-                            };">
-                                ${formatCurrency(item.price * item.quantity)}đ
-                            </div>
-                        </div>
-                    </div>`
-                    )
-                    .join("");
-
-                const total = c.reduce((s, i) => s + i.price * i.quantity, 0);
-                sub.textContent = `${formatCurrency(total)}đ`;
-
-                // Disable checkout button if any items are out of stock
-                const checkoutBtn = document.getElementById("checkoutBtn");
-                if (checkoutBtn) {
-                    checkoutBtn.disabled = hasOutOfStockItems;
-                    if (hasOutOfStockItems) {
-                        checkoutBtn.title =
-                            "Vui lòng xóa sản phẩm hết hàng trước khi thanh toán";
-                    } else {
-                        checkoutBtn.title = "";
-                    }
-                }
-
-                // Add event listeners
-                box.querySelectorAll(".qty-dec").forEach((b) =>
-                    b.addEventListener("click", onDec)
-                );
-                box.querySelectorAll(".qty-inc").forEach((b) =>
-                    b.addEventListener("click", onInc)
-                );
-                box.querySelectorAll(".qty-input").forEach((i) =>
-                    i.addEventListener("change", onChange)
-                );
-                box.querySelectorAll(".remove-item").forEach((b) =>
-                    b.addEventListener("click", onRemove)
-                );
-                box.querySelectorAll(".note-input").forEach((inp) =>
-                    inp.addEventListener("change", onChangeNote)
-                );
-            }
-            function onDec(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const c = getCart();
-                const it = c.find((i) => i.id === id);
-                if (!it) return;
-                it.quantity = Math.max(1, it.quantity - 1);
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-            function onInc(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const c = getCart();
-                const it = c.find((i) => i.id === id);
-                if (!it) return;
-                it.quantity += 1;
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-            function onChange(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const v = Math.max(1, parseInt(e.target.value || "1", 10));
-                const c = getCart();
-                const it = c.find((i) => i.id === id);
-                if (!it) return;
-                it.quantity = v;
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-            function onRemove(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                const c = getCart().filter((i) => i.id !== id);
-                setCart(c);
-                updateCartBadge();
-                renderCart();
-            }
-            function onChangeNote(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                if (!id) return;
-                const c = getCart();
-                const it = c.find((i) => i.id === id);
-                if (!it) return;
-                it.note = e.target.value.trim();
-                setCart(c);
-            }
-
-            // Constants
-            const ITEMS_PER_PAGE = 6;
-            let currentPage = 1;
-            let filteredProducts = [];
-
-            // Initialize
-            function init() {
-                // Get search query from URL if exists
-                const params = new URLSearchParams(window.location.search);
-                const searchQuery = params.get("search");
-                if (searchQuery) {
-                    // Set search input value
-                    document.getElementById("searchInput").value = searchQuery;
-                    // Apply search filter
-                    loadProducts({ search: searchQuery });
-                } else {
-                    loadProducts();
-                }
-                setupEventListeners();
-            }
-
-            // Load and render products
-            function loadProducts(filters = {}) {
-                const products = Products.list().filter((p) => !p.hidden);
-
-                // Apply filters
-                filteredProducts = products.filter((product) => {
-                    let matchesSearch = true;
-                    let matchesCategory = true;
-                    let matchesPrice = true;
-
-                    // Search filter
-                    if (filters.search) {
-                        const searchTerm = filters.search.toLowerCase();
-                        const productName = product.name.toLowerCase();
-                        const productCode = product.code.toLowerCase();
-                        const productType =
-                            Types.list()
-                                .find((t) => t.id === product.typeId)
-                                ?.name.toLowerCase() || "";
-                        matchesSearch =
-                            productName.includes(searchTerm) ||
-                            productCode.includes(searchTerm) ||
-                            productType.includes(searchTerm);
-                    }
-
-                    // Category filter
-                    if (filters.category) {
-                        matchesCategory = product.typeId === filters.category;
-                    }
-
-                    // Price range filter
-                    if (filters.priceRange) {
-                        const price = getSellPrice(product.id).price;
-                        const [min, max] = filters.priceRange.split("-");
-
-                        if (min === "0") {
-                            matchesPrice = price <= Number(max);
-                        } else if (max === "up") {
-                            matchesPrice = price >= Number(min);
-                        } else {
-                            matchesPrice =
-                                price >= Number(min) && price <= Number(max);
-                        }
-                    }
-
-                    return matchesSearch && matchesCategory && matchesPrice;
-                });
-
-                // Apply sorting
-                if (filters.sort) {
-                    filteredProducts.sort((a, b) => {
-                        switch (filters.sort) {
-                            case "price-asc":
-                                return (
-                                    getSellPrice(a.id).price -
-                                    getSellPrice(b.id).price
-                                );
-                            case "price-desc":
-                                return (
-                                    getSellPrice(b.id).price -
-                                    getSellPrice(a.id).price
-                                );
-                            case "name-asc":
-                                return a.name.localeCompare(b.name);
-                            case "name-desc":
-                                return b.name.localeCompare(a.name);
-                            default:
-                                return 0;
-                        }
-                    });
-                }
-
-                renderProducts();
-                renderPagination();
-            }
-
-            // Render products for current page
-            function renderProducts() {
-                const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-                const endIndex = startIndex + ITEMS_PER_PAGE;
-                const pageProducts = filteredProducts.slice(
-                    startIndex,
-                    endIndex
-                );
-
-                const grid = document.getElementById("productGrid");
-
-                if (pageProducts.length === 0) {
-                    grid.innerHTML =
-                        '<div class="no-results">Không tìm thấy sản phẩm phù hợp</div>';
-                    return;
-                }
-
-                grid.innerHTML = pageProducts
-                    .map((product) => {
-                        const priceInfo = getSellPrice(product.id);
-                        const availableStock = getAvailableStock(product.id);
-                        const isAvailable = availableStock > 0;
-                        const stockStatus = isAvailable
-                            ? `<span style="color:#4caf50; font-size:0.9em;">Còn ${availableStock} sản phẩm</span>`
-                            : '<span style="color:#f44336; font-size:0.9em;">Tạm hết hàng</span>';
-
-                        return `
-                    <article class="card" onclick="window.location.href='product-detail.html?id=${
-                        product.id
-                    }'" style="cursor: pointer; position: relative;">
-                        ${
-                            !isAvailable
-                                ? '<div style="position: absolute; top: 10px; left: 10px; background: rgba(244, 67, 54, 0.9); color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold;">HẾT HÀNG</div>'
-                                : ""
-                        }
-                        <img src="${
-                            product.image ||
-                            "https://via.placeholder.com/400x300?text=No+Image"
-                        }" 
-                             alt="${product.name}"
-                             style="${!isAvailable ? "opacity: 0.7;" : ""}">
-                        <div class="card-body">
-                            <span class="chip">${getTypeName(
-                                product.typeId
-                            )}</span>
-                            <div class="spacer"></div>
-                            <div class="prod">
-                                <div>
-                                    <h4>${product.name}</h4>
-                                    <p class="description">${
-                                        product.desc || ""
-                                    }</p>
-                                    <div style="margin: 8px 0;">
-                                        ${stockStatus}
-                                    </div>
-                                    <div>
-                                        <span class="price">${formatCurrency(
-                                            priceInfo.price
-                                        )}đ</span>
-                                    </div>
-                                </div>
-                                <div class="button-group">
-                                    <button class="add" 
-                                            data-id="${product.id}" 
-                                            data-name="${product.name}" 
-                                            data-price="${priceInfo.price}"
-                                            onclick="event.stopPropagation(); ${
-                                                isAvailable
-                                                    ? "addToCart(this);"
-                                                    : ""
-                                            }"
-                                            ${
-                                                !isAvailable
-                                                    ? 'disabled style="opacity: 0.6; cursor: not-allowed;"'
-                                                    : ""
-                                            }>
-                                        ${
-                                            isAvailable
-                                                ? "Thêm vào giỏ"
-                                                : "Hết hàng"
-                                        }
-                                    </button>
-                                    <button class="buy-now" 
-                                            data-id="${product.id}"
-                                            onclick="event.stopPropagation(); ${
-                                                isAvailable
-                                                    ? `buyNow(event, '${product.id}');`
-                                                    : ""
-                                            }"
-                                            ${
-                                                !isAvailable
-                                                    ? 'disabled style="opacity: 0.6; cursor: not-allowed;"'
-                                                    : ""
-                                            }>
-                                        Mua ngay
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                `;
-                    })
-                    .join("");
-            }
-
-            // Render pagination
-            function renderPagination() {
-                const totalPages = Math.ceil(
-                    filteredProducts.length / ITEMS_PER_PAGE
-                );
-                const pagination = document.getElementById("pagination");
-
-                let html = "";
-
-                // Previous button
-                html += `<button ${
-                    currentPage === 1 ? "disabled" : ""
-                } data-page="${currentPage - 1}">&lt;</button>`;
-
-                // Page numbers
-                for (let i = 1; i <= totalPages; i++) {
-                    html += `<button class="${
-                        currentPage === i ? "active" : ""
-                    }" data-page="${i}">${i}</button>`;
-                }
-
-                // Next button
-                html += `<button ${
-                    currentPage === totalPages ? "disabled" : ""
-                } data-page="${currentPage + 1}">&gt;</button>`;
-
-                pagination.innerHTML = html;
-            }
-
-            // Event Listeners
-            function setupEventListeners() {
-                // Filter form submit
-                document
-                    .getElementById("filterForm")
-                    .addEventListener("submit", (e) => {
-                        e.preventDefault();
-                        applyFilters();
-                    });
-
-                // Filter form reset
-                document
-                    .getElementById("filterForm")
-                    .addEventListener("reset", () => {
-                        setTimeout(() => {
-                            applyFilters();
-                        }, 0);
-                    });
-
-                // Search form submit
-                document
-                    .getElementById("searchForm")
-                    .addEventListener("submit", (e) => {
-                        e.preventDefault();
-                        applyFilters();
-                    });
-
-                // Pagination clicks
-                document
-                    .getElementById("pagination")
-                    .addEventListener("click", (e) => {
-                        const button = e.target.closest("button");
-                        if (button && !button.disabled) {
-                            currentPage = parseInt(button.dataset.page);
-                            renderProducts();
-                            renderPagination();
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                        }
-                    });
-            }
-
-            // Apply all filters
-            function applyFilters() {
-                const filters = {
-                    category: document.getElementById("category").value,
-                    priceRange: document.getElementById("priceRange").value,
-                    search: document.getElementById("searchInput").value.trim(),
-                    sort: document.getElementById("sort").value,
-                };
-
-                currentPage = 1;
-                loadProducts(filters);
-            }
-
-            // Utility functions
-            function getTypeName(typeId) {
-                const type = Types.list().find((t) => t.id === typeId);
-                return type ? type.name : "";
-            }
-
-            // Check if user is logged in
-            function checkAuth() {
-                return localStorage.getItem("user_id") !== null;
-            }
-
-            // Show login required message and redirect to login page
-            function showLoginRequired(returnUrl = window.location.href) {
-                if (
-                    confirm(
-                        "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng. Bạn có muốn đăng nhập ngay bây giờ?"
-                    )
-                ) {
-                    window.location.href = `login.html?redirect=${encodeURIComponent(
-                        returnUrl
-                    )}`;
-                }
-            }
-
-            // Add to cart function with login check (aligned with arabica.html)
-            function addToCart(buttonOrData) {
-                if (!requireLogin()) return false;
-                const productId = buttonOrData.dataset
-                    ? buttonOrData.dataset.id
-                    : buttonOrData.id;
-                const product = Products.list().find((p) => p.id === productId);
-                if (!product) return false;
-                if (!isInStock(productId, 1)) return false;
-
-                const cart = getCart();
-                const existing = cart.find((i) => i.id === productId);
-                const available = getAvailableStock(productId);
-
-                if (existing) {
-                    existing.quantity = Math.min(
-                        available,
-                        (existing.quantity || 1) + 1
-                    );
-                } else {
-                    cart.push({
-                        id: productId,
-                        name: product.name,
-                        price: getSellPrice(productId).price,
-                        quantity: 1,
-                        image: product.image || "",
-                    });
-                }
-
-                setCart(cart);
-                updateCartBadge();
-                renderCart();
-                if (buttonOrData.dataset) showAddedToCart(buttonOrData);
-                return true;
-            }
-            window.addToCart = addToCart;
-
-            // Buy now with inventory validation
-            // Buy now function with login check
-            function buyNow(event, productId) {
-                event.stopPropagation();
-
-                // Require login, redirect back to cart similar to arabica
-                if (!requireLogin("cart.html")) return;
-
-                // Ensure product exists and in stock before proceeding
-                const product = Products.list().find((p) => p.id === productId);
-                if (!product) return;
-                if (!isInStock(productId, 1)) return;
-
-                // Add to cart and redirect to cart page (align with arabica)
-                addToCart({ id: productId });
-                window.location.href = "cart.html";
-            }
-            window.buyNow = buyNow;
-
-            // Show added to cart feedback
-            function showAddedToCart(button) {
-                const original = button.textContent;
-                button.textContent = "Đã thêm";
-                button.disabled = true;
-                setTimeout(() => {
-                    button.textContent = original;
-                    button.disabled = false;
-                }, 2000);
-            }
-
-            // Show toast message
-            function showToast(message, type = "info") {
-                // Check if toast container exists, if not create it
-                let container = document.getElementById("toast-container");
-                if (!container) {
-                    container = document.createElement("div");
-                    container.id = "toast-container";
-                    container.style.position = "fixed";
-                    container.style.bottom = "20px";
-                    container.style.right = "20px";
-                    container.style.zIndex = "1000";
-                    document.body.appendChild(container);
-                }
-
-                // Create toast element
-                const toast = document.createElement("div");
-                toast.className = `toast toast-${type}`;
-                toast.style.padding = "12px 24px";
-                toast.style.marginBottom = "10px";
-                toast.style.borderRadius = "4px";
-                toast.style.background =
-                    type === "success"
-                        ? "#4caf50"
-                        : type === "error"
-                        ? "#f44336"
-                        : "#2196f3";
-                toast.style.color = "white";
-                toast.style.boxShadow = "0 2px 5px rgba(0,0,0,0.2)";
-                toast.style.opacity = "0";
-                toast.style.transform = "translateY(20px)";
-                toast.style.transition = "opacity 0.3s, transform 0.3s";
-                toast.textContent = message;
-
-                // Add to container
-                container.appendChild(toast);
-
-                // Trigger reflow
-                setTimeout(() => {
-                    toast.style.opacity = "1";
-                    toast.style.transform = "translateY(0)";
-                }, 10);
-
-                // Remove after delay
-                setTimeout(() => {
-                    toast.style.opacity = "0";
-                    toast.style.transform = "translateY(-20px)";
-                    setTimeout(() => {
-                        container.removeChild(toast);
-                    }, 300);
-                }, 3000);
-            }
-
-            // Auth guard
-            function requireLogin(redirectUrl = window.location.href) {
-                if (!session.isLoggedIn()) {
-                    if (
-                        confirm(
-                            "Vui lòng đăng nhập để tiếp tục. Chuyển sang trang đăng nhập?"
-                        )
-                    ) {
-                        window.location.href = `login.html?redirect=${encodeURIComponent(
-                            redirectUrl
-                        )}`;
-                    }
-                    return false;
-                }
-                return true;
-            }
-
-            // Auth header UI
-            function updateAuthUI() {
-                const accountText = document.getElementById("accountText");
-                const loginItem = document.getElementById("loginItem");
-                const registerItem = document.getElementById("registerItem");
-                const profileItem = document.getElementById("profileItem");
-                const logoutItem = document.getElementById("logoutItem");
-                if (!accountText) return;
-                if (session.isLoggedIn()) {
-                    const user = session.getUser();
-                    accountText.textContent = `Xin chào, ${user.name}`;
-                    if (loginItem) loginItem.style.display = "none";
-                    if (registerItem) registerItem.style.display = "none";
-                    if (profileItem) profileItem.style.display = "block";
-                    if (logoutItem) logoutItem.style.display = "block";
-                } else {
-                    accountText.textContent = "Đăng nhập / Đăng ký";
-                    if (loginItem) loginItem.style.display = "block";
-                    if (registerItem) registerItem.style.display = "block";
-                    if (profileItem) profileItem.style.display = "none";
-                    if (logoutItem) logoutItem.style.display = "none";
-                }
-            }
-            updateAuthUI();
-            document
-                .getElementById("logoutLink")
-                ?.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-                        session.logout();
-                        updateAuthUI();
-                        updateCartBadge(); // Update cart badge after logout
-                    }
-                });
-
-            // Initialize the page
+            import { initHeader } from "./scripts/header.js";
             window.CART_MODE = "navigate";
-            initHeader();
+            document.addEventListener('DOMContentLoaded', () => { initHeader(); });
         </script>
-        <script>
-            function getCurrentUser(){ try { return JSON.parse(localStorage.getItem('currentUser')||'null'); } catch { return null; } }
-            function updateAuthUI(){
-                const user = getCurrentUser();
-                const accountText = document.getElementById('accountText');
-                const loginItem = document.getElementById('loginItem');
-                const registerItem = document.getElementById('registerItem');
-                const profileItem = document.getElementById('profileItem');
-                const logoutItem = document.getElementById('logoutItem');
-                if (user){
-                    if (accountText) accountText.textContent = user.name || 'Tài khoản';
-                    if (loginItem) loginItem.style.display = 'none';
-                    if (registerItem) registerItem.style.display = 'none';
-                    if (profileItem) profileItem.style.display = 'block';
-                    if (logoutItem) logoutItem.style.display = 'block';
-                } else {
-                    if (accountText) accountText.textContent = 'Đăng nhập / Đăng ký';
-                    if (loginItem) loginItem.style.display = 'block';
-                    if (registerItem) registerItem.style.display = 'block';
-                    if (profileItem) profileItem.style.display = 'none';
-                    if (logoutItem) logoutItem.style.display = 'none';
-                }
-            }
-            document.addEventListener('DOMContentLoaded', function(){
-                updateAuthUI();
-                const toggle = document.querySelector('.account-toggle');
-                const dropdown = document.querySelector('.account-dropdown');
-                toggle && toggle.addEventListener('click', function(e){ e.preventDefault(); dropdown && dropdown.classList.toggle('show'); });
-                document.getElementById('logoutLink') && document.getElementById('logoutLink').addEventListener('click', function(e){ e.preventDefault(); localStorage.removeItem('currentUser'); updateAuthUI(); });
-                document.addEventListener('click', function(e){ const menu = document.getElementById('accountMenu'); if(menu && !menu.contains(e.target)){ dropdown && dropdown.classList.remove('show'); } });
-            });
-        </script>
+        
         <script>
             // Prototype parity with index.html: hide badge number and show inline toast on add
             document.addEventListener('DOMContentLoaded', function() {
@@ -1246,14 +726,6 @@
                 document.addEventListener('click', function(e) {
                     const addBtn = e.target.closest && e.target.closest('.add');
                     if (addBtn) {
-                        // Check login requirement
-                        const user = JSON.parse(localStorage.getItem('currentUser'));
-                        if (!user) {
-                            alert('Vui lòng đăng nhập để sử dụng giỏ hàng');
-                            openModal && openModal('login');
-                            return;
-                        }
-
                         // For prototype: Just show notification without actually adding to cart
                         const card = addBtn.closest('.card');
                         const name = addBtn.getAttribute('data-name') || card?.querySelector('.card-title')?.textContent || 'Sản phẩm';

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <rect width="100%" height="100%" fill="#7a5238" />
+  <!-- estate landscape + cup -->
+  <g transform="translate(120,120)">
+    <rect x="40" y="320" width="1020" height="240" rx="20" fill="#3e2a1f" opacity="0.12" />
+    <path d="M160 300 q80 -120 240 -120 q160 0 240 120" fill="#6b4330" opacity="0.14" />
+    <g transform="translate(420,360)">
+      <ellipse cx="160" cy="160" rx="160" ry="32" fill="#5b3a28" opacity="0.9" />
+      <path d="M40 40 q0 -36 36 -50 h152 q36 14 36 50 v18 q0 36 -36 36 h-152 q-36 0 -36 -54 z" fill="#fff"/>
+      <ellipse cx="200" cy="40" rx="96" ry="22" fill="#5b3a28"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <rect width="100%" height="100%" fill="#5a3e2b" />
+  <!-- espresso shot -->
+  <g transform="translate(420,260)">
+    <rect x="40" y="0" width="220" height="340" rx="20" fill="#fff" />
+    <rect x="80" y="30" width="140" height="80" rx="10" fill="#6b3f2b" />
+    <ellipse cx="150" cy="70" rx="60" ry="16" fill="#5a3322" />
+  </g>
+  <!-- cup saucer -->
+  <ellipse cx="600" cy="560" rx="280" ry="56" fill="#2b1a12" opacity="0.14" />
+</svg>

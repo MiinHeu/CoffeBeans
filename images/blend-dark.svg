@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <rect width="100%" height="100%" fill="#4b3429" />
+  <!-- dark roast cup -->
+  <g transform="translate(420,300)">
+    <ellipse cx="160" cy="220" rx="160" ry="36" fill="#2b1a12" opacity="0.14" />
+    <path d="M40 80 q0 -44 44 -68 h152 q44 24 44 68 v30 q0 44 -44 44 h-152 q-44 0 -44 -74 z" fill="#fff" />
+    <ellipse cx="200" cy="80" rx="110" ry="26" fill="#3f281b" />
+    <path d="M140 30 q8 -30 22 -40 q14 -10 28 4" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0.8"/>
+  </g>
+</svg>

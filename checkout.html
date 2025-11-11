@@ -425,6 +425,37 @@
             .checkout-section {
                 animation: fadeIn 0.3s ease-out;
             }
+            /* Account dropdown and modal UX improvements */
+            .account-menu { position: relative; }
+            .account-toggle { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; }
+            .account-toggle:focus { outline: none; box-shadow: 0 0 0 3px rgba(230,126,34,0.12); }
+            .account-dropdown {
+                position: absolute;
+                right: 0;
+                top: calc(100% + 8px);
+                background: #fff;
+                border-radius: 10px;
+                box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+                min-width: 220px;
+                padding: 6px 0;
+                display: none;
+                opacity: 0;
+                transform: translateY(-6px);
+                transition: opacity 180ms ease, transform 180ms ease;
+                z-index: 1200;
+            }
+            .account-dropdown.show { display: block; opacity: 1; transform: translateY(0); }
+            .account-dropdown li { list-style: none; }
+            .menu-link {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                color: #2c3e50;
+                text-decoration: none;
+                font-weight: 500;
+            }
+            .menu-link:hover { background: #f3f4f6; }
         </style>
     </head>
     <body>
@@ -434,14 +465,16 @@
                 <div class="brand">
                     <a href="index.html">
                         <img
-                            src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9"
+                            src="images/z7212168131815_b1dbb356d9d87f59224f644256cd97e3.jpg"
                             alt="Logo Cà Phê Đậm Đà"
                             class="brand-logo"
+                            style="height: 50px; width: auto;"
                         />
                         <span class="brand-name">Cà Phê Đậm Đà</span>
                     </a>
                 </div>
 
+                <!-- Ô tìm kiếm -->
                 <form
                     class="search-bar"
                     role="search"
@@ -458,15 +491,25 @@
                 </form>
 
                 <nav class="menu" aria-label="Chính">
-                    <a href="products.html">Sản phẩm</a>
+                    <div class="dropdown">
+                        <a href="products.html">Sản phẩm</a>
+                        <div class="dropdown-content">
+                            <a href="arabica.html">Arabica</a>
+                            <a href="arabica.html">Robusta</a>
+                            <a href="arabica.html">Blend</a>
+                        </div>
+                    </div>
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
                     <a href="index.html#loi-ich">Lợi ích</a>
                     <a href="index.html#lien-he">Liên hệ</a>
-                    <a href="order-history.html" style="margin-right: 10px">
-                        <i class="fas fa-history"></i> Đơn hàng
+                    <a href="order-history.html" aria-label="Đơn hàng" style="display:inline-flex;align-items:center;gap:8px;">
+                        <i class="fa fa-history" aria-hidden="true"></i>
+                        <span>Đơn hàng</span>
                     </a>
+
+                    <!-- Giỏ hàng -->
                     <a href="cart.html" class="badge" aria-label="Giỏ hàng">
-                        <i class="fas fa-shopping-cart"></i>
+                        Giỏ hàng
                         <span id="cart-badge" class="badge-count">0</span>
                     </a>
                 </nav>
@@ -755,9 +798,9 @@
                         </div>
                     </div>
 
-                    <button id="placeOrderBtn" class="btn-checkout">
+                    <a href="order-confirmation.html" class="btn-checkout" style="display:block; text-align:center;">
                         Đặt hàng
-                    </button>
+                    </a>
 
                     <div
                         style="
@@ -777,154 +820,7 @@
             </div>
         </main>
 
-        <script src="scripts/user.js" defer></script>
-        <script>
-            // Prototype-only: no admin/db dependencies
-            const session = { getUser: () => { try { return JSON.parse(localStorage.getItem('currentUser')||'null'); } catch { return null; } }, isLoggedIn: () => !!localStorage.getItem('currentUser') };
-            const fmt = { currency: (v) => new Intl.NumberFormat('vi-VN').format(Number(v||0)) };
-
-            // DOM Elements
-            const subtotalEl = document.getElementById("subtotal");
-            const shippingFeeEl = document.getElementById("shippingFee");
-            const discountEl = document.getElementById("discount");
-            const totalEl = document.getElementById("total");
-            const placeOrderBtn = document.getElementById("placeOrderBtn");
-            const checkoutForm = document.getElementById("checkoutForm");
-            const addressProfile = document.getElementById("addressProfile");
-            const addressNew = document.getElementById("addressNew");
-            const addressTextarea = document.getElementById("address");
-            const noteTextarea = document.getElementById("note");
-
-            // Initialize tooltips
-            const tooltipTriggerList = [].slice.call(
-                document.querySelectorAll('[data-bs-toggle="tooltip"]')
-            );
-            const tooltipList = tooltipTriggerList.map(function (
-                tooltipTriggerEl
-            ) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-
-            // Add smooth scrolling for anchor links
-            document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-                anchor.addEventListener("click", function (e) {
-                    e.preventDefault();
-                    const target = document.querySelector(
-                        this.getAttribute("href")
-                    );
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                        });
-                    }
-                });
-            });
-
-            // State
-            let cart = [];
-            let selectedItems = [];
-
-            // Initialize
-            document.addEventListener("DOMContentLoaded", () => {
-                setupEventListeners();
-            });
-
-            // Setup event listeners
-            function setupEventListeners() {
-                // Payment option click - update UI only (static prototype)
-                document
-                    .querySelectorAll(".payment-option")
-                    .forEach((option) => {
-                        option.addEventListener("click", (e) => {
-                            const radio = option.querySelector(
-                                'input[type="radio"]'
-                            );
-                            if (radio) {
-                                radio.checked = true;
-                                document
-                                    .querySelectorAll(".payment-option")
-                                    .forEach((opt) =>
-                                        opt.classList.remove("selected")
-                                    );
-                                option.classList.add("selected");
-                            }
-                        });
-                    });
-
-                // Address option change
-                if (addressProfile) {
-                    addressProfile.addEventListener("change", () => {
-                        if (addressTextarea) addressTextarea.disabled = true;
-                    });
-                }
-                if (addressNew) {
-                    addressNew.addEventListener("change", () => {
-                        if (addressTextarea) addressTextarea.disabled = false;
-                    });
-                }
-
-                // Place order button
-                if (placeOrderBtn) {
-                    placeOrderBtn.addEventListener("click", handlePlaceOrder);
-                }
-            }
-
-            // Handle place order (prototype: redirect to confirmation)
-            function handlePlaceOrder() {
-                // Validate address selection
-                if (!addressProfile || !addressNew) {
-                    alert("Lỗi: Không thể tìm thấy tuỳ chọn địa chỉ.");
-                    return;
-                }
-
-                // Get selected address
-                let deliveryAddress = "";
-                if (addressProfile.checked) {
-                    deliveryAddress = "123 Phố Tây, Quận 1, TP.HCM";
-                } else if (addressNew.checked) {
-                    deliveryAddress = addressTextarea ? addressTextarea.value : "";
-                    if (!deliveryAddress.trim()) {
-                        alert("Vui lòng nhập địa chỉ giao hàng.");
-                        return;
-                    }
-                }
-
-                // Get payment method
-                const paymentMethod = document.querySelector(
-                    'input[name="paymentMethod"]:checked'
-                )?.value || "cod";
-
-                // Create order summary (static)
-                const order = {
-                    id: "#ORD" + Date.now().toString().slice(-6),
-                    customer: "Nguyễn Văn A",
-                    phone: "0901234567",
-                    email: "nguyenvana@email.com",
-                    address: deliveryAddress,
-                    delivery: "Giao hàng tận nơi",
-                    payment: paymentMethod,
-                    subtotal: 794000,
-                    shipping: 30000,
-                    discount: 0,
-                    total: 824000,
-                    note: noteTextarea ? noteTextarea.value : "",
-                    date: new Date().toISOString()
-                };
-
-                // Save to sessionStorage for confirmation page
-                sessionStorage.setItem("orderData", JSON.stringify(order));
-
-                // Show success animation
-                placeOrderBtn.innerHTML = `<i class="fas fa-check-circle"></i> Đặt hàng thành công!`;
-                placeOrderBtn.disabled = true;
-                placeOrderBtn.style.backgroundColor = "var(--coffee)";
-
-                // Redirect to confirmation after 600ms
-                setTimeout(() => {
-                    window.location.href = "order-confirmation.html";
-                }, 600);
-            }
-        </script>
+        
+        
     </body>
 </html>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs>
+    <linearGradient id="g1" x1="0" x2="1">
+      <stop offset="0" stop-color="#8C6B4A"/>
+      <stop offset="1" stop-color="#A07857"/>
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#g1)" />
+  <!-- saucer -->
+  <ellipse cx="600" cy="560" rx="300" ry="60" fill="#5a3e2b" opacity="0.18" />
+  <!-- cup body -->
+  <path d="M400 420 q0 -90 100 -120 h200 q80 30 80 120 v40 q0 60 -80 60 h-200 q-100 0 -100 -100 z" fill="#fff" opacity="0.95" />
+  <!-- coffee liquid -->
+  <ellipse cx="600" cy="420" rx="140" ry="36" fill="#6b3f2b" />
+  <!-- handle -->
+  <path d="M760 420 q40 0 40 30 q0 20 -24 30" fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" />
+  <!-- steam -->
+  <path d="M560 350 q8 -32 20 -40 q12 -8 22 4" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity="0.85" />
+  <path d="M600 346 q10 -28 24 -36 q14 -8 26 6" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity="0.7" />
+  <!-- subtle highlight -->
+  <ellipse cx="530" cy="410" rx="40" ry="10" fill="#fff" opacity="0.08" />
+</svg>

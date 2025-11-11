@@ -14,6 +14,109 @@
         <link rel="stylesheet" href="styles/header.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
         <style>
+            /* Login Modal Styles */
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                z-index: 1000;
+                align-items: center;
+                justify-content: center;
+            }
+            .modal-content {
+                background: #18181b;
+                border: 1px solid #3a3a44;
+                border-radius: 20px;
+                width: 90%;
+                max-width: 400px;
+                padding: 30px;
+                position: relative;
+                color: #f5f5f5;
+            }
+            .close-btn {
+                position: absolute;
+                top: 15px;
+                right: 20px;
+                font-size: 24px;
+                cursor: pointer;
+                color: #a1a1aa;
+            }
+            .form-group {
+                margin-bottom: 20px;
+            }
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                color: #e5e5e5;
+                font-weight: 500;
+                font-size: 14px;
+            }
+            .form-group input {
+                width: 100%;
+                padding: 12px 16px;
+                background: #0f0f12;
+                border: 1px solid #3a3a44;
+                border-radius: 12px;
+                color: #fafafa;
+                font-size: 16px;
+                transition: all 0.3s ease;
+                box-sizing: border-box;
+            }
+            .form-group input:focus {
+                outline: none;
+                border-color: #d1a06f;
+                box-shadow: 0 0 0 3px rgba(209, 160, 111, 0.1);
+            }
+            .error {
+                color: #ef4444;
+                font-size: 12px;
+                margin-top: 5px;
+                display: none;
+            }
+            .btn-login {
+                width: 100%;
+                background: linear-gradient(135deg, #d1a06f 0%, #b8945f 100%);
+                color: #2a1c16;
+                border: none;
+                border-radius: 12px;
+                padding: 14px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                margin-top: 10px;
+            }
+            .btn-login:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(209, 160, 111, 0.3);
+            }
+            .toggle-form {
+                text-align: center;
+                margin-top: 15px;
+                color: #a1a1aa;
+                font-size: 14px;
+            }
+            .toggle-form a {
+                color: #d1a06f;
+                cursor: pointer;
+                text-decoration: none;
+            }
+            .toggle-form a:hover {
+                text-decoration: underline;
+            }
+            .success-msg {
+                background: #10b981;
+                color: white;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                text-align: center;
+                display: none;
+            }
             /* Product detail specific tweaks */
             .product-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin: 40px 0; }
             .product-gallery img { width: 100%; height: 500px; object-fit: cover; border-radius: 16px; }
@@ -37,6 +140,37 @@
             .meta-row { display:flex; gap:10px; align-items:center; color:#666; font-size:14px; }
             .price-block { margin-left:auto; text-align:right; }
             @media (max-width:900px){ .product-detail{grid-template-columns:1fr; } .related-grid{grid-template-columns:1fr 1fr;} .product-gallery img { height:360px; } }
+            /* Account dropdown and modal UX improvements */
+            .account-menu { position: relative; }
+            .account-toggle { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 6px; }
+            .account-toggle:focus { outline: none; box-shadow: 0 0 0 3px rgba(230,126,34,0.12); }
+            .account-dropdown {
+                position: absolute;
+                right: 0;
+                top: calc(100% + 8px);
+                background: #fff;
+                border-radius: 10px;
+                box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+                min-width: 220px;
+                padding: 6px 0;
+                display: none;
+                opacity: 0;
+                transform: translateY(-6px);
+                transition: opacity 180ms ease, transform 180ms ease;
+                z-index: 1200;
+            }
+            .account-dropdown.show { display: block; opacity: 1; transform: translateY(0); }
+            .account-dropdown li { list-style: none; }
+            .menu-link {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 16px;
+                color: #2c3e50;
+                text-decoration: none;
+                font-weight: 500;
+            }
+            .menu-link:hover { background: #f3f4f6; }
         </style>
     </head>
     <body>
@@ -45,10 +179,31 @@
             <div class="container nav">
                 <div class="brand">
                     <a href="index.html">
-                        <img src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9" alt="Logo" class="brand-logo"/>
+                        <img
+                            src="images/z7212168131815_b1dbb356d9d87f59224f644256cd97e3.jpg"
+                            alt="Logo Cà Phê Đậm Đà"
+                            class="brand-logo"
+                            style="height: 50px; width: auto;"
+                        />
                         <span class="brand-name">Cà Phê Đậm Đà</span>
                     </a>
                 </div>
+
+                <!-- Ô tìm kiếm -->
+                <form
+                    class="search-bar"
+                    role="search"
+                    id="searchForm"
+                    onsubmit="handleSearch(event)"
+                >
+                    <button class="search-btn" type="submit">🔍</button>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Tìm sản phẩm..."
+                        aria-label="Tìm kiếm"
+                    />
+                </form>
 
                 <nav class="menu" aria-label="Chính">
                     <div class="dropdown">
@@ -60,23 +215,24 @@
                         </div>
                     </div>
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
+                    <a href="index.html#loi-ich">Lợi ích</a>
                     <a href="index.html#lien-he">Liên hệ</a>
 
-                    <div class="account-menu" id="accountMenu">
-                        <div class="account-toggle" role="button" tabindex="0" aria-expanded="false">
-                            <i class="fa fa-user"></i>
-                            <span id="accountText">Đăng nhập / Đăng ký</span>
-                            <i class="fa fa-caret-down"></i>
-                        </div>
-                        <ul class="account-dropdown" id="accountDropdown" aria-hidden="true"></ul>
-                    </div>
-
+                    <!-- Giỏ hàng -->
                     <a href="cart.html" class="badge" aria-label="Giỏ hàng">
-                        Giỏ hàng <span id="cart-badge" class="badge-count">0</span>
+                        Giỏ hàng
+                        <span id="cart-badge" class="badge-count">0</span>
                     </a>
                 </nav>
 
-                <button id="menuBtn" class="mobile-toggle" aria-expanded="false" aria-controls="mobileMenu">Menu</button>
+                <button
+                    id="menuBtn"
+                    class="mobile-toggle"
+                    aria-expanded="false"
+                    aria-controls="mobileMenu"
+                >
+                    Menu
+                </button>
             </div>
         </header>
 
@@ -89,6 +245,8 @@
                 <a href="profile.html" style="color:#e67e22;text-decoration:none;font-weight:600;">Xem hồ sơ</a>
             </div>
         </div>
+
+        
 
         <!-- Mobile menu -->
         <nav id="mobileMenu" hidden style="position:fixed;inset:64px 16px auto;z-index:60;background:var(--coffee-900);color:#fff;border-radius:14px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);">
@@ -118,6 +276,8 @@
             import { initHeader, updateCartBadge } from './scripts/header.js';
             // Mark prototype mode so header.js can simplify behavior when needed
             window.PROTOTYPE_MODE = true;
+            // Ensure cart link navigates to cart.html instead of opening drawer
+            window.CART_MODE = "navigate";
             // Initialize header behaviors (menu, cart link behavior)
             document.addEventListener('DOMContentLoaded', () => {
                 initHeader();
@@ -136,7 +296,7 @@
                 name: 'Arabica Premium 250g',
                 price: 135000,
                 stock: 8,
-                image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=900&auto=format&fit=crop',
+                image: 'images/arabica-premium.svg',
                 desc: 'Hạt Arabica chọn lọc, rang vừa đủ để giữ được độ ngọt tự nhiên và hậu vị bền lâu. Sản phẩm mang đến trải nghiệm pha phin truyền thống lẫn pha tay hiện đại.',
                 origin: 'Đà Lạt, Tây Nguyên (Vietnam)',
                 roast: 'Rang: Trung-cao (Medium-Dark) — cân bằng giữa hương caramel và nốt chocolate nhẹ',
@@ -184,53 +344,14 @@
                     </div>
                     <section class="related-products"><h2 class="section-title">Sản phẩm liên quan</h2><div class="related-grid" id="relatedProducts"></div></section>
                 `;
-                const relatedImgs = ['https://images.unsplash.com/photo-1447933601403-0c6688de566e?q=80&w=400&auto=format&fit=crop','https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=400&auto=format&fit=crop','https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?q=80&w=400&auto=format&fit=crop'];
+                const relatedImgs = ['images/arabica-premium.svg','images/robusta-bold.svg','images/signature-blend.svg'];
                 const relatedContainer = document.getElementById('relatedProducts'); relatedContainer.innerHTML = relatedImgs.map((src,idx)=>`<article class="card" style="cursor:pointer;" onclick="window.location.href='product-detail.html'"><img src="${src}" alt="related"><div class="card-body"><span class="chip">${product.type}</span><div class="spacer"></div><div class="prod"><div><h4>${product.name}</h4><div><span class="price">${formatCurrency(product.price)}đ</span></div></div></div></div></article>`).join('');
                 setupActions();
             }
-            function setupActions(){ const add=document.getElementById('addToCart'); if(add){ add.addEventListener('click',()=>{ const user = JSON.parse(localStorage.getItem('currentUser')); if (!user) { alert('Vui lòng đăng nhập để sử dụng giỏ hàng'); openModal && openModal('login'); return; } createToast(`Đã thêm ${product.name} vào giỏ hàng`); }); } }
+            function setupActions(){ const add=document.getElementById('addToCart'); if(add){ add.addEventListener('click',()=>{ createToast(`Đã thêm ${product.name} vào giỏ hàng`); }); } }
 
             // No additional boot required - header init will call renderProduct on DOMContentLoaded.
         </script>
-        <script>
-            // Header auth UI parity (like products.html)
-            function getCurrentUser(){ try { return JSON.parse(localStorage.getItem('currentUser')||'null'); } catch { return null; } }
-            function updateAuthUI(){
-                const user = getCurrentUser();
-                const accountText = document.getElementById('accountText');
-                const loginItem = document.getElementById('loginItem');
-                const registerItem = document.getElementById('registerItem');
-                const profileItem = document.getElementById('profileItem');
-                const logoutItem = document.getElementById('logoutItem');
-                if (user){
-                    if (accountText) accountText.textContent = user.name || 'Tài khoản';
-                    if (loginItem) loginItem.style.display = 'none';
-                    if (registerItem) registerItem.style.display = 'none';
-                    if (profileItem) profileItem.style.display = 'block';
-                    if (logoutItem) logoutItem.style.display = 'block';
-                } else {
-                    if (accountText) accountText.textContent = 'Đăng nhập / Đăng ký';
-                    if (loginItem) loginItem.style.display = 'block';
-                    if (registerItem) registerItem.style.display = 'block';
-                    if (profileItem) profileItem.style.display = 'none';
-                    if (logoutItem) logoutItem.style.display = 'none';
-                }
-            }
-            document.addEventListener('DOMContentLoaded', function(){
-                updateAuthUI();
-                const toggle = document.querySelector('.account-toggle');
-                const dropdown = document.getElementById('accountDropdown');
-                toggle && toggle.addEventListener('click', function(e){ e.preventDefault(); if (dropdown){ dropdown.classList.toggle('show'); this.setAttribute('aria-expanded', dropdown.classList.contains('show')?'true':'false'); }});
-                const logout = document.getElementById('logoutItem');
-                if (logout){
-                    const link = document.getElementById('logoutLink') || logout.querySelector('a');
-                    link && link.addEventListener('click', function(e){ e.preventDefault(); localStorage.removeItem('currentUser'); updateAuthUI(); });
-                }
-                document.addEventListener('click', function(e){ const menu = document.getElementById('accountMenu'); if(menu && !menu.contains(e.target)){ dropdown && dropdown.classList.remove('show'); const t=document.querySelector('.account-toggle'); t && t.setAttribute('aria-expanded','false'); }});
-
-                // Hide cart badge on detail page in prototype
-                const badge = document.getElementById('cart-badge'); if (badge) badge.style.display = 'none';
-            });
-        </script>
+        
     </body>
 </html>

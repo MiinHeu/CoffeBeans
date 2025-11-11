@@ -452,6 +452,8 @@
         </a>
 
         <div class="container">
+            <!-- Demo Banner -->
+            
             <div class="profile-card">
                 <div class="profile-header">
                     <div class="user-avatar">
@@ -488,25 +490,27 @@
                 <!-- Prototype Edit Form (no persistence) -->
                 <div id="editSection" class="card" style="margin-top: 20px; display: none;">
                     <h2>Chỉnh sửa hồ sơ (prototype)</h2>
-                    <form id="editForm" novalidate>
+                    <form id="editForm" novalidate onsubmit="event.preventDefault(); return false;">
                         <div class="form-group">
                             <label for="inputName">Họ và tên</label>
-                            <input id="inputName" type="text" value="Nguyễn Văn A" />
+                            <input id="inputName" type="text" value="xxxxxxxxxx" disabled style="background-color: #f8f9fa; cursor: not-allowed;" />
                         </div>
                         <div class="form-group">
                             <label for="inputEmail">Email</label>
-                            <input id="inputEmail" type="text" value="email@example.com" />
+                            <input id="inputEmail" type="text" value="email@example.com" disabled style="background-color: #f8f9fa; cursor: not-allowed;" />
                         </div>
                         <div class="form-group">
                             <label for="inputPhone">Số điện thoại</label>
-                            <input id="inputPhone" type="text" value="0901 234 567" />
+                            <input id="inputPhone" type="text" value="0xxxxxxxxxxx" disabled style="background-color: #f8f9fa; cursor: not-allowed;"/>
                         </div>
                         <div class="form-group">
                             <label for="inputAddress">Địa chỉ</label>
-                            <input id="inputAddress" type="text" value="123 Phố Tây, Quận 1, TP.HCM" />
+                            <input id="inputAddress" type="text" value="xxxxxxxxxxxxx"disabled style="background-color: #f8f9fa; cursor: not-allowed;" />
                         </div>
                         <div style="display:flex; gap:10px;">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
+                            <button type="button" class="btn btn-secondary" style="background-color: #1464aa;">
+                                <i class=""></i> Lưu
+                            </button>
                             <button type="button" id="cancelEdit" class="btn"><i class="fas fa-times"></i> Hủy</button>
                         </div>
                     </form>
