@@ -1,3 +1,67 @@
+// Hàm hiển thị modal form chung
+function showModalForm(title, content, onClose = null) {
+    // Xóa các modal cũ nếu có
+    document.querySelectorAll(".modal-overlay").forEach((el) => el.remove());
+
+    const modal = document.createElement("div");
+    modal.className = "modal-overlay";
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        padding: 20px;
+    `;
+
+    const modalContent = document.createElement("div");
+    modalContent.className = "modal-content";
+    modalContent.style.cssText = `
+        background: var(--panel);
+        border: 1px solid #24242a;
+        border-radius: 14px;
+        padding: 24px;
+        max-width: 600px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    `;
+
+    modalContent.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0; color: var(--accent);">${title}</h2>
+            <button class="btn" id="modalClose" style="background: transparent; border: none; font-size: 24px; cursor: pointer; color: var(--text);">×</button>
+        </div>
+        <div>${content}</div>
+        <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: flex-end;">
+            <button class="btn-primary" id="modalConfirm">Xác nhận</button>
+            <button class="btn" id="modalCancel">Hủy</button>
+        </div>
+    `;
+
+    modal.appendChild(modalContent);
+    document.body.appendChild(modal);
+
+    const closeModal = () => {
+        modal.remove();
+        if (onClose) onClose();
+    };
+
+    modal.querySelector("#modalClose").addEventListener("click", closeModal);
+    modal.querySelector("#modalCancel").addEventListener("click", closeModal);
+    modal.querySelector("#modalConfirm").addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    return modal;
+}
 import {
     dbGet,
     dbSet,
@@ -133,30 +197,43 @@ function renderUsers() {
             .join("");
     }
     paint(users);
-    qs("#q").addEventListener("input", (e) => {
-        const v = e.target.value.toLowerCase();
-        const f = users.filter(
-            (u) =>
-                u.name.toLowerCase().includes(v) ||
-                u.email.toLowerCase().includes(v)
-        );
-        paint(f);
-    });
+    // qs("#q").addEventListener("input", (e) => {
+    //     const v = e.target.value.toLowerCase();
+    //     const f = users.filter(
+    //         (u) =>
+    //             u.name.toLowerCase().includes(v) ||
+    //             u.email.toLowerCase().includes(v)
+    //     );
+    //     paint(f);
+    // });
     tb.addEventListener("click", (e) => {
         const btn = e.target.closest("button[data-act]");
         if (!btn) return;
         const id = btn.getAttribute("data-id");
         const act = btn.getAttribute("data-act");
+        const user = users.find((u) => u.id === id);
         if (act === "reset") {
-            // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công
-            alert("Đã reset mật khẩu về 123456");
-            // Users.resetPassword(id);
+            showModalForm(
+                "Reset mật khẩu",
+                `<p>Bạn có chắc chắn muốn reset mật khẩu cho khách hàng <strong>${
+                    user?.name || ""
+                }</strong>?</p>
+                <p style="color: var(--muted); font-size: 14px;">Mật khẩu mới sẽ được gửi qua email: ${
+                    user?.email || ""
+                }</p>`
+            );
         }
         if (act === "toggle") {
-            // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công và refresh UI
-            alert("Đã cập nhật trạng thái tài khoản thành công");
-            renderUsers();
-            // Users.toggleLock(id);
+            const action = user?.locked ? "Mở khóa" : "Khóa";
+            showModalForm(
+                `${action} tài khoản`,
+                `<p>Bạn có chắc chắn muốn ${action.toLowerCase()} tài khoản của khách hàng <strong>${
+                    user?.name || ""
+                }</strong>?</p>
+                <p style="color: var(--muted); font-size: 14px;">Email: ${
+                    user?.email || ""
+                }</p>`
+            );
         }
     });
 }
@@ -190,51 +267,49 @@ function renderTypes() {
             .join("");
     }
     paint();
-    qs("#addType").addEventListener("click", () => showTypeDialog());
+    qs("#addType").addEventListener("click", () => {
+        showModalForm(
+            "Thêm loại sản phẩm",
+            `<label>Tên loại <input type="text" id="typeName" placeholder="Nhập tên loại" style="width: 100%;"></label>
+            <label>% Lợi nhuận <input type="number" id="typeProfit" placeholder="0" min="0" step="1" style="width: 100%;"></label>`
+        );
+    });
     tb.addEventListener("click", (e) => {
         const b = e.target.closest("button");
         if (!b) return;
         const id = b.getAttribute("data-id");
         const act = b.getAttribute("data-act");
+        const t = Types.list().find((x) => x.id === id);
         if (act === "edit") {
-            const t = Types.list().find((x) => x.id === id);
-            showTypeDialog(t);
+            showModalForm(
+                "Sửa loại sản phẩm",
+                `<label>Tên loại <input type="text" id="typeName" value="${
+                    t?.name || ""
+                }" style="width: 100%;"></label>
+                <label>% Lợi nhuận <input type="number" id="typeProfit" value="${
+                    t?.profitPercent || 0
+                }" min="0" step="1" style="width: 100%;"></label>`
+            );
         }
         if (act === "toggle") {
-            // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công và refresh UI
-            alert("Đã cập nhật trạng thái hiển thị thành công");
-            paint();
-            // const t = Types.list().find((x) => x.id === id);
-            // Types.update(id, { hidden: !t.hidden });
+            const action = t?.hidden ? "Hiện" : "Ẩn";
+            showModalForm(
+                `${action} loại sản phẩm`,
+                `<p>Bạn có chắc chắn muốn ${action.toLowerCase()} loại sản phẩm <strong>${
+                    t?.name || ""
+                }</strong>?</p>`
+            );
         }
         if (act === "del") {
-            if (confirm("Xóa loại?")) {
-                // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công và refresh UI
-                alert("Đã xóa loại sản phẩm thành công");
-                paint();
-                // Types.remove(id);
-            }
+            showModalForm(
+                "Xóa loại sản phẩm",
+                `<p style="color: var(--danger);">Bạn có chắc chắn muốn xóa loại sản phẩm <strong>${
+                    t?.name || ""
+                }</strong>?</p>
+                <p style="color: var(--muted); font-size: 14px;">Hành động này không thể hoàn tác.</p>`
+            );
         }
     });
-    function showTypeDialog(type) {
-        const name = prompt("Tên loại", type?.name || "");
-        if (name == null) return;
-        const pp = Number(
-            prompt("% lợi nhuận (theo loại)", type?.profitPercent ?? 0) || 0
-        );
-        // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công và refresh UI
-        if (type) {
-            alert("Đã cập nhật loại sản phẩm thành công");
-        } else {
-            alert("Đã thêm loại sản phẩm thành công");
-        }
-        paint();
-        // if (type) {
-        //     Types.update(type.id, { name, profitPercent: pp });
-        // } else {
-        //     Types.create({ name, profitPercent: pp });
-        // }
-    }
 }
 
 // Products module
@@ -281,15 +356,16 @@ function renderProducts() {
             .join("");
     }
     paint(products);
-    qs("#q").addEventListener("input", (e) => {
-        const v = e.target.value.toLowerCase();
-        const f = Products.list().filter(
-            (p) =>
-                p.name.toLowerCase().includes(v) ||
-                p.code.toLowerCase().includes(v)
-        );
-        paint(f);
-    });
+    // Vô hiệu hóa tìm kiếm - chỉ là giao diện
+    // qs("#q").addEventListener("input", (e) => {
+    //     const v = e.target.value.toLowerCase();
+    //     const f = Products.list().filter(
+    //         (p) =>
+    //             p.name.toLowerCase().includes(v) ||
+    //             p.code.toLowerCase().includes(v)
+    //     );
+    //     paint(f);
+    // });
     pf.addEventListener("submit", (e) => {
         e.preventDefault();
         const data = {
@@ -299,7 +375,7 @@ function renderProducts() {
             image: qs("#pimg").value.trim(),
             desc: qs("#pdesc").value.trim(),
         };
-        // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công và refresh UI
+        // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công
         if (state.editing) {
             alert("Đã cập nhật sản phẩm thành công");
             state.editing = null;
@@ -308,12 +384,6 @@ function renderProducts() {
         }
         pf.reset();
         paint();
-        // if (state.editing) {
-        //     Products.update(state.editing, data);
-        //     state.editing = null;
-        // } else {
-        //     Products.create(data);
-        // }
     });
     qs("#resetP").addEventListener("click", () => {
         state.editing = null;
@@ -325,28 +395,51 @@ function renderProducts() {
         const id = b.getAttribute("data-id");
         const act = b.getAttribute("data-act");
         const p = Products.list().find((x) => x.id === id);
+        const tmap = new Map(Types.list().map((t) => [t.id, t.name]));
         if (act === "edit") {
-            state.editing = id;
-            qs("#ptype").value = p.typeId;
-            qs("#pcode").value = p.code;
-            qs("#pname").value = p.name;
-            qs("#pimg").value = p.image;
-            qs("#pdesc").value = p.desc;
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            const typeOptions = Types.list()
+                .filter((t) => !t.hidden)
+                .map(
+                    (t) =>
+                        `<option value="${t.id}" ${
+                            t.id === p.typeId ? "selected" : ""
+                        }>${t.name}</option>`
+                )
+                .join("");
+            showModalForm(
+                "Sửa sản phẩm",
+                `<label>Loại<select id="editPtype" style="width: 100%;">${typeOptions}</select></label>
+                <label>Mã <input type="text" id="editPcode" value="${
+                    p?.code || ""
+                }" style="width: 100%;"></label>
+                <label>Tên <input type="text" id="editPname" value="${
+                    p?.name || ""
+                }" style="width: 100%;"></label>
+                <label>Hình (URL) <input type="text" id="editPimg" value="${
+                    p?.image || ""
+                }" style="width: 100%;"></label>
+                <label>Mô tả<textarea id="editPdesc" style="width: 100%; min-height: 80px;">${
+                    p?.desc || ""
+                }</textarea></label>`
+            );
         }
         if (act === "toggle") {
-            // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công và refresh UI
-            alert("Đã cập nhật trạng thái hiển thị thành công");
-            paint();
-            // Products.update(id, { hidden: !p.hidden });
+            const action = p?.hidden ? "Hiện" : "Ẩn";
+            showModalForm(
+                `${action} sản phẩm`,
+                `<p>Bạn có chắc chắn muốn ${action.toLowerCase()} sản phẩm <strong>${
+                    p?.name || ""
+                }</strong>?</p>`
+            );
         }
         if (act === "del") {
-            if (confirm("Xóa sản phẩm?")) {
-                // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công và refresh UI
-                alert("Đã xóa sản phẩm thành công");
-                paint();
-                // Products.remove(id);
-            }
+            showModalForm(
+                "Xóa sản phẩm",
+                `<p style="color: var(--danger);">Bạn có chắc chắn muốn xóa sản phẩm <strong>${
+                    p?.name || ""
+                }</strong>?</p>
+                <p style="color: var(--muted); font-size: 14px;">Hành động này không thể hoàn tác.</p>`
+            );
         }
     });
 }
@@ -361,14 +454,14 @@ function renderReceipts() {
       <form id="rf" class="panel">
         <div class="row"><label>Ngày nhập <input type="date" id="rdate" value="${fmt.dateISO(
             new Date()
-        )}"></label></div>
+        )}" readonly></label></div>
         <div id="items"></div>
         <div class="row"><button class="btn" type="button" id="addI">+ Thêm dòng</button></div>
         <div class="row"><button class="btn-primary" type="submit">Lưu phiếu</button><button class="btn" id="resetR" type="button">Làm mới</button></div>
       </form>
     </section>
     <section class="panel">
-      <div class="row" style="justify-content:space-between"><h2>Danh mục phiếu</h2><input id="q" placeholder="Tìm theo mã sản phẩm"></div>
+      <div class="row" style="justify-content:space-between"><h2>Danh mục phiếu</h2><input id="q" placeholder="Tìm "></div>
       <div class="table-wrap"><table class="table"><thead><tr><th>#</th><th>Ngày</th><th>Trạng thái</th><th>Số dòng</th><th></th></tr></thead><tbody id="tb"></tbody></table></div>
     </section>`;
     const items = qs("#items");
@@ -389,7 +482,19 @@ function renderReceipts() {
         items.appendChild(div);
     }
     addRow();
-    qs("#addI").addEventListener("click", () => addRow());
+    qs("#addI").addEventListener("click", () => {
+        showModalForm(
+            "Thêm dòng",
+            `<p>Thêm dòng sản phẩm mới vào phiếu nhập hàng.</p>
+            <label>Sản phẩm <select id="addProduct" style="width: 100%;">
+                ${products
+                    .map((p) => `<option value="${p.id}">${p.name}</option>`)
+                    .join("")}
+            </select></label>
+            <label>Giá nhập <input type="number" id="addCost" placeholder="0" min="0" step="1000" style="width: 100%;"></label>
+            <label>Số lượng <input type="number" id="addQty" placeholder="1" min="1" step="1" style="width: 100%;"></label>`
+        );
+    });
     qs("#rf").addEventListener("submit", (e) => {
         e.preventDefault();
         const date = qs("#rdate").value;
@@ -405,16 +510,14 @@ function renderReceipts() {
             alert("Đã thêm phiếu nhập hàng thành công");
         }
         renderReceipts();
-        // if (state.editing) {
-        //     Receipts.update(state.editing, { date, items: list });
-        // } else {
-        //     Receipts.create({ date, items: list });
-        // }
-
-        // Trigger stock update event for user pages
-        // window.dispatchEvent(new CustomEvent("stockUpdated"));
     });
-    qs("#resetR").addEventListener("click", () => renderReceipts());
+    qs("#resetR").addEventListener("click", () => {
+        showModalForm(
+            "Làm mới",
+            `<p>Bạn có chắc chắn muốn làm mới form phiếu nhập hàng?</p>
+            <p style="color: var(--muted); font-size: 14px;">Tất cả dữ liệu chưa lưu sẽ bị mất.</p>`
+        );
+    });
 
     const tb = qs("#tb");
     function paint() {
@@ -426,17 +529,21 @@ function renderReceipts() {
                     r.items.length
                 }</td>
       <td style="text-align:right">
-        <button class="btn" data-act="edit" data-id="${r.id}" ${
-                    r.status !== "draft" ? "disabled" : ""
-                }>Sửa</button>
-        <button class="btn" data-act="done" data-id="${r.id}" ${
-                    r.status !== "draft" ? "disabled" : ""
-                }>Hoàn thành</button>
+        <button class="btn" data-act="edit" data-id="${r.id}">Sửa</button>
+        <button class="btn" data-act="done" data-id="${
+            r.id
+        }">Hoàn thành</button>
       </td></tr>`
             )
             .join("");
     }
     paint();
+    // Vô hiệu hóa tìm kiếm - chỉ là giao diện
+    // qs("#q").addEventListener("input", (e) => {
+    //     const v = e.target.value.toLowerCase();
+    //     const list = Receipts.list();
+    //     // Tìm kiếm logic...
+    // });
     tb.addEventListener("click", (e) => {
         const b = e.target.closest("button");
         if (!b) return;
@@ -444,28 +551,25 @@ function renderReceipts() {
         const act = b.getAttribute("data-act");
         const r = Receipts.list().find((x) => x.id === id);
         if (act === "edit") {
-            state.editing = id;
-            qs("#rdate").value = r.date;
-            items.innerHTML = "";
-            r.items.forEach(addRow);
-            window.scrollTo({ top: 0, behavior: "smooth" });
+            showModalForm(
+                "Sửa phiếu nhập hàng",
+                `<p>Chỉnh sửa thông tin phiếu nhập hàng #${r?.id || id}.</p>
+                <label>Ngày nhập <input type="date" id="editRdate" value="${
+                    r?.date || ""
+                }" style="width: 100%;"></label>
+                <p style="color: var(--muted); font-size: 14px;">Số dòng: ${
+                    r?.items.length || 0
+                }</p>`
+            );
         }
         if (act === "done") {
-            // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công và refresh UI
-            alert("Đã hoàn thành phiếu nhập hàng thành công");
-            paint();
-
-            // If we're on the stock page, refresh it too
-            const activeButton = document.querySelector(
-                ".sidebar button.active"
+            showModalForm(
+                "Hoàn thành phiếu nhập hàng",
+                `<p>Bạn có chắc chắn muốn hoàn thành phiếu nhập hàng #${
+                    r?.id || id
+                }?</p>
+                <p style="color: var(--muted); font-size: 14px;">Sau khi hoàn thành, phiếu nhập hàng sẽ được cập nhật vào tồn kho.</p>`
             );
-            if (activeButton && activeButton.dataset.view === "stock") {
-                renderStock();
-            }
-
-            // Receipts.complete(id);
-            // Trigger stock update event for user pages
-            // window.dispatchEvent(new CustomEvent("stockUpdated"));
         }
     });
 }
@@ -489,29 +593,13 @@ function renderPricing() {
     typesDiv.innerHTML = types
         .map(
             (t) =>
-                `<div class="row"><span style="min-width:140px">${
-                    t.name
-                }</span><input type="number" min="0" step="1" value="${
-                    t.profitPercent || 0
-                }" data-id="${
-                    t.id
-                }" class="pp-type"><span>%</span><button class="btn" data-act="saveT" data-id="${
-                    t.id
-                }">Lưu</button></div>`
+                `<div class="row"><span style="min-width:140px">${t.name}</span><input type="text" placeholder="Nhập % lợi nhuận" data-id="${t.id}" class="pp-type" style="width: 100px;"><span>%</span><button class="btn" data-act="saveT" data-id="${t.id}">Lưu</button></div>`
         )
         .join("");
     prodsDiv.innerHTML = products
         .map(
             (p) =>
-                `<div class="row"><span style="min-width:220px">${
-                    p.name
-                }</span><input type="number" min="0" step="1" value="${
-                    p.profitPercent ?? ""
-                }" placeholder="(kế thừa loại)" data-id="${
-                    p.id
-                }" class="pp-prod"><span>%</span><button class="btn" data-act="saveP" data-id="${
-                    p.id
-                }">Lưu</button></div>`
+                `<div class="row"><span style="min-width:220px">${p.name}</span><input type="text" placeholder="(kế thừa loại)" data-id="${p.id}" class="pp-prod" style="width: 100px;"><span>%</span><button class="btn" data-act="saveP" data-id="${p.id}">Lưu</button></div>`
         )
         .join("");
     function paint() {
@@ -536,36 +624,114 @@ function renderPricing() {
         const b = e.target.closest('button[data-act="saveT"]');
         if (!b) return;
         const id = b.getAttribute("data-id");
-        const v = Number(qs(`input.pp-type[data-id="${id}"]`).value || 0);
-        // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công và refresh UI
-        alert("Đã cập nhật % lợi nhuận theo loại thành công");
-        paint();
-        // Types.update(id, { profitPercent: v });
+        const v = qs(`input.pp-type[data-id="${id}"]`).value || "";
+        showModalForm(
+            "Cập nhật % lợi nhuận theo loại",
+            `<p>Giá trị nhập: <strong>${v || "Trống"}%</strong></p>
+            <p style="color: var(--muted); font-size: 14px;">Bạn có chắc chắn muốn cập nhật % lợi nhuận?</p>`
+        );
     });
     prodsDiv.addEventListener("click", (e) => {
         const b = e.target.closest('button[data-act="saveP"]');
         if (!b) return;
         const id = b.getAttribute("data-id");
         const el = qs(`input.pp-prod[data-id="${id}"]`);
-        const v = el.value === "" ? null : Number(el.value || 0);
-        // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công và refresh UI
-        alert("Đã cập nhật % lợi nhuận theo sản phẩm thành công");
-        paint();
-        // Products.update(id, { profitPercent: v });
+        const v = el.value === "" ? "(kế thừa loại)" : el.value;
+        showModalForm(
+            "Cập nhật % lợi nhuận theo sản phẩm",
+            `<p>Giá trị nhập: <strong>${v}%</strong></p>
+            <p style="color: var(--muted); font-size: 14px;">Bạn có chắc chắn muốn cập nhật % lợi nhuận?</p>`
+        );
     });
 }
 
 // Orders module
 function renderOrders() {
-    const orders = Orders.list();
+    // Dữ liệu mẫu cho giao diện
+    const sampleOrders = [
+        {
+            id: "ORD-001",
+            date: "2025-11-01",
+            userId: "Nguyễn Văn A",
+            items: [
+                { productId: "ARB-250", quantity: 2, price: 250000 },
+                { productId: "ROB-500", quantity: 1, price: 450000 },
+            ],
+            status: "new",
+            note: "Giao hàng trong giờ hành chính",
+        },
+        {
+            id: "ORD-002",
+            date: "2025-11-02",
+            userId: "Trần Thị B",
+            items: [{ productId: "ARB-250", quantity: 3, price: 250000 }],
+            status: "processing",
+            note: "",
+        },
+        {
+            id: "ORD-003",
+            date: "2025-11-03",
+            userId: "Lê Văn C",
+            items: [
+                { productId: "ROB-500", quantity: 2, price: 450000 },
+                { productId: "ARB-250", quantity: 1, price: 250000 },
+            ],
+            status: "shipped",
+            note: "Đã giao hàng thành công",
+        },
+        {
+            id: "ORD-004",
+            date: "2025-11-04",
+            userId: "Phạm Thị D",
+            items: [{ productId: "ARB-250", quantity: 1, price: 250000 }],
+            status: "new",
+            note: "",
+        },
+        {
+            id: "ORD-005",
+            date: "2025-11-05",
+            userId: "Hoàng Văn E",
+            items: [{ productId: "ROB-500", quantity: 1, price: 450000 }],
+            status: "processing",
+            note: "Khách yêu cầu giao nhanh",
+        },
+        {
+            id: "ORD-006",
+            date: "2025-11-06",
+            userId: "Nguyễn Thị F",
+            items: [
+                { productId: "ARB-250", quantity: 2, price: 250000 },
+                { productId: "ROB-500", quantity: 1, price: 450000 },
+                { productId: "ARB-250", quantity: 1, price: 250000 },
+            ],
+            status: "shipped",
+            note: "",
+        },
+        {
+            id: "ORD-007",
+            date: "2025-11-07",
+            userId: "Đặng Văn G",
+            items: [{ productId: "ROB-500", quantity: 1, price: 450000 }],
+            status: "canceled",
+            note: "Khách hủy đơn",
+        },
+        {
+            id: "ORD-008",
+            date: "2025-11-08",
+            userId: "Võ Thị H",
+            items: [{ productId: "ARB-250", quantity: 3, price: 250000 }],
+            status: "new",
+            note: "",
+        },
+    ];
     app.innerHTML = `
     <section class="panel">
-        <h1>Đơn hàng</h1>
+        <h1>Quản lý đơn đặt hàng của khách hàng</h1>
         <div class="row">
-            <label>Từ <input type="date" id="d1"></label>
-            <label>Đến <input type="date" id="d2"></label>
+            <label>Từ <input type="date" id="d1" ></label>
+            <label>Đến <input type="date" id="d2" ></label>
             <label>Trạng thái 
-                <select id="st">
+                <select id="st"  >
                     <option value="">Tất cả</option>
                     <option value="new">Mới đặt</option>
                     <option value="processing">Đã xử lý</option>
@@ -594,17 +760,8 @@ function renderOrders() {
     const tb = qs("#tb");
 
     function paint() {
-        const d1 = qs("#d1").value;
-        const d2 = qs("#d2").value;
-        const st = qs("#st").value;
-        let list = [...orders]; // Tạo bản sao của danh sách đơn hàng
-
-        // Lọc đơn hàng
-        if (d1) list = list.filter((o) => o.date >= d1);
-        if (d2) list = list.filter((o) => o.date <= d2);
-        if (st) list = list.filter((o) => o.status === st);
-
-        // Hiển thị danh sách đơn hàng
+        // Hiển thị tất cả đơn hàng (không lọc)
+        const list = [...sampleOrders];
         tb.innerHTML = list
             .map(
                 (o, i) => `
@@ -618,6 +775,9 @@ function renderOrders() {
                         <button class="btn" data-id="${
                             o.id
                         }" data-act="view">Xem</button>
+                        <button class="btn" data-id="${
+                            o.id
+                        }" data-act="update">Cập nhật tình trạng đơn hàng</button>
                     </td>
                 </tr>`
             )
@@ -635,64 +795,35 @@ function renderOrders() {
         return statusMap[status] || status;
     }
 
-    // Thêm sự kiện lọc
-    ["d1", "d2", "st"].forEach((id) => {
-        const element = qs("#" + id);
-        if (element) {
-            element.addEventListener("change", paint);
-        }
-    });
+    // Vô hiệu hóa tìm kiếm - chỉ là giao diện
+    // ["d1", "d2", "st"].forEach((id) => {
+    //     const element = qs("#" + id);
+    //     if (element) {
+    //         element.addEventListener("change", paint);
+    //     }
+    // });
 
     // Vẽ danh sách ban đầu
     paint();
 
-    // Xử lý sự kiện xem chi tiết đơn hàng
+    // Xử lý sự kiện xem chi tiết đơn hàng và cập nhật
     tb.addEventListener("click", (e) => {
-        const b = e.target.closest('button[data-act="view"]');
+        const b = e.target.closest("button");
         if (!b) return;
-
         const id = b.getAttribute("data-id");
-        const order = Orders.list().find((x) => x.id === id);
+        const act = b.getAttribute("data-act");
+        const order = sampleOrders.find((x) => x.id === id);
         if (!order) return;
 
-        showOrderDetail(order);
-    });
-}
-
-// Hàm hiển thị chi tiết đơn hàng
-function showOrderDetail(order) {
-    const user = Users.list().find((u) => u.id === order.userId);
-    const products = Products.list();
-    const pmap = new Map(products.map((p) => [p.id, p]));
-    const total = order.items.reduce(
-        (sum, it) => sum + it.quantity * it.price,
-        0
-    );
-
-    const statusMessages = {
-        new: "Mới đặt",
-        processing: "Đã xử lý",
-        shipped: "Đã giao",
-        canceled: "Đã hủy",
-    };
-
-    const isCanceled = order.status === "canceled";
-
-    const html = `
-    <div class="order-detail">
-        <div class="row" style="justify-content: space-between; align-items: center;">
-            <h3>Chi tiết đơn hàng #${order.id}</h3>
-            <button class="btn" id="closeDetail">✕ Đóng</button>
-        </div>
-        
-        <div class="grid-2">
-            <div>
-                <h4>Thông tin đơn hàng</h4>
-                <p><strong>Ngày đặt:</strong> ${order.date}</p>
-                <p><strong>Trạng thái:</strong> 
-                    <select id="ust" style="margin-left: 8px;" ${
-                        isCanceled ? "disabled" : ""
-                    }>
+        if (act === "view") {
+            showOrderDetail(order);
+        } else if (act === "update") {
+            showModalForm(
+                "Cập nhật tình trạng đơn hàng",
+                `<p>Đơn hàng: <strong>#${order.id}</strong></p>
+                <p>Khách hàng: <strong>${order.userId}</strong></p>
+                <label>Trạng thái 
+                    <select id="updateStatus" style="width: 100%;">
                         <option value="new" ${
                             order.status === "new" ? "selected" : ""
                         }>Mới đặt</option>
@@ -706,12 +837,54 @@ function showOrderDetail(order) {
                             order.status === "canceled" ? "selected" : ""
                         }>Hủy</option>
                     </select>
-                    ${
-                        isCanceled
-                            ? '<p style="color: red; margin-top: 5px;">Không thể thay đổi trạng thái đơn hàng đã hủy</p>'
-                            : ""
-                    }
-                </p>
+                </label>`
+            );
+        }
+    });
+}
+
+// Hàm hiển thị chi tiết đơn hàng
+function showOrderDetail(order) {
+    // Dữ liệu mẫu cho khách hàng
+    const user = {
+        name: order.userId,
+        email: `${order.userId.toLowerCase().replace(/\s+/g, "")}@email.com`,
+        phone: "0901234567",
+        address: "123 Đường ABC, Quận XYZ, TP.HCM",
+    };
+
+    // Dữ liệu mẫu cho sản phẩm
+    const productMap = {
+        "ARB-250": { name: "Arabica Premium 250g", code: "ARB-250" },
+        "ROB-500": { name: "Robusta Đặc Biệt 500g", code: "ROB-500" },
+    };
+
+    const total = order.items.reduce(
+        (sum, it) => sum + it.quantity * it.price,
+        0
+    );
+
+    const statusMessages = {
+        new: "Mới đặt",
+        processing: "Đã xử lý",
+        shipped: "Đã giao",
+        canceled: "Đã hủy",
+    };
+
+    const html = `
+    <div class="order-detail">
+        <div class="row" style="justify-content: space-between; align-items: center;">
+            <h3>Chi tiết đơn hàng #${order.id}</h3>
+            <button class="btn" id="closeDetail">✕ Đóng</button>
+        </div>
+        
+        <div class="grid-2">
+            <div>
+                <h4>Thông tin đơn hàng</h4>
+                <p><strong>Ngày đặt:</strong> ${order.date}</p>
+                <p><strong>Trạng thái:</strong> ${
+                    statusMessages[order.status] || order.status
+                }</p>
                 <p><strong>Tổng tiền:</strong> ${fmt.currency(total)}</p>
                 ${
                     order.note
@@ -722,20 +895,14 @@ function showOrderDetail(order) {
             
             <div>
                 <h4>Thông tin khách hàng</h4>
-                ${
-                    user
-                        ? `
-                    <p><strong>Tên:</strong> ${user.name || "N/A"}</p>
-                    <p><strong>Email:</strong> ${user.email || "N/A"}</p>
-                    <p><strong>Điện thoại:</strong> ${
-                        user.phone || "Chưa cập nhật"
-                    }</p>
-                    <p><strong>Địa chỉ:</strong> ${
-                        user.address || "Chưa cập nhật"
-                    }</p>
-                `
-                        : "<p>Khách vãng lai</p>"
-                }
+                <p><strong>Tên:</strong> ${user.name || "N/A"}</p>
+                <p><strong>Email:</strong> ${user.email || "N/A"}</p>
+                <p><strong>Điện thoại:</strong> ${
+                    user.phone || "Chưa cập nhật"
+                }</p>
+                <p><strong>Địa chỉ:</strong> ${
+                    user.address || "Chưa cập nhật"
+                }</p>
             </div>
         </div>
         
@@ -755,17 +922,14 @@ function showOrderDetail(order) {
                     <tbody>
                         ${order.items
                             .map((item) => {
-                                const product = pmap.get(item.productId);
+                                const product = productMap[item.productId] || {
+                                    name: item.productId,
+                                    code: item.productId,
+                                };
                                 return `
                                 <tr>
-                                    <td>${
-                                        product ? product.name : item.productId
-                                    }</td>
-                                    <td>${
-                                        product
-                                            ? product.code || "N/A"
-                                            : item.productId
-                                    }</td>
+                                    <td>${product.name}</td>
+                                    <td>${product.code}</td>
                                     <td>${item.quantity}</td>
                                     <td>${fmt.currency(item.price)}</td>
                                     <td>${fmt.currency(
@@ -778,107 +942,17 @@ function showOrderDetail(order) {
                 </table>
             </div>
         </div>
-        
-        <div class="row" style="margin-top: 20px;">
-            <button class="btn-primary" id="save" ${
-                isCanceled ? "disabled" : ""
-            }>
-                Cập nhật trạng thái
-            </button>
-            <button class="btn" id="closeBtn">
-                Đóng
-            </button>
-        </div>
     </div>`;
 
-    // Tạo và hiển thị modal
-    const wrap = document.createElement("section");
-    wrap.className = "panel";
-    wrap.style.marginBottom = "20px";
-    wrap.innerHTML = html;
-
-    // Xóa các modal cũ nếu có
-    document
-        .querySelectorAll(".order-detail-modal")
-        .forEach((el) => el.remove());
-
-    // Thêm modal mới
-    const modal = document.createElement("div");
-    modal.className = "order-detail-modal";
-    modal.style.position = "fixed";
-    modal.style.top = "0";
-    modal.style.left = "0";
-    modal.style.right = "0";
-    modal.style.bottom = "0";
-    modal.style.backgroundColor = "rgba(0,0,0,0.5)";
-    modal.style.display = "flex";
-    modal.style.justifyContent = "center";
-    modal.style.alignItems = "flex-start";
-    modal.style.padding = "40px 20px";
-    modal.style.overflowY = "auto";
-    modal.style.zIndex = "1000";
-
-    modal.appendChild(wrap);
-    document.body.appendChild(modal);
-
-    // Xử lý sự kiện đóng modal
-    const closeModal = () => {
-        modal.remove();
-    };
-
-    // Đóng khi click ra ngoài modal
-    modal.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    // Đóng khi click nút đóng
-    const closeBtn = wrap.querySelector("#closeBtn");
-    const closeDetailBtn = wrap.querySelector("#closeDetail");
-
-    if (closeBtn) closeBtn.addEventListener("click", closeModal);
-    if (closeDetailBtn) closeDetailBtn.addEventListener("click", closeModal);
-
-    // Xử lý sự kiện lưu
-    const saveBtn = wrap.querySelector("#save");
-    if (saveBtn) {
-        saveBtn.addEventListener("click", function () {
-            const newStatus = wrap.querySelector("#ust").value;
-            const oldStatus = order.status;
-            // const stock = computeStock(); // Lấy thông tin tồn kho mới nhất
-
-            // Logic đã bị vô hiệu hóa - chỉ hiển thị thông báo thành công và refresh UI
-            // Kiểm tra nếu đơn hàng đã bị hủy
-            if (oldStatus === "canceled") {
-                alert("Không thể thay đổi trạng thái đơn hàng đã hủy");
-                return;
-            }
-
-            // Hiển thị thông báo thành công
-            if (newStatus === "canceled") {
-                alert("Đã hủy đơn hàng và cập nhật lại số lượng tồn kho.");
-            } else {
-                const statusText = statusMessages[newStatus] || newStatus;
-                alert(`Cập nhật trạng thái đơn hàng thành: ${statusText}`);
-            }
-
-            // Đóng modal và làm mới danh sách
-            closeModal();
-            renderOrders();
-
-            // try {
-            //     // Cập nhật trạng thái đơn hàng
-            //     Orders.update(order.id, { status: newStatus });
-            // } catch (error) {
-            //     console.error("Lỗi khi cập nhật đơn hàng:", error);
-            //     alert(
-            //         error.message ||
-            //             "Có lỗi xảy ra khi cập nhật trạng thái đơn hàng"
-            //     );
-            // }
-        });
-    }
+    showModalForm(
+        "Chi tiết đơn hàng",
+        html
+            .replace('<button class="btn" id="closeDetail">✕ Đóng</button>', "")
+            .replace(
+                /<div class="row" style="margin-top: 20px;">.*?<\/div>/s,
+                ""
+            )
+    );
 }
 
 // Stock module
@@ -895,33 +969,58 @@ function renderStock() {
             return;
         }
 
-        // Tạo giao diện bảng tồn kho
+        // Giao diện đơn giản hơn
         app.innerHTML = `
         <section class="panel">
             <div class="panel-header">
-                <h1>Quản lý tồn kho</h1>
-                <div class="actions">
-                    <button id="refreshStock" class="btn">
-                        <i class="fas fa-sync-alt"></i> Làm mới
-                    </button>
+                <h1>Quản lý tồn kho </h1>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <div class="grid-3" style="gap:12px;">
+                    <label>
+                        Sản phẩm
+                        <select id="searchProduct" style="width:100%; padding:8px; border-radius:6px; border:1px solid #2b2b30; background:var(--panel); color:var(--text);">
+                            <option value="">-- Chọn sản phẩm --</option>
+                            ${products.map(p => `<option value="${p.id}">${p.name} (${p.code})</option>`).join("")}
+                        </select>
+                    </label>
+                    <label>
+                        Loại
+                        <select id="searchType" style="width:100%; padding:8px; border-radius:6px; border:1px solid #2b2b30; background:var(--panel); color:var(--text);">
+                            <option value="">-- Chọn loại --</option>
+                            ${Types.list().filter(t => !t.hidden).map(t => `<option value="${t.id}">${t.name}</option>`).join("")}
+                        </select>
+                    </label>
+                    <label>
+                        Thời điểm
+                        <input type="date" id="searchDate" style="width:100%; padding:8px; border-radius:6px; border:1px solid #2b2b30; background:var(--panel); color:var(--text);">
+                    </label>
+                </div>
+
+                <div style="margin-top:12px; display:flex; gap:8px;">
+                    <button class="btn-primary" id="searchStockBtn">Xác nhận</button>
+                    <button class="btn" id="resetSearchBtn">Làm mới</button>
                 </div>
             </div>
+
+            <div style="margin-bottom:12px; padding:12px; background: rgba(239,68,68,0.05); border-radius:8px;">
+                <strong style="color:var(--accent)">Cảnh báo sản phẩm sắp hết hàng</strong>
+                <p style="color:var(--muted); margin:6px 0 0 0;">Sẽ hiển thị danh sách sản phẩm có tồn thấp ở đây.</p>
+            </div>
+
             <div class="table-wrap">
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Mã sản phẩm</th>
-                            <th>Tên sản phẩm</th>
-                            <th class="text-right">Số lượng tồn</th>
+                            <th>Mã</th>
+                            <th>Tên</th>
+                            <th class="text-right">Tồn</th>
                             <th>Trạng thái</th>
                         </tr>
                     </thead>
                     <tbody id="stockTableBody">
-                        ${
-                            products.length === 0
-                                ? '<tr><td colspan="4" class="text-center">Không có sản phẩm nào</td></tr>'
-                                : ""
-                        }
+                        ${products.length === 0 ? '<tr><td colspan="4" class="text-center">Không có sản phẩm</td></tr>' : ''}
                     </tbody>
                 </table>
             </div>
@@ -934,68 +1033,65 @@ function renderStock() {
             return;
         }
 
-        // Nếu không có sản phẩm, không cần render tiếp
         if (products.length === 0) return;
 
-        // Render danh sách sản phẩm
-        tbody.innerHTML = products
-            .map((product) => {
-                const quantity = stock.get(product.id) || 0;
-                const isLowStock = quantity < 5;
-                let status = "";
+        // Render danh sách sản phẩm (đơn giản)
+        tbody.innerHTML = products.map(product => {
+            const quantity = stock.get(product.id) || 0;
+            const isLowStock = quantity > 0 && quantity < 5;
+            let status = isLowStock ? '<span class="badge badge-warning">Sắp hết</span>' :
+                         (quantity === 0 ? '<span class="badge badge-danger">Hết hàng</span>' :
+                         '<span class="badge badge-success">Còn hàng</span>');
+            if (isLowStock) lowStockProducts.push(product.name);
+            return `
+                <tr>
+                    <td>${product.code || "N/A"}</td>
+                    <td>${product.name || "N/A"}</td>
+                    <td class="text-right">${quantity.toLocaleString()}</td>
+                    <td>${status}</td>
+                </tr>`;
+        }).join("");
 
-                if (isLowStock) {
-                    lowStockProducts.push(product.name);
-                    status = '<span class="badge badge-warning">Sắp hết</span>';
-                } else if (quantity === 0) {
-                    status = '<span class="badge badge-danger">Hết hàng</span>';
-                } else {
-                    status =
-                        '<span class="badge badge-success">Còn hàng</span>';
-                }
-
-                return `
-                    <tr>
-                        <td>${product.code || "N/A"}</td>
-                        <td>${product.name || "N/A"}</td>
-                        <td class="text-right">${quantity.toLocaleString()}</td>
-                        <td>${status}</td>
-                    </tr>`;
-            })
-            .join("");
-
-        // Thêm sự kiện làm mới
-        const refreshBtn = qs("#refreshStock");
-        if (refreshBtn) {
-            refreshBtn.addEventListener("click", () => {
-                renderStock();
-            });
+        // Hiển thị cảnh báo (đơn giản)
+        if (lowStockProducts.length > 0) {
+            const warningDiv = qs("#lowStockWarning");
+            if (warningDiv) {
+                warningDiv.innerHTML = `
+                    <strong style="color:var(--accent)">⚠ Có ${lowStockProducts.length} sản phẩm sắp hết</strong>
+                    <div style="margin-top:8px; color:var(--muted)">${lowStockProducts.slice(0,5).map(p => `<span>${p}</span>`).join(", ")}${lowStockProducts.length>5? ' ...':''}</div>
+                `;
+            }
         }
 
-        // Auto-refresh stock every 3 seconds when on stock page
-        const stockRefreshInterval = setInterval(() => {
-            // Only refresh if we're currently on the stock page
-            const activeButton = document.querySelector(
-                ".sidebar button.active"
-            );
-            if (activeButton && activeButton.dataset.view === "stock") {
-                renderStock();
-            }
-        }, 3000);
+        // Sự kiện: Xác nhận mở modal hiển thị form (không xử lý tìm kiếm)
+        const searchStockBtn = qs("#searchStockBtn");
+        const resetSearchBtn = qs("#resetSearchBtn");
 
-        // Clean up interval when leaving stock page
-        const originalRoute = window.route;
-        window.route = function (view) {
-            if (view !== "stock") {
-                clearInterval(stockRefreshInterval);
-            }
-            originalRoute(view);
-        };
+        function openSearchModal(mode = "search") {
+            const currProduct = qs("#searchProduct").value || "";
+            const currType = qs("#searchType").value || "";
+            const currDate = qs("#searchDate").value || "";
 
-        // Hiển thị cảnh báo nếu có sản phẩm sắp hết hàng
-        if (lowStockProducts.length > 0) {
-            const warningMsg = `Cảnh báo: Có ${lowStockProducts.length} sản phẩm sắp hết hàng`;
-            console.warn(warningMsg, lowStockProducts);
+            
+
+            const modal = showModalForm(mode==="search" ? "Tra cứu số lượng tồn" : "Làm mới tìm kiếm", formHtml, () => {});
+            // đính kèm sự kiện cho nút trong modal
+            setTimeout(() => {
+                modal.querySelector("#m_confirm")?.addEventListener("click", (e) => {
+                    // Chỉ đóng modal — không thực hiện tìm kiếm
+                    modal.remove();
+                });
+                modal.querySelector("#m_cancel")?.addEventListener("click", (e) => {
+                    modal.remove();
+                });
+            }, 0);
+        }
+
+        if (searchStockBtn) {
+            searchStockBtn.addEventListener("click", () => openSearchModal("search"));
+        }
+        if (resetSearchBtn) {
+            resetSearchBtn.addEventListener("click", () => openSearchModal("reset"));
         }
     } catch (error) {
         console.error("Lỗi khi tải kho hàng:", error);
