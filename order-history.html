@@ -1,159 +1,379 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Lịch sử đặt hàng - Cà Phê Đậm Đà</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles/user.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .order-card {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        .order-header {
-            padding: 15px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .order-body {
-            padding: 15px;
-        }
-        .order-item {
-            display: flex;
-            padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        .order-item:last-child {
-            border-bottom: none;
-        }
-        .order-item img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 4px;
-            margin-right: 15px;
-        }
-        .order-item-details {
-            flex: 1;
-        }
-        .order-status {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-        .status-new { background: #e3f2fd; color: #1976d2; }
-        .status-processing { background: #fff3e0; color: #ef6c00; }
-        .status-shipped { background: #e8f5e9; color: #2e7d32; }
-        .status-canceled { background: #ffebee; color: #c62828; }
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #666;
-        }
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            color: #ddd;
-        }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <header class="header">
-        <div class="container nav">
-            <div class="brand">
-                <a href="index.html">
-                    <img src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png" alt="Logo Cà Phê Đậm Đà" class="brand-logo">
-                    <span class="brand-name">Cà Phê Đậm Đà</span>
-                </a>
-            </div>
-
-            <nav class="menu" aria-label="Chính">
-                <a href="products.html">Sản phẩm</a>
-                <a href="index.html#ve-chung-toi">Giới thiệu</a>
-                <a href="index.html#loi-ich">Lợi ích</a>
-                <a href="index.html#lien-he">Liên hệ</a>
-                <a href="cart.html" class="badge" aria-label="Giỏ hàng">
-                    Giỏ hàng
-                    <span id="cart-badge" class="badge-count">0</span>
-                </a>
-            </nav>
-        </div>
-    </header>
-
-    <main class="container" style="padding: 24px 20px;">
-        <h1 class="section-title">Lịch sử đặt hàng</h1>
-        <div id="ordersList">
-            <!-- Orders will be loaded here -->
-            <div class="empty-state">
-                <i class="fas fa-clock-rotate-left"></i>
-                <h3>Chưa có đơn hàng nào</h3>
-                <p>Bạn chưa đặt đơn hàng nào. Hãy mua sắm ngay!</p>
-                <a href="products.html" class="btn" style="margin-top: 16px;">Mua sắm ngay</a>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        // Demo mode: show last order summary from sessionStorage only
-        function currency(v){ return new Intl.NumberFormat('vi-VN').format(Number(v||0)); }
-        function formatDate(dateString){ const d = new Date(dateString||Date.now()); return d.toLocaleString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
-
-        function renderOrders(){
-            const container = document.getElementById('ordersList');
-            let summary = null; try { summary = JSON.parse(sessionStorage.getItem('last_order_summary')||'null'); } catch {}
-
-            if (!summary) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-clock-rotate-left"></i>
-                        <h3>Chưa có đơn hàng nào</h3>
-                        <p>Bạn chưa đặt đơn hàng nào. Hãy mua sắm ngay!</p>
-                        <a href="products.html" class="btn" style="margin-top: 16px;">Mua sắm ngay</a>
-                    </div>`;
-                return;
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Lịch sử đơn hàng - Cà Phê Đậm Đà</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="styles/user.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+        <style>
+            .orders-container {
+                max-width: 900px;
+                margin: 40px auto;
             }
+            .order-card {
+                background: #fff;
+                border-radius: 12px;
+                padding: 20px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+                margin-bottom: 20px;
+                border-left: 4px solid var(--coffee);
+            }
+            .order-card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #eee;
+            }
+            .order-card-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: var(--coffee-900);
+            }
+            .order-id {
+                font-size: 14px;
+                color: var(--coffee);
+                font-weight: 600;
+                font-family: monospace;
+            }
+            .status-badge {
+                display: inline-block;
+                padding: 6px 12px;
+                border-radius: 20px;
+                font-size: 12px;
+                font-weight: 600;
+                text-transform: uppercase;
+            }
+            .status-delivered {
+                background: #d4edda;
+                color: #155724;
+            }
+            .status-pending {
+                background: #fff3cd;
+                color: #856404;
+            }
+            .status-processing {
+                background: #cce5ff;
+                color: #004085;
+            }
+            .order-card-info {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+                gap: 16px;
+                margin-bottom: 16px;
+                font-size: 14px;
+            }
+            .info-item {
+                padding: 12px;
+                background: #f7fafc;
+                border-radius: 8px;
+            }
+            .info-label {
+                font-size: 12px;
+                color: #666;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
+            .info-value {
+                font-weight: 600;
+                color: #2d3748;
+            }
+            .order-items-preview {
+                margin: 12px 0;
+                padding: 12px;
+                background: #f7fafc;
+                border-radius: 8px;
+                font-size: 13px;
+                color: #555;
+            }
+            .order-total {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px 0;
+                margin-top: 12px;
+                font-weight: 600;
+            }
+            .total-amount {
+                font-size: 18px;
+                color: var(--coffee);
+            }
+            .order-actions {
+                display: flex;
+                gap: 10px;
+                margin-top: 16px;
+            }
+            .btn-small {
+                padding: 10px 16px;
+                border: none;
+                border-radius: 6px;
+                font-weight: 600;
+                cursor: pointer;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 13px;
+                text-align: center;
+            }
+            .btn-view {
+                background: var(--coffee);
+                color: white;
+                flex: 1;
+            }
+            .btn-view:hover {
+                background: var(--coffee-900);
+            }
+            .btn-cancel {
+                background: #f0f0f0;
+                color: #666;
+                flex: 1;
+            }
+            .btn-cancel:hover {
+                background: #e0e0e0;
+            }
+            .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+            }
+            .empty-icon {
+                font-size: 64px;
+                color: #ddd;
+                margin-bottom: 20px;
+            }
+            .empty-text {
+                font-size: 18px;
+                color: #999;
+                margin-bottom: 20px;
+            }
+            @media (max-width: 768px) {
+                .order-card-info {
+                    grid-template-columns: 1fr 1fr;
+                }
+                .order-card-header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                .status-badge {
+                    margin-top: 8px;
+                }
+                .order-actions {
+                    flex-direction: column;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Header -->
+        <header class="header">
+            <div class="container nav">
+                <div class="brand">
+                    <a href="index.html">
+                        <img
+                            src="https://scontent-hkg4-2.xx.fbcdn.net/v/t1.15752-9/552703956_771855105468883_1116774372539651057_n.png?_nc_cat=111&ccb=1-7&_nc_sid=0024fc&_nc_eui2=AeHOBCj3lX8HaOlEvmrFw3xlBrfZDT56J6MGt9kNPnono-ZY8pwnFeBxIqW3onZN3zta5vYTCGt1khW091oaxsr0&_nc_ohc=gpp9itW4IqcQ7kNvwEoG1Qq&_nc_oc=Admu0eUlmvebDWAO50DQbndetZfv1eoK4Pdnm2Fql2WZTtukjFnDuqMCp5j7orfE930&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent-hkg4-2.xx&oh=03_Q7cD3QHC08gLgVHXrZ8zt8znzke_wz-InehjvWetDnfV-WoDKQ&oe=68FBBCA9"
+                            alt="Logo Cà Phê Đậm Đà"
+                            class="brand-logo"
+                        />
+                        <span class="brand-name">Cà Phê Đậm Đà</span>
+                    </a>
+                </div>
 
-            container.innerHTML = `
-                <div class="order-card">
-                    <div class="order-header">
-                        <div><strong>Mã đơn hàng:</strong> ${summary.id || ''}</div>
-                        <div><strong>Ngày đặt:</strong> ${formatDate(summary.date)}</div>
-                    </div>
-                    <div class="order-body">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                            <span>Tạm tính:</span><span>${currency(summary.subtotal||0)}đ</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                            <span>Phí vận chuyển:</span><span>${currency(summary.shipping||0)}đ</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                            <span>Giảm giá:</span><span>${summary.discount? '-' + currency(summary.discount) + 'đ' : '0đ'}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:600;">
-                            <span>Tổng cộng:</span><span>${currency(summary.total||0)}đ</span>
-                        </div>
-                        <div style="margin-top:12px;">
-                            <strong>Phương thức thanh toán:</strong> ${summary.paymentMethod==='bank' ? 'Chuyển khoản ngân hàng' : 'Thanh toán khi nhận hàng'}
-                        </div>
-                    </div>
-                </div>`;
-        }
+                <nav class="menu" aria-label="Chính">
+                    <a href="index.html">Trang chủ</a>
+                    <a href="products.html">Sản phẩm</a>
+                    <a href="index.html#ve-chung-toi">Giới thiệu</a>
+                    <a href="index.html#lien-he">Liên hệ</a>
+                    <a href="order-history.html" class="active">
+                        <i class="fas fa-history"></i> Đơn hàng
+                    </a>
+                    <a href="cart.html" class="badge" aria-label="Giỏ hàng">
+                        Giỏ hàng
+                        <span id="cart-badge" class="badge-count">0</span>
+                    </a>
+                </nav>
 
-        document.addEventListener('DOMContentLoaded', renderOrders);
-    </script>
-</body>
+                <button
+                    id="menuBtn"
+                    class="mobile-toggle"
+                    aria-expanded="false"
+                    aria-controls="mobileMenu"
+                >
+                    Menu
+                </button>
+            </div>
+        </header>
+
+        <nav id="mobileMenu" hidden class="mobile-menu"></nav>
+
+        <main class="container orders-container">
+            <h1 class="section-title" style="margin-bottom: 30px;">
+                <i class="fas fa-history" style="margin-right: 10px; color: var(--coffee);"></i>
+                Lịch sử đơn hàng
+            </h1>
+
+            <!-- Order 1 - Delivered -->
+            <div class="order-card">
+                <div class="order-card-header">
+                    <div>
+                        <div class="order-card-title">Đơn hàng #1</div>
+                        <div class="order-id">#ORD2025001</div>
+                    </div>
+                    <span class="status-badge status-delivered">✓ Đã giao</span>
+                </div>
+
+                <div class="order-card-info">
+                    <div class="info-item">
+                        <div class="info-label">Ngày đặt</div>
+                        <div class="info-value">15/03/2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Ngày giao</div>
+                        <div class="info-value">18/03/2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Số sản phẩm</div>
+                        <div class="info-value">3 sản phẩm</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Tổng tiền</div>
+                        <div class="info-value" style="color: var(--coffee);">824.000đ</div>
+                    </div>
+                </div>
+
+                <div class="order-items-preview">
+                    📦 Arabica Premium 250g (x1), Robusta Bold 500g (x1), Signature Blend 1kg (x2)
+                </div>
+
+                <div class="order-actions">
+                    <a href="order-confirmation.html" class="btn-small btn-view">
+                        <i class="fas fa-eye" style="margin-right: 6px;"></i>
+                        Xem chi tiết
+                    </a>
+                </div>
+            </div>
+
+            <!-- Order 2 - Processing -->
+            <div class="order-card">
+                <div class="order-card-header">
+                    <div>
+                        <div class="order-card-title">Đơn hàng #2</div>
+                        <div class="order-id">#ORD2025002</div>
+                    </div>
+                    <span class="status-badge status-processing">⏳ Chờ xác nhận</span>
+                </div>
+
+                <div class="order-card-info">
+                    <div class="info-item">
+                        <div class="info-label">Ngày đặt</div>
+                        <div class="info-value">18/03/2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Dự kiến giao</div>
+                        <div class="info-value">21/03/2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Số sản phẩm</div>
+                        <div class="info-value">2 sản phẩm</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Tổng tiền</div>
+                        <div class="info-value" style="color: var(--coffee);">264.000đ</div>
+                    </div>
+                </div>
+
+                <div class="order-items-preview">
+                    📦 Arabica Premium 250g (x2)
+                </div>
+
+                <div class="order-actions">
+                    <a href="order-confirmation.html" class="btn-small btn-view">
+                        <i class="fas fa-eye" style="margin-right: 6px;"></i>
+                        Xem chi tiết
+                    </a>
+                    <button class="btn-small btn-cancel">
+                        <i class="fas fa-times" style="margin-right: 6px;"></i>
+                        Hủy đơn hàng
+                    </button>
+                </div>
+            </div>
+
+            <!-- Order 3 - Pending -->
+            <div class="order-card">
+                <div class="order-card-header">
+                    <div>
+                        <div class="order-card-title">Đơn hàng #3</div>
+                        <div class="order-id">#ORD2025003</div>
+                    </div>
+                    <span class="status-badge status-pending">📦 Đang giao</span>
+                </div>
+
+                <div class="order-card-info">
+                    <div class="info-item">
+                        <div class="info-label">Ngày đặt</div>
+                        <div class="info-value">10/03/2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Dự kiến giao</div>
+                        <div class="info-value">20/03/2025</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Số sản phẩm</div>
+                        <div class="info-value">1 sản phẩm</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Tổng tiền</div>
+                        <div class="info-value" style="color: var(--coffee);">295.000đ</div>
+                    </div>
+                </div>
+
+                <div class="order-items-preview">
+                    📦 Signature Blend 1kg (x1)
+                </div>
+
+                <div class="order-actions">
+                    <a href="order-confirmation.html" class="btn-small btn-view">
+                        <i class="fas fa-eye" style="margin-right: 6px;"></i>
+                        Xem chi tiết
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <footer id="lien-he">
+            <div class="container foot">
+                <div>
+                    <h4>Cà Phê Đậm Đà</h4>
+                    <p>Hạt cà phê rang xay chất lượng cao. Đồng hành cùng ly cà phê ngon mỗi ngày.</p>
+                </div>
+                <div>
+                    <h4>Liên hệ</h4>
+                    <p>Hotline: 0901 234 567<br />Email: hello@caphedamda.vn</p>
+                </div>
+                <div>
+                    <h4>Địa chỉ</h4>
+                    <p>123 Phin Street, Quận Caffeine, TP.HCM</p>
+                </div>
+            </div>
+            <div class="container copyright">
+                © 2025 Cà Phê Đậm Đà. All rights reserved.
+            </div>
+        </footer>
+
+        <script>
+            // Hide cart badge on order history page (static prototype)
+            document.addEventListener('DOMContentLoaded', function() {
+                const badge = document.getElementById('cart-badge');
+                if (badge) badge.style.display = 'none';
+            });
+        </script>
+    </body>
 </html>

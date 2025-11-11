@@ -182,6 +182,16 @@
             </div>
         </header>
 
+        <div class="page-banner" style="background:#fff7ef;border-bottom:1px solid #f2e6d9;">
+            <div class="container" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;gap:12px;">
+                <div style="display:flex;align-items:center;gap:10px;color:#2c1810;font-weight:600;">
+                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                    <span>Thông tin cá nhân</span>
+                </div>
+                <a href="profile.html" style="color:#e67e22;text-decoration:none;font-weight:600;">Xem hồ sơ</a>
+            </div>
+        </div>
+
         <!-- Mobile menu -->
         <nav id="mobileMenu" hidden class="mobile-menu">
             <a href="index.html">Trang chủ</a>
@@ -535,6 +545,14 @@
                 document.addEventListener('click', function(e) {
                     const addBtn = e.target.closest && e.target.closest('.add');
                     if (addBtn) {
+                        // Check login requirement
+                        const user = JSON.parse(localStorage.getItem('currentUser'));
+                        if (!user) {
+                            alert('Vui lòng đăng nhập để sử dụng giỏ hàng');
+                            openModal && openModal('login');
+                            return;
+                        }
+
                         // For prototype: Just show notification without actually adding to cart
                         const card = addBtn.closest('.card');
                         const name = addBtn.getAttribute('data-name') || card?.querySelector('.card-title')?.textContent || 'Sản phẩm';
@@ -550,7 +568,7 @@
                         toast.style.borderRadius = '4px';
                         toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
                         toast.style.zIndex = '1000';
-                        toast.innerHTML = `PROTOTYPE: Đã thêm "${name}" vào giỏ hàng<br><small style="opacity:0.8">(Chức năng này chỉ là demo)</small>`;
+                        toast.innerHTML = `Đã thêm "${name}" vào giỏ hàng`;
                         document.body.appendChild(toast);
                         setTimeout(() => { try { toast.remove(); } catch(e){} }, 2500);
                         return;

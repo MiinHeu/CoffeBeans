@@ -484,6 +484,33 @@
                         <i class="fas fa-sign-out-alt"></i> Đăng xuất
                     </button>
                 </div>
+
+                <!-- Prototype Edit Form (no persistence) -->
+                <div id="editSection" class="card" style="margin-top: 20px; display: none;">
+                    <h2>Chỉnh sửa hồ sơ (prototype)</h2>
+                    <form id="editForm" novalidate>
+                        <div class="form-group">
+                            <label for="inputName">Họ và tên</label>
+                            <input id="inputName" type="text" value="Nguyễn Văn A" />
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail">Email</label>
+                            <input id="inputEmail" type="text" value="email@example.com" />
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPhone">Số điện thoại</label>
+                            <input id="inputPhone" type="text" value="0901 234 567" />
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAddress">Địa chỉ</label>
+                            <input id="inputAddress" type="text" value="123 Phố Tây, Quận 1, TP.HCM" />
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
+                            <button type="button" id="cancelEdit" class="btn"><i class="fas fa-times"></i> Hủy</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -513,75 +540,54 @@
                 }, 3000);
             }
             
-            // Khi trang được tải xong
+            // Khi trang được tải xong (không kiểm tra đăng nhập, chỉ hiển thị UI tĩnh)
             document.addEventListener('DOMContentLoaded', function() {
-                // Kiểm tra đăng nhập
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                
-                // Nếu chưa đăng nhập, chuyển hướng về trang chủ
-                if (!currentUser) {
-                    showMessage('Vui lòng đăng nhập để xem thông tin cá nhân', 'error');
-                    setTimeout(() => window.location.href = 'index.html', 1500);
-                    return;
-                }
-                
-                // Hiển thị thông tin người dùng
-                try {
-                    // Hiển thị thông tin cơ bản
-                    document.getElementById('userName').textContent = currentUser.name || 'Khách hàng';
-                    document.getElementById('userEmail').textContent = currentUser.email || 'Chưa cập nhật';
-                    
-                    // Hiển thị thông tin chi tiết
-                    document.getElementById('displayName').textContent = currentUser.name || 'Chưa cập nhật';
-                    document.getElementById('displayEmail').textContent = currentUser.email || 'Chưa cập nhật';
-                    document.getElementById('userRole').textContent = currentUser.role === 'admin' ? 'Quản trị viên' : 'Khách hàng';
-                    document.getElementById('displayPhone').textContent = currentUser.phone || 'Chưa cập nhật';
-                    document.getElementById('displayAddress').textContent = currentUser.address || 'Chưa cập nhật';
-                    
-                    // Cập nhật avatar dựa trên tên
-                    const avatar = document.querySelector('.user-avatar i');
-                    if (currentUser.name) {
-                        const nameParts = currentUser.name.split(' ');
-                        const initials = nameParts
-                            .map(part => part[0])
-                            .join('')
-                            .toUpperCase();
-                        
-                        // Nếu có tên và họ, hiển thị 2 ký tự đầu
-                        if (nameParts.length >= 2) {
-                            avatar.textContent = (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
-                        } else if (nameParts.length === 1) {
-                            // Nếu chỉ có tên, hiển thị ký tự đầu tiên
-                            avatar.textContent = nameParts[0][0].toUpperCase();
-                        }
-                        
-                        // Màu nền ngẫu nhiên dựa trên tên
-                        const colors = ['#6F4E37', '#8B4513', '#A0522D', '#CD853F', '#D2691E'];
-                        const colorIndex = currentUser.name.length % colors.length;
-                        document.querySelector('.user-avatar').style.backgroundColor = colors[colorIndex];
-                    }
-                    
-                } catch (error) {
-                    console.error('Lỗi khi tải thông tin người dùng:', error);
-                    showMessage('Có lỗi xảy ra khi tải thông tin người dùng', 'error');
-                }
-                
-                // Xử lý sự kiện đăng xuất
-                document.getElementById('logoutBtn').addEventListener('click', function() {
-                    if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
-                        // Xóa thông tin đăng nhập
-                        localStorage.removeItem('currentUser');
-                        
-                        // Thông báo và chuyển hướng
-                        showMessage('Đã đăng xuất thành công!');
-                        setTimeout(() => window.location.href = 'index.html', 1500);
-                    }
-                });
-                
-                // Xử lý sự kiện chỉnh sửa thông tin
-                document.getElementById('editProfileBtn').addEventListener('click', function(e) {
+                // Gán thông tin tĩnh/placeholder
+                document.getElementById('userName').textContent = 'Khách hàng';
+                document.getElementById('userEmail').textContent = 'Chưa cập nhật';
+                document.getElementById('displayName').textContent = 'Chưa cập nhật';
+                document.getElementById('displayEmail').textContent = 'Chưa cập nhật';
+                document.getElementById('userRole').textContent = 'Khách hàng';
+                document.getElementById('displayPhone').textContent = 'Chưa cập nhật';
+                document.getElementById('displayAddress').textContent = 'Chưa cập nhật';
+
+                // Nút đăng xuất: chỉ thông báo, không thao tác dữ liệu
+                document.getElementById('logoutBtn').addEventListener('click', function(e) {
                     e.preventDefault();
-                    showMessage('Tính năng này đang được phát triển', 'info');
+                    // no-op in prototype
+                });
+
+                // Nút chỉnh sửa: mở form prototype
+                const editBtn = document.getElementById('editProfileBtn');
+                const editSection = document.getElementById('editSection');
+                const editForm = document.getElementById('editForm');
+                const cancelEdit = document.getElementById('cancelEdit');
+
+                editBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    editSection.style.display = editSection.style.display === 'none' ? 'block' : 'none';
+                });
+
+                cancelEdit.addEventListener('click', function() {
+                    editSection.style.display = 'none';
+                });
+
+                // Lưu: chỉ cập nhật hiển thị, không lưu trữ
+                editForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = document.getElementById('inputName').value || 'Khách hàng';
+                    const email = document.getElementById('inputEmail').value || 'Chưa cập nhật';
+                    const phone = document.getElementById('inputPhone').value || 'Chưa cập nhật';
+                    const address = document.getElementById('inputAddress').value || 'Chưa cập nhật';
+
+                    document.getElementById('userName').textContent = name;
+                    document.getElementById('userEmail').textContent = email;
+                    document.getElementById('displayName').textContent = name;
+                    document.getElementById('displayEmail').textContent = email;
+                    document.getElementById('displayPhone').textContent = phone;
+                    document.getElementById('displayAddress').textContent = address;
+
+                    editSection.style.display = 'none';
                 });
             });
             

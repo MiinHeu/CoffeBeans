@@ -194,6 +194,16 @@
             </div>
         </header>
 
+        <div class="page-banner" style="background:#fff7ef;border-bottom:1px solid #f2e6d9;">
+            <div class="container" style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;gap:12px;">
+                <div style="display:flex;align-items:center;gap:10px;color:#2c1810;font-weight:600;">
+                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                    <span>Thông tin cá nhân</span>
+                </div>
+                <a href="profile.html" style="color:#e67e22;text-decoration:none;font-weight:600;">Xem hồ sơ</a>
+            </div>
+        </div>
+
         <!-- Nhúng Font Awesome -->
         <link
             rel="stylesheet"
@@ -432,17 +442,17 @@
                 <span class="close-btn">&times;</span>
                 
                 <!-- Login Form -->
-                <form id="loginForm" class="auth-form">
+                <form id="loginForm" class="auth-form" novalidate>
                     <h3>Đăng nhập</h3>
                     <div class="form-group">
                         <label for="loginEmail">Email</label>
-                        <input type="email" id="loginEmail" required>
+                        <input type="text" id="loginEmail">
                     </div>
                     <div class="form-group">
                         <label for="loginPassword">Mật khẩu</label>
-                        <input type="password" id="loginPassword" required>
+                        <input type="password" id="loginPassword">
                     </div>
-                    <button type="submit" class="btn">Đăng nhập</button>
+                    <button type="submit" class="btn" href="index.html">Đăng nhập</button>
                     <p class="form-footer">
                         Chưa có tài khoản? 
                         <a href="#" id="switchToRegister">Đăng ký ngay</a>
@@ -450,31 +460,31 @@
                 </form>
 
                 <!-- Register Form -->
-                <form id="registerForm" class="auth-form" style="display: none;">
+                <form id="registerForm" class="auth-form" style="display: none;" novalidate>
                     <h3>Đăng ký tài khoản</h3>
                     <div class="form-group">
                         <label for="regName">Họ và tên</label>
-                        <input type="text" id="regName" required>
+                        <input type="text" id="regName">
                     </div>
                     <div class="form-group">
                         <label for="regEmail">Email</label>
-                        <input type="email" id="regEmail" required>
+                        <input type="text" id="regEmail">
                     </div>
                     <div class="form-group">
                         <label for="regPhone">Số điện thoại</label>
-                        <input type="tel" id="regPhone" required>
+                        <input type="text" id="regPhone">
                     </div>
                     <div class="form-group">
                         <label for="regAddress">Địa chỉ</label>
-                        <input type="text" id="regAddress" required>
+                        <input type="text" id="regAddress">
                     </div>
                     <div class="form-group">
                         <label for="regPassword">Mật khẩu</label>
-                        <input type="password" id="regPassword" required>
+                        <input type="password" id="regPassword">
                     </div>
                     <div class="form-group">
                         <label for="regConfirmPassword">Xác nhận mật khẩu</label>
-                        <input type="password" id="regConfirmPassword" required>
+                        <input type="password" id="regConfirmPassword">
                     </div>
                     <button type="submit" class="btn">Đăng ký</button>
                     <p class="form-footer">
@@ -625,43 +635,12 @@
         </style>
 
         <script>
-            // Initialize database from db.js if not exists
-            function initializeDatabase() {
-                // Check if database exists in localStorage
-                if (!localStorage.getItem('caphe_db_v1')) {
-                    // Import the database from db.js
-                    const defaultDB = {
-                        users: [
-                            {
-                                id: 1,
-                                name: 'Admin',
-                                email: 'admin@example.com',
-                                password: 'admin123',
-                                phone: '0123456789',
-                                address: '123 Đường ABC, Quận 1, TP.HCM',
-                                role: 'admin'
-                            },
-                            {
-                                id: 2,
-                                name: 'Khách hàng 1',
-                                email: 'user@example.com',
-                                password: 'user123',
-                                phone: '0987654321',
-                                address: '456 Đường XYZ, Quận 3, TP.HCM',
-                                role: 'user'
-                            }
-                        ]
-                    };
-                    localStorage.setItem('caphe_db_v1', JSON.stringify(defaultDB));
-                }
-            }
+            // No-op: Authentication and DB have been removed
+            function initializeDatabase() {}
 
             // Check authentication status on page load
             document.addEventListener('DOMContentLoaded', function() {
-                // Initialize database
-                initializeDatabase();
-                
-                // Update UI and setup event listeners
+                // Auth removed: just setup UI and listeners
                 updateAuthUI();
                 setupEventListeners();
                 // Clear cart badge for prototype
@@ -669,66 +648,28 @@
                 if (badge) badge.style.display = 'none';
             });
 
-            // Cập nhật giao diện dựa trên trạng thái đăng nhập
+            // Giao diện tài khoản luôn ở trạng thái UI (không kiểm tra đăng nhập)
             function updateAuthUI() {
-                const currentUser = JSON.parse(localStorage.getItem('currentUser'));
                 const accountText = document.getElementById('accountText');
                 const accountDropdown = document.getElementById('accountDropdown');
-                const accountToggle = document.querySelector('.account-toggle');
-
-                // Xóa tất cả các mục menu cũ
-                accountDropdown.innerHTML = '';
-
-                if (currentUser) {
-                    // Đã đăng nhập - Hiển thị thông tin người dùng
-                    const displayName = currentUser.name || 'Tài khoản';
-                    accountText.textContent = displayName;
-                    
-                    // Tạo menu khi đã đăng nhập
-                    // Build logged-in menu items using data-action for delegated handling
-                    const profileItem = document.createElement('li');
-                    profileItem.innerHTML = `
-                        <a href="profile.html" data-action="profile" class="menu-link">
-                            <i class="fa fa-user-circle"></i> Thông tin cá nhân
-                        </a>
-                    `;
-
-                    const logoutItem = document.createElement('li');
-                    logoutItem.innerHTML = `
-                        <a href="#" data-action="logout" class="menu-link">
-                            <i class="fa fa-sign-out-alt"></i> Đăng xuất
-                        </a>
-                    `;
-
-                    // Thêm các mục vào menu
-                    accountDropdown.appendChild(profileItem);
-                    accountDropdown.appendChild(logoutItem);
-                } else {
-                    // Chưa đăng nhập - Hiển thị menu đăng nhập/đăng ký
-                    accountText.textContent = 'Đăng nhập / Đăng ký';
-                    
-                    // Tạo menu khi chưa đăng nhập
-                    // Build not-logged-in menu items using data-action for delegated handling
+                if (accountText) accountText.textContent = 'Đăng nhập / Đăng ký';
+                if (accountDropdown) {
+                    accountDropdown.innerHTML = '';
                     const loginItem = document.createElement('li');
                     loginItem.innerHTML = `
                         <a href="#" data-action="show-login" class="menu-link">
                             <i class="fa fa-sign-in-alt"></i> Đăng nhập
                         </a>
                     `;
-
                     const registerItem = document.createElement('li');
                     registerItem.innerHTML = `
                         <a href="#" data-action="show-register" class="menu-link">
                             <i class="fa fa-user-plus"></i> Đăng ký
                         </a>
                     `;
-
-                    // Thêm các mục vào menu
                     accountDropdown.appendChild(loginItem);
                     accountDropdown.appendChild(registerItem);
                 }
-                
-                // Note: dropdown toggle is handled in setupEventListeners so we don't duplicate handlers here
             }
 
             // Setup event listeners
@@ -794,22 +735,11 @@
 
                         if (action === 'logout') {
                             e.preventDefault();
-                            if (confirm('Bạn có chắc chắn muốn đăng xuất không?')) {
-                                localStorage.removeItem('currentUser');
-                                updateAuthUI();
-                                // No forced redirect; reflect UI change
-                            }
                             return;
                         }
 
                         if (action === 'profile') {
-                            // allow default navigation to profile.html but if not logged in, show login
-                            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-                            if (!currentUser) {
-                                e.preventDefault();
-                                sessionStorage.setItem('redirectToProfile', 'true');
-                                openModal('login');
-                            }
+                            // Cho phép đi tới profile mà không ràng buộc đăng nhập
                             return;
                         }
                     }
@@ -817,6 +747,8 @@
                     // Handle clicks on product "Thêm" buttons
                     const addBtn = e.target.closest && e.target.closest('.add');
                     if (addBtn) {
+                        e.preventDefault();
+                        
                         // For prototype: Just show notification without actually adding to cart
                         const card = addBtn.closest('.card');
                         const name = addBtn.getAttribute('data-name') || card?.querySelector('.card-title')?.textContent || 'Sản phẩm';
@@ -832,7 +764,7 @@
                         toast.style.borderRadius = '4px';
                         toast.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
                         toast.style.zIndex = '1000';
-                        toast.innerHTML = `PROTOTYPE: Đã thêm "${name}" vào giỏ hàng<br><small style="opacity:0.8">(Chức năng này chỉ là demo)</small>`;
+                        toast.innerHTML = `Đã thêm "${name}" vào giỏ hàng (prototype)`;
                         document.body.appendChild(toast);
                         setTimeout(() => { try { toast.remove(); } catch(e){} }, 2500);
                         return;
@@ -920,73 +852,7 @@
                 if (loginForm) {
                     loginForm.addEventListener('submit', function(e) {
                         e.preventDefault();
-                        const email = document.getElementById('loginEmail').value;
-                        const password = document.getElementById('loginPassword').value;
-                        
-                        // Simple validation
-                        if (!email || !password) {
-                            alert('Vui lòng nhập đầy đủ email và mật khẩu');
-                            return;
-                        }
-
-                        try {
-                            // Lấy dữ liệu từ localStorage
-                            const db = JSON.parse(localStorage.getItem('caphe_db_v1') || '{}');
-                            const users = Array.isArray(db.users) ? db.users : [];
-                            
-                            console.log('Tất cả người dùng trong cơ sở dữ liệu:', users);
-                            
-                            // Tìm kiếm người dùng với email và mật khẩu khớp
-                            const user = users.find(u => {
-                                const emailMatch = u.email.toLowerCase() === email.toLowerCase();
-                                const passwordMatch = u.password === password;
-                                console.log(`Kiểm tra: ${u.email} (${emailMatch}) với mật khẩu (${passwordMatch})`);
-                                return emailMatch && passwordMatch;
-                            });
-                            
-                            if (user) {
-                                // Tạo đối tượng người dùng sạch (không chứa mật khẩu)
-                                const userSession = {
-                                    id: user.id,
-                                    name: user.name,
-                                    email: user.email,
-                                    phone: user.phone || '',
-                                    address: user.address || '',
-                                    role: user.role || 'user',
-                                    lastLogin: new Date().toISOString()
-                                };
-                                
-                                // Lưu thông tin đăng nhập
-                                localStorage.setItem('currentUser', JSON.stringify(userSession));
-                                
-                                // Cập nhật thời gian đăng nhập cuối cùng
-                                const userIndex = users.findIndex(u => u.id === user.id);
-                                if (userIndex !== -1) {
-                                    users[userIndex].lastLogin = new Date().toISOString();
-                                    db.users = users;
-                                    localStorage.setItem('caphe_db_v1', JSON.stringify(db));
-                                }
-                                
-                                // Đóng modal và cập nhật giao diện
-                                closeModal();
-                                updateAuthUI();
-                                
-                                // Hiển thị thông báo thành công
-                                alert(`Chào mừng trở lại, ${user.name}!`);
-                                
-                                // Check if we need to redirect to profile
-                                const redirectToProfile = sessionStorage.getItem('redirectToProfile');
-                                if (redirectToProfile) {
-                                    sessionStorage.removeItem('redirectToProfile');
-                                    window.location.href = 'profile.html';
-                                }
-                            } else {
-                                throw new Error('Email hoặc mật khẩu không đúng');
-                            }
-                        } catch (error) {
-                            console.error('Login error:', error);
-                            alert(error.message || 'Có lỗi xảy ra khi đăng nhập. Vui lòng thử lại.');
-                        }
+                        // no-op: keep only the form UI
                     });
                 }
 
@@ -994,90 +860,14 @@
                 if (registerForm) {
                     registerForm.addEventListener('submit', function(e) {
                         e.preventDefault();
-                        
-                        const name = document.getElementById('regName').value;
-                        const email = document.getElementById('regEmail').value;
-                        const phone = document.getElementById('regPhone').value;
-                        const address = document.getElementById('regAddress').value;
-                        const password = document.getElementById('regPassword').value;
-                        const confirmPassword = document.getElementById('regConfirmPassword').value;
-                        
-                        // Simple validation
-                        if (!name || !email || !phone || !address || !password || !confirmPassword) {
-                            alert('Vui lòng điền đầy đủ thông tin');
-                            return;
-                        }
-                        
-                        if (password !== confirmPassword) {
-                            alert('Mật khẩu xác nhận không khớp');
-                            return;
-                        }
-                        
-                        if (password.length < 6) {
-                            alert('Mật khẩu phải có ít nhất 6 ký tự');
-                            return;
-                        }
-
-                        // Get users from localStorage
-                        const db = JSON.parse(localStorage.getItem('caphe_db_v1') || '{}');
-                        const users = db.users || [];
-                        
-                        // Check if email already exists (case-insensitive)
-                        const emailLower = email.trim().toLowerCase();
-                        if (users.some(u => (u.email || '').toLowerCase() === emailLower)) {
-                            alert('Email đã được đăng ký');
-                            return;
-                        }
-                        
-                        // Tạo ID mới (tăng dần từ 1)
-                        const newId = users.length > 0 ? Math.max(...users.map(u => parseInt(u.id) || 0)) + 1 : 1;
-                        
-                        // Tạo đối tượng người dùng mới
-                        const newUser = {
-                            id: newId.toString(),
-                            name: name.trim(),
-                            email: email.trim().toLowerCase(),
-                            phone: phone.trim(),
-                            address: address.trim(),
-                            password: password,
-                            role: 'user',
-                            createdAt: new Date().toISOString()
-                        };
-                        
-                        // Lưu vào cơ sở dữ liệu
-                        users.push(newUser);
-                        db.users = users;
-                        localStorage.setItem('caphe_db_v1', JSON.stringify(db));
-                        
-                        // Tạo đối tượng người dùng sạch (không chứa mật khẩu) để lưu vào session
-                        const userSession = {
-                            id: newUser.id,
-                            name: newUser.name,
-                            email: newUser.email,
-                            phone: newUser.phone,
-                            address: newUser.address,
-                            role: newUser.role
-                        };
-                        
-                        // Tự động đăng nhập
-                        localStorage.setItem('currentUser', JSON.stringify(userSession));
-                        
-                        // Close modal and update UI
-                        closeModal();
-                        updateAuthUI();
-                        
-                        // Show success message
-                        alert('Đăng ký và đăng nhập thành công!');
+                        // no-op: keep only the form UI
                     });
                 }
 
-                // logout/profile handled via delegated click handler (data-action)
+                // logout/profile handled via delegated click handler (data-action); no auth state
             }
         </script>
 
-        <script
-            src="https://kit.fontawesome.com/a076d05399.js"
-            crossorigin="anonymous"
-        ></script>
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </body>
 </html>

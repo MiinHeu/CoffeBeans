@@ -15,6 +15,14 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         />
+        <style>
+            .cart-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            .cart-table th { text-align: left; padding: 12px 0; border-bottom: 2px solid #ddd; font-weight: 600; color: var(--coffee-900); }
+            .cart-table td { padding: 16px 0; border-bottom: 1px solid #eee; vertical-align: middle; }
+            .cart-table tr:last-child td { border-bottom: none; }
+            .product-cell { display: flex; gap: 12px; align-items: center; }
+            .product-img { width: 64px; height: 64px; border-radius: 6px; object-fit: cover; }
+        </style>
     </head>
     <body>
         <!-- Header -->
@@ -30,27 +38,13 @@
                         <span class="brand-name">Cà Phê Đậm Đà</span>
                     </a>
                 </div>
-                <form
-                    class="search-bar"
-                    role="search"
-                    id="searchForm"
-                    onsubmit="handleSearch(event)"
-                >
-                    <button class="search-btn" type="submit">🔍</button>
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Tìm sản phẩm..."
-                        aria-label="Tìm kiếm"
-                    />
-                </form>
 
                 <nav class="menu" aria-label="Chính">
-                    <a href="products.html">Sản phẩm</a>
+                    <a href="index.html">Trang chủ</a>
+                    <a href="products.html">Sản phẩm</a>++
                     <a href="index.html#ve-chung-toi">Giới thiệu</a>
-                    <a href="index.html#loi-ich">Lợi ích</a>
                     <a href="index.html#lien-he">Liên hệ</a>
-                    <a href="order-history.html" style="margin-right: 10px">
+                    <a href="order-history.html">
                         <i class="fas fa-history"></i> Đơn hàng
                     </a>
                     <a href="cart.html" class="badge" aria-label="Giỏ hàng">
@@ -83,7 +77,7 @@
                     margin-top: 16px;
                 "
             >
-                <!-- Cart items -->
+                <!-- Cart items (static HTML) -->
                 <section
                     style="
                         background: #fff;
@@ -92,25 +86,98 @@
                         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
                     "
                 >
-                    <div
-                        style="
-                            display: flex;
-                            align-items: center;
-                            gap: 10px;
-                            margin-bottom: 10px;
-                        "
-                    >
-                        <input type="checkbox" id="selectAll" />
-                        <label
-                            for="selectAll"
-                            style="user-select: none; cursor: pointer"
-                            >Chọn tất cả</label
-                        >
-                    </div>
-                    <div id="cartItems"></div>
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th style="text-align: center;">Số lượng</th>
+                                <th style="text-align: right;">Giá</th>
+                                <th style="text-align: right;">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Static sample cart item 1 -->
+                            <tr>
+                                <td>
+                                    <div class="product-cell">
+                                        <img
+                                            src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=300&auto=format&fit=crop"
+                                            alt="Arabica Premium 250g"
+                                            class="product-img"
+                                        />
+                                        <div>
+                                            <div style="font-weight: 500; margin-bottom: 4px;">Arabica Premium 250g</div>
+                                            <div style="font-size: 12px; color: #666;">Loại: Arabica</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span style="font-weight: 500;">1</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <span style="color: var(--coffee); font-weight: 600;">135.000đ</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <span style="font-weight: 600;">135.000đ</span>
+                                </td>
+                            </tr>
+
+                            <!-- Static sample cart item 2 -->
+                            <tr>
+                                <td>
+                                    <div class="product-cell">
+                                        <img
+                                            src="https://images.unsplash.com/photo-1497935586351-b67a49e012bf?q=80&w=300&auto=format&fit=crop"
+                                            alt="Robusta Bold 500g"
+                                            class="product-img"
+                                        />
+                                        <div>
+                                            <div style="font-weight: 500; margin-bottom: 4px;">Robusta Bold 500g</div>
+                                            <div style="font-size: 12px; color: #666;">Loại: Robusta</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span style="font-weight: 500;">1</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <span style="color: var(--coffee); font-weight: 600;">129.000đ</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <span style="font-weight: 600;">129.000đ</span>
+                                </td>
+                            </tr>
+
+                            <!-- Static sample cart item 3 -->
+                            <tr>
+                                <td>
+                                    <div class="product-cell">
+                                        <img
+                                            src="https://images.unsplash.com/photo-1442550528053-c431ecb55509?q=80&w=300&auto=format&fit=crop"
+                                            alt="Signature Blend 1kg"
+                                            class="product-img"
+                                        />
+                                        <div>
+                                            <div style="font-weight: 500; margin-bottom: 4px;">Signature Blend 1kg</div>
+                                            <div style="font-size: 12px; color: #666;">Loại: Blend</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="text-align: center;">
+                                    <span style="font-weight: 500;">2</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <span style="color: var(--coffee); font-weight: 600;">265.000đ</span>
+                                </td>
+                                <td style="text-align: right;">
+                                    <span style="font-weight: 600;">530.000đ</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </section>
 
-                <!-- Summary -->
+                <!-- Summary (static HTML) -->
                 <aside
                     style="
                         background: #fff;
@@ -121,28 +188,22 @@
                         top: 84px;
                     "
                 >
-                    <h3>Tổng kết</h3>
-                    <div style="display: grid; gap: 8px; margin-top: 10px">
-                        <div
-                            style="
-                                display: flex;
-                                justify-content: space-between;
-                            "
-                        >
-                            <span>Đã chọn</span
-                            ><strong id="selectedCount">0</strong>
+                    <h3 style="margin: 0 0 16px 0; font-size: 18px; color: var(--coffee-900);">Tổng kết</h3>
+                    <div style="display: grid; gap: 12px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                            <span style="color: #666;">Tạm tính</span>
+                            <strong style="color: var(--coffee);">794.000đ</strong>
                         </div>
-                        <div
-                            style="
-                                display: flex;
-                                justify-content: space-between;
-                            "
-                        >
-                            <span>Tạm tính</span
-                            ><strong id="subtotal">0đ</strong>
+                        <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                            <span style="color: #666;">Phí vận chuyển</span>
+                            <strong style="color: var(--coffee);">30.000đ</strong>
+                        </div>
+                        <div style="border-top: 1px solid #eee; padding-top: 12px; display: flex; justify-content: space-between;">
+                            <span style="font-weight: 600; color: var(--coffee-900);">Tổng tiền</span>
+                            <strong style="font-size: 18px; color: var(--coffee);">824.000đ</strong>
                         </div>
                     </div>
-                    <div style="display: flex; gap: 12px; margin-top: 12px">
+                    <div style="display: flex; gap: 12px;">
                         <a
                             href="products.html"
                             style="
@@ -154,9 +215,10 @@
                                 border: 1px solid #ddd;
                                 border-radius: 8px;
                                 font-weight: 600;
+                                text-decoration: none;
+                                cursor: pointer;
                             "
-                            >Tiếp tục mua</a
-                        >
+                        >Tiếp tục mua</a>
                         <a
                             href="checkout.html"
                             style="
@@ -168,9 +230,10 @@
                                 border: none;
                                 border-radius: 8px;
                                 font-weight: 600;
+                                text-decoration: none;
+                                cursor: pointer;
                             "
-                            >Thanh toán</a
-                        >
+                        >Thanh toán</a>
                     </div>
                 </aside>
             </div>
@@ -199,407 +262,11 @@
             </div>
         </footer>
 
-        <script type="module">
-            import { session } from "./scripts/utils.js";
-
-            // Utility functions
-            function formatCurrency(v) {
-                return new Intl.NumberFormat("vi-VN").format(v);
-            }
-
-            function getCart() {
-                try {
-                    return JSON.parse(localStorage.getItem("cart") || "[]");
-                } catch {
-                    return [];
-                }
-            }
-
-            function setCart(cart) {
-                localStorage.setItem("cart", JSON.stringify(cart));
-
-                // Also save to user-specific storage if user is logged in
-                const user = session.getUser();
-                if (user) {
-                    try {
-                        const carts = JSON.parse(
-                            localStorage.getItem("userCarts") || "{}"
-                        );
-                        carts[user.id] = cart;
-                        localStorage.setItem(
-                            "userCarts",
-                            JSON.stringify(carts)
-                        );
-                    } catch (e) {
-                        console.error("Error saving to user-specific cart:", e);
-                    }
-                }
-
-                updateCartBadge();
-            }
-
-            // Update cart badge in the header
-            function updateCartBadge() {
-                const cart = getCart();
-                // Show number of distinct items on the cart page
-                const distinctCount = cart.length;
-                const badge = document.getElementById("cart-badge");
-                if (badge) {
-                    badge.textContent =
-                        distinctCount > 0 ? String(distinctCount) : "";
-                    badge.style.display = distinctCount > 0 ? "flex" : "none";
-                }
-                return distinctCount;
-            }
-
-            // Get selected item IDs from localStorage
-            function getSelectedIds() {
-                try {
-                    // First try to get from generic storage
-                    const genericSelected = JSON.parse(
-                        localStorage.getItem("cart_selected") || "[]"
-                    );
-                    if (genericSelected.length > 0) {
-                        return new Set(genericSelected);
-                    }
-
-                    // If no generic selection, try user-specific storage
-                    const user = session.getUser();
-                    if (user) {
-                        const selectedCarts = JSON.parse(
-                            localStorage.getItem("userCartSelected") || "{}"
-                        );
-                        const userSelected = selectedCarts[user.id] || [];
-                        return new Set(userSelected);
-                    }
-
-                    return new Set();
-                } catch {
-                    return new Set();
-                }
-            }
-
-            // Save selected item IDs to localStorage
-            function setSelectedIds(ids) {
-                localStorage.setItem(
-                    "cart_selected",
-                    JSON.stringify(Array.from(ids))
-                );
-
-                // Also save to user-specific storage if user is logged in
-                const user = session.getUser();
-                if (user) {
-                    try {
-                        const selectedCarts = JSON.parse(
-                            localStorage.getItem("userCartSelected") || "{}"
-                        );
-                        selectedCarts[user.id] = Array.from(ids);
-                        localStorage.setItem(
-                            "userCartSelected",
-                            JSON.stringify(selectedCarts)
-                        );
-                    } catch (e) {
-                        console.error(
-                            "Error saving selected items to user-specific storage:",
-                            e
-                        );
-                    }
-                }
-            }
-
-            // Handle item selection toggle
-            function onToggleSelect(e) {
-                const id = e.target.closest(".cart-item")?.dataset.id;
-                if (!id) return;
-                const selected = getSelectedIds();
-                if (e.target.checked) {
-                    selected.add(id);
-                } else {
-                    selected.delete(id);
-                }
-                setSelectedIds(selected);
-                updateCartSummary();
-            }
-
-            // Update cart summary (selected items count and subtotal)
-            function updateCartSummary() {
-                const cart = getCart();
-                const selectedIds = getSelectedIds();
-                const selectedItems = cart.filter((item) => selectedIds.has(item.id));
-
-                let totalItems = 0;
-                let subtotal = 0;
-
-                selectedItems.forEach((item) => {
-                    totalItems += item.quantity;
-                    subtotal += (item.price || 0) * item.quantity;
-                });
-
-                const selectedCountEl = document.getElementById("selectedCount");
-                const subtotalEl = document.getElementById("subtotal");
-                const checkoutBtn = document.querySelector('a[href="checkout.html"]');
-
-                if (selectedCountEl) selectedCountEl.textContent = totalItems;
-                if (subtotalEl) subtotalEl.textContent = formatCurrency(subtotal) + "đ";
-
-                // Update checkout button state
-                if (checkoutBtn) {
-                    if (selectedItems.length === 0) {
-                        checkoutBtn.style.opacity = "0.6";
-                        checkoutBtn.style.pointerEvents = "none";
-                        checkoutBtn.title = "Vui lòng chọn sản phẩm để thanh toán";
-                    } else {
-                        checkoutBtn.style.opacity = "1";
-                        checkoutBtn.style.pointerEvents = "auto";
-                        checkoutBtn.title = "";
-                    }
-                }
-
-                return selectedItems.length > 0;
-            }
-
-            // Update item quantity in cart
-            function updateQuantity(id, quantity) {
-                const cart = getCart();
-                const item = cart.find((i) => i.id === id);
-                if (!item) return false;
-
-                // Get available stock
-                const availableStock = getAvailableStock(id);
-                // Ensure quantity doesn't exceed available stock
-                const newQuantity = Math.max(
-                    1,
-                    Math.min(quantity, availableStock)
-                );
-
-                // Only update if quantity changed
-                if (newQuantity !== item.quantity) {
-                    item.quantity = newQuantity;
-                    setCart(cart);
-                    render();
-                    updateCartSummary();
-                    return true;
-                }
-                return false;
-            }
-
-            // Event handlers
-            function onInc(e) {
-                const item = e.target.closest('.cart-item');
-                if (!item) return;
-                const id = item.dataset.id;
-                const currentQuantity = parseInt(item.querySelector('.quantity-value').textContent);
-                updateQuantity(id, currentQuantity + 1);
-            }
-
-            function onDec(e) {
-                const item = e.target.closest('.cart-item');
-                if (!item) return;
-                const id = item.dataset.id;
-                const currentQuantity = parseInt(item.querySelector('.quantity-value').textContent);
-                if (currentQuantity > 1) {
-                    updateQuantity(id, currentQuantity - 1);
-                }
-            }
-
-            function onChange(e) {
-                const item = e.target.closest('.cart-item');
-                if (!item) return;
-                const id = item.dataset.id;
-                const newQuantity = parseInt(e.target.value);
-                if (!isNaN(newQuantity) && newQuantity >= 1) {
-                    updateQuantity(id, newQuantity);
-                } else {
-                    e.target.value = item.querySelector('.quantity-value').textContent;
-                }
-            }
-
-            function onRemove(e) {
-                // Removing items from cart is disabled in this build
-                try { showToast('Không thể xóa sản phẩm tại trang giỏ hàng', 'info'); } catch(e) {}
-                return;
-            }
-
-            function onChangeNote(e) {
-                // Notes are read-only in this cart implementation
-                try { showToast('Ghi chú không khả dụng', 'info'); } catch(e) {}
-                return;
-            }
-
-            // Render cart items
-            function render() {
-                const box = document.getElementById("cartItems");
-                const cart = getCart();
-                const selectedIds = getSelectedIds();
-
-                // If no selection saved and we have items, select all by default
-                if (selectedIds.size === 0 && cart.length > 0) {
-                    const allIds = new Set(cart.map((item) => item.id));
-                    setSelectedIds(allIds);
-                }
-
-                if (cart.length === 0) {
-                    box.innerHTML = `
-                        <div style="text-align: center; padding: 40px 20px;">
-                            <div style="font-size: 48px; margin-bottom: 20px;">🛒</div>
-                            <h3 style="margin: 0 0 10px;">Giỏ hàng của bạn đang trống</h3>
-                            <p style="color: #666; margin-bottom: 20px;">Hãy thêm sản phẩm vào giỏ hàng để bắt đầu mua sắm</p>
-                            <a href="products.html" class="btn" style="display: inline-block; padding: 10px 24px; background: #6f4e37; color: white; text-decoration: none; border-radius: 4px;">
-                                Tiếp tục mua sắm
-                            </a>
-                        </div>`;
-
-                    const subtotalEl = document.getElementById("subtotal");
-                    const selectedCountEl = document.getElementById("selectedCount");
-
-                    if (subtotalEl) subtotalEl.textContent = "0đ";
-                    if (selectedCountEl) selectedCountEl.textContent = "0";
-
-                    return;
-                }
-
-                // Render items read-only: use stored image and price from cart entries
-                box.innerHTML = cart.map((item) => {
-                    const displayPrice = item.price || 0;
-                    const isSelected = Array.from(selectedIds).includes(item.id);
-
-                    return `
-                    <div class="cart-item" data-id="${item.id}" style="padding: 16px 0; border-bottom: 1px solid #eee;">
-                        <div style="display: flex; gap: 16px; align-items: center;">
-                            <div style="flex: 0 0 24px; padding-top: 4px;">
-                                <input type="checkbox" class="select-item" ${isSelected ? 'checked' : ''} style="width:16px; height:16px; margin:0;">
-                            </div>
-                            <div style="width:80px; height:80px; flex:0 0 80px;">
-                                <img src="${item.image || 'https://via.placeholder.com/80'}" alt="${item.name}" style="width:100%; height:100%; object-fit:cover; border-radius:4px;">
-                            </div>
-                            <div style="flex:1; min-width:0;">
-                                <div style="margin-bottom:8px; font-weight:500;">${item.name}</div>
-                                <div style="color:#d4a76a; font-weight:600; margin-bottom:12px;">${formatCurrency(displayPrice)}đ</div>
-                                <div style="margin-top:6px; display:flex; align-items:center; gap:8px;">
-                                    <div style="display:flex; align-items:center; border:1px solid #ddd; border-radius:4px;">
-                                        <button class="quantity-btn dec" style="width:28px; height:28px; border:none; background:none; cursor:pointer; color:#666;">-</button>
-                                        <input type="number" class="quantity-input" value="${item.quantity}" min="1" style="width:40px; height:28px; border:none; text-align:center; -moz-appearance:textfield;" onchange="onChange(event)">
-                                        <button class="quantity-btn inc" style="width:28px; height:28px; border:none; background:none; cursor:pointer; color:#666;">+</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div style="text-align:right; font-weight:600; white-space:nowrap;">
-                                ${formatCurrency(displayPrice * item.quantity)}đ
-                            </div>
-                        </div>
-                    </div>`;
-                    })
-                    .join("");
-
-                // Attach event listeners
-                box.querySelectorAll(".select-item").forEach((inp) =>
-                    inp.addEventListener("change", onToggleSelect)
-                );
-                
-                // Add event listeners for quantity buttons
-                box.querySelectorAll(".quantity-btn.inc").forEach((btn) =>
-                    btn.addEventListener("click", onInc)
-                );
-                box.querySelectorAll(".quantity-btn.dec").forEach((btn) =>
-                    btn.addEventListener("click", onDec)
-                );
-
-                // Update select all checkbox
-                const selectAllCheckbox = document.getElementById("selectAll");
-                if (selectAllCheckbox) {
-                    const selectedCount = Array.from(selectedIds).filter((id) =>
-                        cart.some((item) => item.id === id)
-                    ).length;
-
-                    selectAllCheckbox.checked =
-                        selectedCount === cart.length && cart.length > 0;
-                    selectAllCheckbox.indeterminate =
-                        selectedCount > 0 && selectedCount < cart.length;
-
-                    selectAllCheckbox.onchange = () => {
-                        if (selectAllCheckbox.checked) {
-                            setSelectedIds(
-                                new Set(cart.map((item) => item.id))
-                            );
-                        } else {
-                            setSelectedIds(new Set());
-                        }
-                        render();
-                    };
-                }
-
-                // After rendering, update the summary (selected count and subtotal)
-                updateCartSummary();
-            }
-
-            // Search submit
-            function handleSearch(event) {
-                event.preventDefault();
-                const q = document.getElementById("searchInput").value.trim();
-                if (q) {
-                    window.location.href = `products.html?search=${encodeURIComponent(
-                        q
-                    )}`;
-                }
-            }
-            window.handleSearch = handleSearch;
-
-            // Show toast message
-            function showToast(message, type = "info") {
-                const toast = document.createElement("div");
-                toast.className = `toast toast-${type}`;
-                toast.style.position = "fixed";
-                toast.style.bottom = "20px";
-                toast.style.right = "20px";
-                toast.style.padding = "12px 24px";
-                toast.style.background =
-                    type === "success"
-                        ? "#4caf50"
-                        : type === "error"
-                        ? "#f44336"
-                        : type === "warning"
-                        ? "#ff9800"
-                        : "#2196f3";
-                toast.style.color = "white";
-                toast.style.borderRadius = "4px";
-                toast.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
-                toast.style.zIndex = "1000";
-                toast.style.transition = "opacity 0.3s, transform 0.3s";
-                toast.style.transform = "translateY(20px)";
-                toast.style.opacity = "0";
-                toast.textContent = message;
-
-                document.body.appendChild(toast);
-
-                // Trigger reflow
-                setTimeout(() => {
-                    toast.style.transform = "translateY(0)";
-                    toast.style.opacity = "1";
-                }, 10);
-
-                // Remove after delay
-                setTimeout(() => {
-                    toast.style.opacity = "0";
-                    toast.style.transform = "translateY(-20px)";
-                    setTimeout(() => {
-                        if (toast.parentNode) {
-                            document.body.removeChild(toast);
-                        }
-                    }, 300);
-                }, 3000);
-            }
-
-            // Initialize the page
-            document.addEventListener("DOMContentLoaded", () => {
-                updateCartBadge();
-                render();
-                updateCartSummary();
-
-                // Add event listener for search form if it exists
-                const searchForm = document.getElementById("searchForm");
-                if (searchForm) {
-                    searchForm.addEventListener("submit", handleSearch);
-                }
+        <script>
+            // Hide cart badge on cart page (static prototype)
+            document.addEventListener('DOMContentLoaded', function() {
+                const badge = document.getElementById('cart-badge');
+                if (badge) badge.style.display = 'none';
             });
         </script>
     </body>
